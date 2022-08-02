@@ -1,4 +1,4 @@
-export const Register: React.FC = () => {
+export const Register = () => {
   return (
     <div>
       <p>Register page</p>

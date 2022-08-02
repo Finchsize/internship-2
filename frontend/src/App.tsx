@@ -4,7 +4,7 @@ import { Main } from "./pages/main";
 import { Register } from "./pages/register";
 import { Signin } from "./pages/signin";
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
