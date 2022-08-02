@@ -1,15 +1,18 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Main from "./pages/main";
+import Register from "./pages/register/register";
+import Signin from "./pages/signin/signin";
 
 const App: React.FC = () => {
   return (
-    <div>
-      <h1>Clean template.</h1>
-      <nav>
-        <Link to="/signin">Sign in</Link> | <Link to="/register">Register</Link> | <Link to="/main">Main chat</Link>
-      </nav>
-      <Outlet />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="signin" element={<Signin />} />
+        <Route path="register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
