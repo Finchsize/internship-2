@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import { Link } from "react-router-dom";
 
-const Main: React.FC = () => {
+export const Main: React.FC = () => {
   return (
     <div>
       <h1>Clean template.</h1>
@@ -12,5 +12,3 @@ const Main: React.FC = () => {
     </div>
   );
 };
-
-export default Main;
