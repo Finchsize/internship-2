@@ -9,8 +9,38 @@ import {
   FormErrorMessage,
   FormHelperText,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export const Register = () => {
+
+  const [email, setEmail] = useState<string>();
+  const [pass, setPass] = useState<string>();
+  const [secondaryPass, setSecondaryPass] = useState<string>();
+  
+
+  function checkEmail(): boolean {
+    if (typeof email === "undefined") {
+      return true;
+    }
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  const checkPassLength = (): boolean => {
+
+    if (typeof pass === "undefined") return true;
+    else return pass.length > 5;
+  }
+  function passwordValidation(e:any){
+  
+    setPass(e);
+    
+    
+  }
+  const confirmPass = ():boolean =>{
+    
+    return pass === secondaryPass;
+    
+  }
+
   return (
     <div>
       <Flex
@@ -48,21 +78,27 @@ export const Register = () => {
                   {" "}
                   <EmailIcon> </EmailIcon> Email
                 </FormLabel>
-                <Input type="email" mb={"2rem"} />
+                <Input
+                  type="email"
+                  mb={"2rem"}
+                  isInvalid={!checkEmail()}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
 
                 <FormLabel fontSize={"xl"}>
                   {" "}
                   <LockIcon> </LockIcon> Password
-                  
                 </FormLabel>
-                <Input type="password" />
-                <FormHelperText mb={"2rem"}>Password has to contain atleast 6 characters and a number.</FormHelperText>
+                <Input type="password" isInvalid={!checkPassLength()} onChange={(e) => (passwordValidation(e.target.value))}/>
+                <FormHelperText mb={"2rem"}>
+                  Password has to contain atleast 6 characters.
+                </FormHelperText>
 
                 <FormLabel fontSize={"xl"}>
                   {" "}
                   <LockIcon> </LockIcon> Confirm Password
                 </FormLabel>
-                <Input type="password" mb={"3rem"} />
+                <Input isInvalid={!confirmPass()} onChange={(e) => setSecondaryPass(e.target.value)} type="password" mb={"3rem"} />
               </FormControl>
 
               <Flex
