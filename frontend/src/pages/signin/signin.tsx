@@ -33,7 +33,7 @@ export const Signin = () => {
       email.includes("@") &&
       email.split("@").length - 1 === 1 &&
       email.split("@")[1].includes(".") &&
-      email.split("@")[1].includes(".")
+      email.split("@")[1].split(".").length - 1 === 1
     ) {
       return true;
     }
