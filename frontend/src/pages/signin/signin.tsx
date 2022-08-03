@@ -2,42 +2,48 @@ import {
   Flex,
   Container,
   Heading,
-  Stack,
   Input,
   Button,
-  InputGroup,
-  InputRightElement,
-  Text,
+  FormLabel,
+  FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+import axios from "../../lib/axios"
 
 export const Signin = () => {
-  const [email, setEmail] = useState<string>();
-  const [passwordLength, setPasswordLength] = useState<number>();
+  const [login, setLogin] = useState("");
+  const [exception, setException] = useState("");
 
-  const [show, setShow] = useState<boolean>(false);
-  const handleClick = () => setShow(!show);
-
-  const checkPasswordLength = (): boolean => {
-    if (typeof passwordLength === "undefined") {
-      return true;
-    }
-    return passwordLength >= 8;
-  };
-
-  const checkEmail = (): boolean => {
-    if (typeof email === "undefined") {
-      return true;
-    }
-    if (
-      email.includes("@") &&
-      email.split("@").length - 1 === 1 &&
-      email.split("@")[1].includes(".") &&
-      email.split("@")[1].split(".").length - 1 === 1
-    ) {
-      return true;
-    }
-    return false;
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await axios({
+      method: "post",
+      url: "/login",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "*/*",
+      },
+      data: {
+        nickname: login,
+      },
+      responseType: "json",
+    })
+      .then((response) => {
+        setException("");
+        Cookies.set("token", response.data, { expires: 7 });
+      })
+      .catch((error) => {
+        if (error.response) {
+          setException(error.response.data.exceptionMessage);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
   };
 
   return (
@@ -48,94 +54,68 @@ export const Signin = () => {
       alignItems={"center"}
     >
       <Container>
-        <Flex
-          bgColor={"white"}
-          direction={"column"}
-          p={6}
-          alignItems={"center"}
-          borderRadius={10}
-          gap={6}
-          borderColor={"blackAlpha.200"}
-          borderWidth={1}
-          boxShadow={"md"}
-        >
-          <Flex direction={"column"} w={"full"} gap={2}>
-            <Heading
-              w={"full"}
-              textAlign={"center"}
-              as={"h1"}
-              size="2xl"
-              color={"blackAlpha.900"}
-            >
-              Sign in
-            </Heading>
-            <Heading
-              w={"full"}
-              textAlign={"center"}
-              as={"h2"}
-              size={"md"}
-              color={"blackAlpha.600"}
-            >
-              to your Chat™ account
-            </Heading>
-          </Flex>
-          <Stack spacing={2} width={"full"}>
-            <Heading as={"h3"} size={"sm"} color={"blackAlpha.600"}>
-              Email
-            </Heading>
-            <Input
-              isInvalid={!checkEmail()}
-              placeholder="john@example.com"
-              type={"email"}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {!checkEmail() && (
-              <Text fontSize={"sm"} color={"blackAlpha.600"}>
-                Please enter a valid email.
-              </Text>
-            )}
-          </Stack>
-          <Stack spacing={2} width={"full"}>
-            <Heading as={"h3"} size={"sm"} color={"blackAlpha.600"}>
-              Password
-            </Heading>
-            <InputGroup>
-              <Input
-                isInvalid={!checkPasswordLength()}
-                pr="4.7rem"
-                type={show ? "text" : "password"}
-                placeholder="********"
-                onChange={(e) => setPasswordLength(e.target.value.length)}
-              />
-              <InputRightElement width="4.7rem">
-                <Button
-                  size="sm"
-                  width={"4.2rem"}
-                  height={"1.75rem"}
-                  marginRight={"0.2rem"}
-                  onClick={handleClick}
-                >
-                  {show ? "Hide" : "Show"}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-            {!checkPasswordLength() && (
-              <Text fontSize={"sm"} color={"blackAlpha.600"}>
-                Password must be at least 8 characters long.
-              </Text>
-            )}
-          </Stack>
+        <form onSubmit={handleSubmit}>
           <Flex
-            width={"full"}
+            bgColor={"white"}
+            direction={"column"}
+            p={6}
             alignItems={"center"}
-            justifyContent={"space-between"}
+            borderRadius={10}
+            gap={6}
+            borderColor={"blackAlpha.200"}
+            borderWidth={1}
+            boxShadow={"md"}
           >
-            <Button colorScheme="blue" variant={"link"}>
-              Don't have an account?
-            </Button>
-            <Button colorScheme="blue">Sign in</Button>
+            <Flex direction={"column"} w={"full"} gap={2}>
+              <Heading
+                w={"full"}
+                textAlign={"center"}
+                as={"h1"}
+                size="2xl"
+                color={"blackAlpha.900"}
+              >
+                Sign in
+              </Heading>
+              <Heading
+                w={"full"}
+                textAlign={"center"}
+                as={"h2"}
+                size={"md"}
+                color={"blackAlpha.600"}
+              >
+                to your Chat™ account
+              </Heading>
+            </Flex>
+
+            <FormControl isRequired isInvalid={exception !== ""}>
+              <FormLabel as={"h3"} size={"sm"} color={"blackAlpha.600"}>
+                Login
+              </FormLabel>
+              <Input
+                type={"text"}
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+              />
+              {exception !== "" && (
+                <FormErrorMessage>{exception}</FormErrorMessage>
+              )}
+            </FormControl>
+            <Flex
+              width={"full"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Link to="/register">
+                <Button colorScheme="blue" variant={"link"}>
+                  Don't have an account?
+                </Button>
+              </Link>
+              <Button colorScheme="blue" type={"submit"}>
+                Sign in
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
+        </form>
       </Container>
     </Flex>
   );
