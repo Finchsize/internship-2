@@ -16,12 +16,11 @@ import axios from "axios";
 export const Register = () => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState<string>();
-  const [pass, setPass] = useState<string>(); // reduntant
-  const [secondaryPass, setSecondaryPass] = useState<string>(); // reduntant
   const [exception, setException] = useState("");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
     await axios({
       method: "POST",
       url: "http://localhost:8080/users",
@@ -40,42 +39,28 @@ export const Register = () => {
         language: "POLISH",
       },
       responseType: "json",
-    }).then((response) => {
-      console.log(response);
-      Cookies.set("token", response.data.token, {expires: 7});
-
-    }).catch(function(error){
-      if(error.response){
-        setException("");
-      }
-      else if (error.request) {
-        console.log(error.request);
-      }
-      else {
-        console.log("Error", error.message);
-      }
     })
+      .then((response) => {
+        setException("");
+        Cookies.set("token", response.data.token, { expires: 7 });
+      })
+      .catch((error) => {
+        if (error.response) {
+          setException(error.response.data.exceptionMessage);
+        } else if (error.request) {
+          console.log(error.request);
+        } else {
+          console.log("Error", error.message);
+        }
+      });
   };
 
-  function checkEmail(): boolean {
+  const checkEmail = (): boolean => {
     if (typeof email === "undefined") {
       return true;
     }
     return /\S+@\S+\.\S+/.test(email);
   }
-  const checkPassLength = (): boolean => {
-    if (typeof pass === "undefined") return true;
-    else return pass.length > 5;
-  };
-
-  function passwordValidation(e: any) {
-    // reduntant
-    setPass(e);
-  }
-  const confirmPass = (): boolean => {
-    // redundant
-    return pass === secondaryPass;
-  };
 
   return (
     <div>
@@ -92,13 +77,13 @@ export const Register = () => {
           border={"1px"}
           borderColor={"gray.200"}
           width="500px"
-          height="800"
+          height="700"
           justifyContent="center"
           borderRadius={30}
           padding={8}
         >
           <Stack width={"full"}>
-            <Heading textAlign={"center"} size={"2xl"} py={"9"}>
+            <Heading textAlign={"center"} size={"2xl"} pt={"12"} pb={"5rem"}>
               <h1>Sign up</h1>
             </Heading>
 
@@ -113,7 +98,7 @@ export const Register = () => {
                     value={login}
                     type="text"
                     onChange={(e) => setLogin(e.target.value)}
-                    mb={"2rem"}
+                    mb={"4rem"}
                   />
 
                   <FormLabel fontSize={"xl"}>
@@ -127,35 +112,9 @@ export const Register = () => {
                     isInvalid={!checkEmail()}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <LockIcon> </LockIcon> <s>Password</s>
-                  </FormLabel>
-                  <Input
-                    isDisabled={true}
-                    type="password"
-                    isInvalid={!checkPassLength()}
-                    onChange={(e) => passwordValidation(e.target.value)}
-                  />
-                  <FormHelperText mb={"2rem"}>
-                    Password has to contain atleast 6 characters.
-                  </FormHelperText>
-
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <s>
-                      {" "}
-                      <LockIcon> </LockIcon> Confirm Password
-                    </s>
-                  </FormLabel>
-                  <Input
-                    isDisabled={true}
-                    isInvalid={!confirmPass()}
-                    onChange={(e) => setSecondaryPass(e.target.value)}
-                    type="password"
-                    mb={"3rem"}
-                  />
+                  {exception !== "" && (
+                    <FormErrorMessage>{exception}</FormErrorMessage>
+                  )}
 
                   <Flex
                     width={"full"}
@@ -166,7 +125,7 @@ export const Register = () => {
                       Don't have an account?
                     </Button>
                     <Button colorScheme="teal" type={"submit"}>
-                      Sign in
+                      Sign up
                     </Button>
                   </Flex>
                 </FormControl>
