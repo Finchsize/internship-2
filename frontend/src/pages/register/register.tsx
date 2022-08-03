@@ -12,6 +12,7 @@ import {
 import { FormEvent, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export const Register = () => {
   const [login, setLogin] = useState("");
@@ -20,7 +21,7 @@ export const Register = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     await axios({
       method: "POST",
       url: "http://localhost:8080/users",
@@ -121,9 +122,11 @@ export const Register = () => {
                     alignItems={"center"}
                     justifyContent={"space-between"}
                   >
-                    <Button colorScheme="blue" variant={"link"}>
-                      Don't have an account?
-                    </Button>
+                    <Link to="/signin">
+                      <Button colorScheme="blue" variant={"link"}>
+                        Don't have an account?
+                      </Button>
+                    </Link>
                     <Button colorScheme="teal" type={"submit"}>
                       Sign up
                     </Button>
