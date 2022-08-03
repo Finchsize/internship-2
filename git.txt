@@ -1,0 +1,8 @@
+nickname: login,
+firstName: "string",
+lastName: "string",
+email: email,
+phoneNumber: "0000000000",
+country: "String",
+city: "Ghymobuimaoebegdraagbwgzwmbzajmmjtwxieocvqpskubhrmqgpernlomzhw",
+language: "POLISH",
