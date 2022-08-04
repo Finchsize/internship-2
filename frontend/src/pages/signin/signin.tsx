@@ -8,28 +8,24 @@ import {
   FormControl,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useId, useState } from "react";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
-import axios from "../../lib/axios"
+import axiosInstance from "../../lib/axios";
 
 export const Signin = () => {
-  const [login, setLogin] = useState("");
+  const loginId = useId();
   const [exception, setException] = useState("");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await axios({
+    await axiosInstance({
       method: "post",
       url: "/login",
-      headers: {
-        "Content-Type": "application/json",
-        accept: "*/*",
-      },
       data: {
-        nickname: login,
+        // Read data from target, then convert it to object, and then extract the login
+        nickname: Object.fromEntries(new FormData(event.currentTarget)).login,
       },
-      responseType: "json",
     })
       .then((response) => {
         setException("");
@@ -88,14 +84,15 @@ export const Signin = () => {
             </Flex>
 
             <FormControl isRequired isInvalid={exception !== ""}>
-              <FormLabel as={"h3"} size={"sm"} color={"blackAlpha.600"}>
+              <FormLabel
+                htmlFor={loginId}
+                as={"h3"}
+                size={"sm"}
+                color={"blackAlpha.600"}
+              >
                 Login
               </FormLabel>
-              <Input
-                type={"text"}
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-              />
+              <Input id={loginId} name="login" type={"text"} />
               {exception !== "" && (
                 <FormErrorMessage>{exception}</FormErrorMessage>
               )}
