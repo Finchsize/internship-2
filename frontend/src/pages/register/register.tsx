@@ -29,7 +29,10 @@ export const Register = () => {
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
-  const [language, setLanguage] = useState<string>();
+  const [language, setLanguage] = useState<string>('ENGLISH');
+
+
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -54,17 +57,6 @@ export const Register = () => {
     })
       .then((response) => {
         setException("");
-        // axiosInstance({
-        //   method: "GET",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     accept: "*/*",
-            
-        //   },
-        //   data:{
-        //     nickname: login
-        //   }
-        // });
       })
       .catch((error) => {
         if (error.response) {
