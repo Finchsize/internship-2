@@ -1,24 +1,9 @@
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Avatar,
-  AvatarBadge,
-  Box,
-  Button,
   Flex,
-  Heading,
   HStack,
-  IconButton,
   Input,
-  List,
-  ListItem,
-  Text,
   VStack,
 } from "@chakra-ui/react";
-import { BellIcon, ChatIcon, SettingsIcon } from "@chakra-ui/icons";
 
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
