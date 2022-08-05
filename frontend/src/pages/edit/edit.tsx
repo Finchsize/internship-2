@@ -23,7 +23,6 @@ import Cookies from "js-cookie";
 import parseJwt from "../../lib/parseJWT";
 export const Edit = () => {
   const [login, setLogin] = useState<string>();
-  const [email, setEmail] = useState<string>();
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
@@ -40,6 +39,14 @@ export const Edit = () => {
     headers: {
       authorization: `Bearer ${Cookies.get("token")}`,
     },
+  }).then((res) => {
+    setLogin(res.data.nickname);
+    setFirstName(res.data.firstName);
+    setLastName(res.data.lastName);
+    setphoneNumber(res.data.phoneNumber);
+    setCountry(res.data.country);
+    setCity(res.data.city);
+    setLanguage(res.data.userLanguage);
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {};
@@ -50,12 +57,6 @@ export const Edit = () => {
     }
 
     return phoneNumber.length === 9;
-  };
-  const checkEmail = (): boolean => {
-    if (typeof email === "undefined") {
-      return true;
-    }
-    return /\S+@\S+\.\S+/.test(email);
   };
   const checkLogin = (): boolean => {
     if (typeof login === "undefined") {
@@ -131,6 +132,7 @@ export const Edit = () => {
                   <Input
                     value={login}
                     isInvalid={!checkLogin()}
+                    placeholder={login}
                     isRequired={true}
                     type="text"
                     onChange={(e) => setLogin(e.target.value)}
@@ -150,7 +152,7 @@ export const Edit = () => {
                   <Input
                     value={firstName}
                     isRequired={true}
-                    type="text"
+                    type="text" placeholder={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     mb={"1rem"}
                   />
@@ -163,7 +165,7 @@ export const Edit = () => {
                   </FormLabel>
                   <Input
                     value={lastName}
-                    isRequired={true}
+                    isRequired={true} placeholder={lastName}
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
                     mb={"1rem"}
@@ -175,6 +177,7 @@ export const Edit = () => {
                   </FormLabel>
                   <Input
                     type="text"
+                    placeholder={phoneNumber}
                     isRequired={true}
                     value={phoneNumber}
                     isInvalid={!checkPhoneNumber()}
@@ -189,7 +192,7 @@ export const Edit = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    value={country}
+                    value={country} placeholder={country}
                     isInvalid={!checkCountry()}
                     isRequired={true}
                     mb={"1rem"}
@@ -202,6 +205,7 @@ export const Edit = () => {
                   <Input
                     type="text"
                     value={city}
+                    placeholder={city}
                     isInvalid={!checkCity()}
                     mb={"1rem"}
                     isRequired={true}
@@ -215,11 +219,12 @@ export const Edit = () => {
                   <Select
                     value={language}
                     isRequired
+                    
                     mb={"1rem"}
                     onChange={(e) => {
                       setLanguage(e.target.value);
                     }}
-                    defaultValue={"default"}
+                    defaultValue={language}
                   >
                     <option value={"default"} disabled>
                       Choose a language
@@ -232,10 +237,10 @@ export const Edit = () => {
                   <Flex
                     width={"full"}
                     alignItems={"center"}
-                    justifyContent={"space-between"}
+                    justifyContent={"right"}
                   >
                     <Button colorScheme="teal" type={"submit"}>
-                      Sign up
+                      Confirm
                     </Button>
                   </Flex>
                 </FormControl>

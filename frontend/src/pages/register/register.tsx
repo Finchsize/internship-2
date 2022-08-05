@@ -1,12 +1,11 @@
 import { Box, Flex, Button, Icon, Select } from "@chakra-ui/react";
-import { Heading, Text, Stack } from "@chakra-ui/react";
+import { Heading, Stack } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
 import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
 import {
   Input,
   FormControl,
   FormLabel,
-  FormErrorMessage,
   FormHelperText,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
