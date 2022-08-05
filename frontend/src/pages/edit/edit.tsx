@@ -1,75 +1,48 @@
-import { Box, Flex, Button, Icon, Select } from "@chakra-ui/react";
-import { Heading, Text, Stack } from "@chakra-ui/react";
-import { EmailIcon } from "@chakra-ui/icons";
-import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
-  Input,
+  Box,
+  Button,
+  Flex,
   FormControl,
-  FormLabel,
-  FormErrorMessage,
   FormHelperText,
+  FormLabel,
+  Heading,
+  Icon,
+  Input,
+  Link,
+  Select,
 } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import { Stack, Text } from "@chakra-ui/react";
+import { ChatIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 import { BsGlobe } from "react-icons/bs";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
+import { HiIdentification, HiOutlineIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
-
-export const Register = () => {
+import Cookies from "js-cookie";
+import parseJwt from "../../lib/parseJWT";
+export const Edit = () => {
   const [login, setLogin] = useState<string>();
   const [email, setEmail] = useState<string>();
-  const [exception, setException] = useState("");
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
-  const [language, setLanguage] = useState<string>('ENGLISH');
+  const [language, setLanguage] = useState<string>("ENGLISH");
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
+    Cookies.get("token")
+  );
+  axiosInstance({
+    method: "get",
+    url: "/users/details",
+    headers: {
+      authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  });
 
-    await axiosInstance({
-      url: "/users",
-      method: "POST",
-      data: {
-        nickname: login,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phoneNumber: phoneNumber,
-        country: country,
-        city: city,
-        language: language,
-      },
-    })
-      .then((response) => {
-        setException("");
-      })
-      .catch((error) => {
-        if (error.response) {
-          setException(error.response.data.exceptionMessage);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-      });
-
-    await axiosInstance({
-      url: "/login",
-      method: "POST",
-      data: {
-        nickname: login,
-      },
-    }).then((response) => {
-      Cookies.set("token", response.data, { expires: 7 });
-    });
-  };
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {};
 
   const checkPhoneNumber = (): boolean => {
     if (typeof phoneNumber === "undefined") {
@@ -84,28 +57,29 @@ export const Register = () => {
     }
     return /\S+@\S+\.\S+/.test(email);
   };
-  const checkLogin = ():boolean => {
+  const checkLogin = (): boolean => {
     if (typeof login === "undefined") {
       return true;
     }
     return login.length > 3;
-  }
-  const checkCity = ():boolean => {
+  };
+  const checkCity = (): boolean => {
     if (typeof city === "undefined") {
       return true;
     }
-    const regex = new RegExp('^[A-Z][^A-Z\n]*$');
+    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
 
     return regex.test(city);
-  }
-  const checkCountry = ():boolean => {
+  };
+  const checkCountry = (): boolean => {
     if (typeof country === "undefined") {
       return true;
     }
-    const regex = new RegExp('^[A-Z][^A-Z\n]*$');
+    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
 
     return regex.test(country);
-  }
+  };
+
   return (
     <div>
       <Flex
@@ -127,10 +101,26 @@ export const Register = () => {
           padding={8}
         >
           <Stack width={"full"}>
-            <Heading textAlign={"center"} size={"2xl"} pt={"4"} pb={"1rem"}>
-              <h1>Sign up</h1>
-            </Heading>
-
+            <Box>
+              <Heading textAlign={"center"} size={"3xl"} pt={"4"}>
+                <h1>Edit</h1>
+              </Heading>
+              <Text
+                fontWeight={"semibold"}
+                fontSize={"1.25rem"}
+                textAlign={"center"}
+              >
+                {" "}
+                your profile
+              </Text>
+              <Text
+                fontWeight={"semibold"}
+                fontSize={"1.25rem"}
+                textAlign={"center"}
+              >
+                information
+              </Text>{" "}
+            </Box>
             <Box width={"100%"}>
               <form onSubmit={handleSubmit}>
                 <FormControl my={3}>
@@ -144,9 +134,11 @@ export const Register = () => {
                     isRequired={true}
                     type="text"
                     onChange={(e) => setLogin(e.target.value)}
-                    
                   />
-                  <FormHelperText mb={"1rem"}> min. 3 characters</FormHelperText>
+                  <FormHelperText mb={"1rem"}>
+                    {" "}
+                    min. 3 characters
+                  </FormHelperText>
 
                   <FormLabel fontSize={"xl"}>
                     {" "}
@@ -176,19 +168,7 @@ export const Register = () => {
                     onChange={(e) => setLastName(e.target.value)}
                     mb={"1rem"}
                   />
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <EmailIcon> </EmailIcon> Email
-                  </FormLabel>
-                  <Input
-                    type="email"
-                    isRequired={true}
-                    value={email}
-                    mb={"1rem"}
-                    isInvalid={!checkEmail()}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> Phone Number
@@ -254,11 +234,6 @@ export const Register = () => {
                     alignItems={"center"}
                     justifyContent={"space-between"}
                   >
-                    <Link to="/signin">
-                      <Button colorScheme="blue" variant={"link"}>
-                        Already have an account?
-                      </Button>
-                    </Link>
                     <Button colorScheme="teal" type={"submit"}>
                       Sign up
                     </Button>
