@@ -3,6 +3,7 @@ const parseJwt = (token: string | undefined) => {
     try {
       return JSON.parse(atob(token.split(".")[1]));
     } catch (e) {
+      console.error(e)
       return undefined;
     }
   }
