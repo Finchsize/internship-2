@@ -10,6 +10,8 @@ export const Topbar = () => {
       px={"1rem"}
       borderBottom={"1px"}
       borderColor={"blackAlpha.200"}
+      zIndex={1}
+      shadow={"sm"}
     >
       <Heading as={"h1"} fontSize={"xl"} fontWeight={"medium"}>
         Main
