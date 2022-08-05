@@ -16,12 +16,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
-import {TbLanguage} from "react-icons/tb";
+import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 
-
 export const Register = () => {
-  const [login, setLogin] = useState("");
+  const [login, setLogin] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [exception, setException] = useState("");
   const [firstName, setFirstName] = useState<string>();
@@ -31,18 +30,12 @@ export const Register = () => {
   const [city, setCity] = useState<string>();
   const [language, setLanguage] = useState<string>('ENGLISH');
 
-
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     await axiosInstance({
       url: "/users",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        accept: "*/*",
-      },
       data: {
         nickname: login,
         firstName: firstName,
@@ -53,7 +46,6 @@ export const Register = () => {
         city: city,
         language: language,
       },
-      responseType: "json",
     })
       .then((response) => {
         setException("");
@@ -68,24 +60,17 @@ export const Register = () => {
         }
       });
 
-      await axiosInstance({
-        url: "/login",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "*/*",
-          
-        },
-        data:{
-          nickname: login
-        }
-      }).then((response) => {
-        Cookies.set("token", response.data, { expires: 7 });
-      });
+    await axiosInstance({
+      url: "/login",
+      method: "POST",
+      data: {
+        nickname: login,
+      },
+    }).then((response) => {
+      Cookies.set("token", response.data, { expires: 7 });
+    });
   };
 
-
-  
   const checkPhoneNumber = (): boolean => {
     if (typeof phoneNumber === "undefined") {
       return true;
@@ -99,7 +84,28 @@ export const Register = () => {
     }
     return /\S+@\S+\.\S+/.test(email);
   };
+  const checkLogin = ():boolean => {
+    if (typeof login === "undefined") {
+      return true;
+    }
+    return login.length > 3;
+  }
+  const checkCity = ():boolean => {
+    if (typeof city === "undefined") {
+      return true;
+    }
+    const regex = new RegExp('^[A-Z][^A-Z\n]*$');
 
+    return regex.test(city);
+  }
+  const checkCountry = ():boolean => {
+    if (typeof country === "undefined") {
+      return true;
+    }
+    const regex = new RegExp('^[A-Z][^A-Z\n]*$');
+
+    return regex.test(country);
+  }
   return (
     <div>
       <Flex
@@ -121,7 +127,7 @@ export const Register = () => {
           padding={8}
         >
           <Stack width={"full"}>
-            <Heading textAlign={"center"} size={"2xl"} pt={"4"} pb={"1.5rem"}>
+            <Heading textAlign={"center"} size={"2xl"} pt={"4"} pb={"1rem"}>
               <h1>Sign up</h1>
             </Heading>
 
@@ -134,10 +140,13 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     value={login}
+                    isInvalid={!checkLogin()}
+                    isRequired={true}
                     type="text"
                     onChange={(e) => setLogin(e.target.value)}
-                    mb={"1rem"}
+                    
                   />
+                  <FormHelperText mb={"1rem"}> min. 3 characters</FormHelperText>
 
                   <FormLabel fontSize={"xl"}>
                     {" "}
@@ -148,6 +157,7 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     value={firstName}
+                    isRequired={true}
                     type="text"
                     onChange={(e) => setFirstName(e.target.value)}
                     mb={"1rem"}
@@ -161,6 +171,7 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     value={lastName}
+                    isRequired={true}
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
                     mb={"1rem"}
@@ -171,20 +182,20 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="email"
+                    isRequired={true}
                     value={email}
                     mb={"1rem"}
                     isInvalid={!checkEmail()}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  {exception !== "" && (
-                    <FormErrorMessage>{exception}</FormErrorMessage>
-                  )}
+                  
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> Phone Number
                   </FormLabel>
                   <Input
                     type="text"
+                    isRequired={true}
                     value={phoneNumber}
                     isInvalid={!checkPhoneNumber()}
                     onChange={(e) => setphoneNumber(e.target.value)}
@@ -199,6 +210,8 @@ export const Register = () => {
                   <Input
                     type="text"
                     value={country}
+                    isInvalid={!checkCountry()}
+                    isRequired={true}
                     mb={"1rem"}
                     onChange={(e) => setCountry(e.target.value)}
                   />
@@ -209,18 +222,28 @@ export const Register = () => {
                   <Input
                     type="text"
                     value={city}
+                    isInvalid={!checkCity()}
                     mb={"1rem"}
+                    isRequired={true}
                     onChange={(e) => setCity(e.target.value)}
                   />
 
-                  <FormLabel fontSize={'xl'}> <Icon fontSize={25} as={TbLanguage}/> Language</FormLabel>
+                  <FormLabel fontSize={"xl"}>
+                    {" "}
+                    <Icon fontSize={25} as={TbLanguage} /> Language
+                  </FormLabel>
                   <Select
                     value={language}
+                    isRequired
                     mb={"1rem"}
                     onChange={(e) => {
                       setLanguage(e.target.value);
                     }}
+                    defaultValue={"default"}
                   >
+                    <option value={"default"} disabled>
+                      Choose a language
+                    </option>
                     <option value="ENGLISH">English</option>
                     <option value="POLISH">Polish</option>
                     <option value="GERMAN">German</option>
