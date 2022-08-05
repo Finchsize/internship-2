@@ -21,6 +21,7 @@ import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
 import parseJwt from "../../lib/parseJWT";
+
 export const Edit = () => {
   const [login, setLogin] = useState<string>();
   const [firstName, setFirstName] = useState<string>();
@@ -33,23 +34,45 @@ export const Edit = () => {
   const JWT: { nickname: string; exp: number } | undefined = parseJwt(
     Cookies.get("token")
   );
-  axiosInstance({
-    method: "get",
-    url: "/users/details",
-    headers: {
-      authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  }).then((res) => {
-    setLogin(res.data.nickname);
-    setFirstName(res.data.firstName);
-    setLastName(res.data.lastName);
-    setphoneNumber(res.data.phoneNumber);
-    setCountry(res.data.country);
-    setCity(res.data.city);
-    setLanguage(res.data.userLanguage);
-  });
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: "/users/details",
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    }).then((res) => {
+      setLogin(res.data.nickname);
+      setFirstName(res.data.firstName);
+      setLastName(res.data.lastName);
+      setphoneNumber(res.data.phoneNumber);
+      setCountry(res.data.country);
+      setCity(res.data.city);
+      setLanguage(res.data.userLanguage);
+      
+    });
+  }, []);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {};
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // console.log(login);
+    await axiosInstance({
+      method: "put",
+      url: "/users/",
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      data: {
+        firstName: firstName,
+        lastName: lastName,
+        username: login,
+        phoneNumber: phoneNumber,
+        country: country,
+        city: city,
+        userLanguage: language,
+      },
+    });
+  };
 
   const checkPhoneNumber = (): boolean => {
     if (typeof phoneNumber === "undefined") {
@@ -80,7 +103,7 @@ export const Edit = () => {
 
     return regex.test(country);
   };
-
+  console.log(login);
   return (
     <div>
       <Flex
@@ -130,9 +153,8 @@ export const Edit = () => {
                     <ChatIcon> </ChatIcon> Nickname
                   </FormLabel>
                   <Input
-                    value={login}
                     isInvalid={!checkLogin()}
-                    placeholder={login}
+                    value={login}
                     isRequired={true}
                     type="text"
                     onChange={(e) => setLogin(e.target.value)}
@@ -152,7 +174,7 @@ export const Edit = () => {
                   <Input
                     value={firstName}
                     isRequired={true}
-                    type="text" placeholder={firstName}
+                    type="text"
                     onChange={(e) => setFirstName(e.target.value)}
                     mb={"1rem"}
                   />
@@ -165,7 +187,8 @@ export const Edit = () => {
                   </FormLabel>
                   <Input
                     value={lastName}
-                    isRequired={true} placeholder={lastName}
+                    isRequired={true}
+                    placeholder={lastName}
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
                     mb={"1rem"}
@@ -192,7 +215,8 @@ export const Edit = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    value={country} placeholder={country}
+                    value={country}
+                    placeholder={country}
                     isInvalid={!checkCountry()}
                     isRequired={true}
                     mb={"1rem"}
@@ -219,7 +243,6 @@ export const Edit = () => {
                   <Select
                     value={language}
                     isRequired
-                    
                     mb={"1rem"}
                     onChange={(e) => {
                       setLanguage(e.target.value);
