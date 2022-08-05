@@ -5,17 +5,16 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 
 import {
-  Avatar,
   Flex,
   HStack,
   Input,
   VStack,
-  Text,
   Box,
 } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/ChatDetails";
+import { Message } from "../../components/Message";
 
 type Inputs = {
   message: string;
@@ -74,9 +73,10 @@ export const Dashboard = () => {
   useEffect(() => {
     const timer = setInterval(getMessages, 1000);
     return () => clearInterval(timer);
-  }, []);
+  });
 
   useEffect(() => {
+    console.log(msgBoxRef.current);
     if (msgBoxRef.current !== null) {
       msgBoxRef.current!.scrollIntoView({ behavior: "smooth" });
     }
@@ -102,27 +102,7 @@ export const Dashboard = () => {
               alignItems={"flex-start"}
             >
               {messages.map((message, key) => (
-                <HStack
-                  key={key}
-                  ref={
-                    messages.indexOf(message) === messages.length - 1
-                      ? msgBoxRef
-                      : null
-                  }
-                  spacing={"0.75rem"}
-                  paddingX={"1rem"}
-                >
-                  <Avatar size={"sm"} />
-                  <VStack alignItems={"flex-start"} spacing={0}>
-                    <HStack>
-                      <Text fontSize={"sm"}>{message.authorNick}</Text>
-                      <Text fontSize={"xs"}>
-                        {new Date(message.createdAt).toLocaleString()}
-                      </Text>
-                    </HStack>
-                    <p>{message.content}</p>
-                  </VStack>
-                </HStack>
+                <Message ref={msgBoxRef} {...message} key={key} />
               ))}
             </VStack>
             <form
