@@ -4,21 +4,40 @@ import axiosInstance from "../../lib/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 
-import { Flex, HStack, Input, VStack, Box } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Input,
+  VStack,
+  Box,
+} from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
-import { ChatDetails } from "../../components/ChatDetails";
+import { ChatDetails } from "../../components/UsersList";
 import { Message } from "../../components/Message";
 import type MessageType from "../../types/message";
+import { useNavigate } from "react-router";
 
 type Inputs = {
   message: string;
 };
 
 export const Dashboard = () => {
-  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
-    Cookies.get("token")
-  );
+  const navigator = useNavigate();
+  const [JWT, setJWT] = useState<
+    { nickname: string; exp: number } | undefined
+  >();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (typeof parseJwt(Cookies.get("token")) === "undefined") {
+        navigator("/signin");
+      } else {
+        setJWT(parseJwt(Cookies.get("token")));
+      }
+    }, 100);
+    return () => clearInterval(timer);
+  }, []);
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
@@ -75,7 +94,7 @@ export const Dashboard = () => {
       w={"full"}
       h={"100vh"}
     >
-      <Sidebar />
+      <Sidebar nickname={JWT?.nickname} />
       <VStack w="full" h="full" spacing={"0"}>
         <Topbar />
         <HStack w="full" h="full" alignItems={"flex-end"} spacing={0}>
@@ -86,6 +105,7 @@ export const Dashboard = () => {
               w={"full"}
               h={"calc(100% - 4rem)"}
               alignItems={"flex-start"}
+              justifyContent={"flex-end"}
             >
               {messages.map((message, key) => (
                 <Message ref={msgBoxRef} {...message} key={key} />
