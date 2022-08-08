@@ -31,6 +31,7 @@ type Message = {
 
 export const Dashboard = () => {
   const navigator = useNavigate()
+
   const JWT: { nickname: string; exp: number } | undefined = parseJwt(
     Cookies.get("token")
   );
@@ -41,6 +42,7 @@ export const Dashboard = () => {
     }
   }, []);
 
+  
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
   const { register, handleSubmit, reset } = useForm<Inputs>();
