@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Flex, HStack, Input, VStack } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
-import { ChatDetails } from "../../components/ChatDetails";
+import { ChatDetails } from "../../components/UsersList";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
