@@ -185,7 +185,7 @@ export const Register = () => {
                     isInvalid={!checkEmail()}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  a
+                  
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> Phone Number
