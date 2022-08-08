@@ -112,6 +112,7 @@ export const Dashboard = () => {
               w={"full"}
               h={"calc(100% - 4.5rem)"}
               alignItems={"flex-start"}
+              justifyContent={"flex-end"}
             >
               {messages.map((message, key) => (
                 <HStack
