@@ -4,27 +4,15 @@ import axiosInstance from "../../lib/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 
-import {
-  Flex,
-  HStack,
-  Input,
-  VStack,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, HStack, Input, VStack, Box } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/ChatDetails";
 import { Message } from "../../components/Message";
+import type MessageType from "../../types/message";
 
 type Inputs = {
   message: string;
-};
-
-type Message = {
-  id: number;
-  authorNick: string;
-  content: string;
-  createdAt: string;
 };
 
 export const Dashboard = () => {
@@ -53,7 +41,7 @@ export const Dashboard = () => {
     reset();
   };
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
 
   const getMessages = async () => {
     if (typeof JWT !== "undefined") {
@@ -76,12 +64,10 @@ export const Dashboard = () => {
   });
 
   useEffect(() => {
-    console.log(msgBoxRef.current);
     if (msgBoxRef.current !== null) {
       msgBoxRef.current!.scrollIntoView({ behavior: "smooth" });
     }
   }, [msgBoxRef.current]);
-
   return (
     <Flex
       flexDirection={"row"}
@@ -98,7 +84,7 @@ export const Dashboard = () => {
               position={"absolute"}
               overflowY={"scroll"}
               w={"full"}
-              h={"calc(100% - 4.5rem)"}
+              h={"calc(100% - 4rem)"}
               alignItems={"flex-start"}
             >
               {messages.map((message, key) => (
