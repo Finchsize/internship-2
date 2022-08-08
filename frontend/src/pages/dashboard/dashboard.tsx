@@ -16,6 +16,7 @@ import {
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/ChatDetails";
+import { useNavigate } from "react-router";
 
 type Inputs = {
   message: string;
@@ -29,10 +30,18 @@ type Message = {
 };
 
 export const Dashboard = () => {
+  const navigator = useNavigate()
+  
   const JWT: { nickname: string; exp: number } | undefined = parseJwt(
     Cookies.get("token")
   );
 
+  useEffect(() => {
+    if (typeof JWT === "undefined") {
+      navigator("/signin");
+    }
+  }, []);
+  
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
   const { register, handleSubmit, reset } = useForm<Inputs>();
