@@ -24,7 +24,7 @@ export const Main = () => {
     if (typeof JWT === "undefined") {
       navigator("/signin");
     }
-  }, []);
+  }, [JWT]);
   
   const { register, handleSubmit, reset } = useForm<Inputs>();
 
@@ -53,7 +53,7 @@ export const Main = () => {
       w={"full"}
       h={"100vh"}
     >
-      <Sidebar />
+      <Sidebar nickname={JWT?.nickname}/>
       <VStack w="full" h="full" spacing={"0"}>
         <Topbar />
         <HStack w="full" h="full" alignItems={"flex-end"}>
