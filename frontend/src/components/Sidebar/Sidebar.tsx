@@ -1,14 +1,8 @@
 import { ChatIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Text,
-  Box,
   Flex,
-  Accordion,
   Heading,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
   List,
   ListItem,
   Button,
@@ -17,16 +11,10 @@ import {
   AvatarBadge,
   IconButton,
 } from "@chakra-ui/react";
-import Cookies from "js-cookie";
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
-import parseJwt from "../../lib/parseJwt";
 
-export const Sidebar = () => {
-  const navigate = useNavigate();
-  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
-    Cookies.get("token")
-  );
+const channels = ["main", "conversation", "off-topic", "music"];
+
+export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
   return (
     <Flex
       flexDirection={"column"}
@@ -35,286 +23,30 @@ export const Sidebar = () => {
       bgColor={"white"}
       borderRight={"1px"}
       borderColor={"blackAlpha.200"}
-      pt={"0.75rem"}
+      p={"0.5rem"}
     >
-      <Accordion borderColor={"transparent"} allowToggle>
-        <Heading
-          px={"1rem"}
-          pb={"0.5rem"}
-          as={"h1"}
-          fontSize={"xl"}
-          fontWeight={"medium"}
-        >
-          Chats
-        </Heading>
-        <AccordionItem>
-          <Heading as={"h2"} px={"1rem"}>
-            <AccordionButton
-              gap={"0.5rem"}
-              borderRadius={"md"}
-              px={2}
+      <List>
+        <ListItem><Heading pl={3} py={2} size={"md"}>Chats</Heading></ListItem>
+        {channels.map((channel, key) => (
+          <ListItem key={key}>
+            <Button
               _hover={{
                 bgColor: "blackAlpha.50",
               }}
-            >
-              <AccordionIcon h={6} w={6} />
-              <Box flex="1" textAlign="left">
-                staż-chat
-              </Box>
-            </AccordionButton>
-          </Heading>
-          <AccordionPanel py={0} pl={12}>
-            <List>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-            </List>
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem>
-          <Heading as={"h2"} px={"1rem"}>
-            <AccordionButton
-              gap={"0.5rem"}
-              borderRadius={"md"}
-              px={2}
-              _hover={{
-                bgColor: "blackAlpha.50",
+              _active={{
+                bgColor: "blackAlpha.200",
               }}
+              gap={"0.25rem"}
+              leftIcon={<ChatIcon />}
+              variant={"ghost"}
+              w={"full"}
+              justifyContent={"flex-start"}
             >
-              <AccordionIcon h={6} w={6} />
-              <Box flex="1" textAlign="left">
-                staż-chat
-              </Box>
-            </AccordionButton>
-          </Heading>
-          <AccordionPanel py={0} pl={12}>
-            <List>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-            </List>
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem>
-          <Heading as={"h2"} px={"1rem"}>
-            <AccordionButton
-              gap={"0.5rem"}
-              borderRadius={"md"}
-              px={2}
-              _hover={{
-                bgColor: "blackAlpha.50",
-              }}
-            >
-              <AccordionIcon h={6} w={6} />
-              <Box flex="1" textAlign="left">
-                staż-chat
-              </Box>
-            </AccordionButton>
-          </Heading>
-          <AccordionPanel py={0} pl={12}>
-            <List>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button
-                  _hover={{
-                    bgColor: "blackAlpha.50",
-                  }}
-                  _active={{
-                    bgColor: "blackAlpha.200",
-                  }}
-                  gap={"0.25rem"}
-                  leftIcon={<ChatIcon />}
-                  variant={"ghost"}
-                  w={"full"}
-                  justifyContent={"flex-start"}
-                >
-                  main
-                </Button>
-              </ListItem>
-            </List>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+              {channel}
+            </Button>
+          </ListItem>
+        ))}
+      </List>
       <Flex
         flexDirection={"row"}
         py={"0.75rem"}
@@ -329,7 +61,7 @@ export const Sidebar = () => {
             <AvatarBadge boxSize="1.25em" bg="green.500" />
           </Avatar>
           <Text fontSize={"lg"} fontWeight={"medium"}>
-            {JWT?.nickname}
+            {nickname}
           </Text>
         </HStack>
         <HStack>

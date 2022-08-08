@@ -1,4 +1,13 @@
-import { Text, VStack, Heading, List, ListItem, Button, Avatar, AvatarBadge } from "@chakra-ui/react";
+import {
+  Text,
+  VStack,
+  Heading,
+  List,
+  ListItem,
+  Button,
+  Avatar,
+  AvatarBadge,
+} from "@chakra-ui/react";
 
 export const ChatDetails = () => {
   return (
