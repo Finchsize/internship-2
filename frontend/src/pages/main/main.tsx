@@ -7,7 +7,7 @@ import { Flex, HStack, Input, VStack } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 type Inputs = {
@@ -15,17 +15,22 @@ type Inputs = {
 };
 
 export const Main = () => {
-  const navigator = useNavigate()
-  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
-    Cookies.get("token")
-  );
+  const navigator = useNavigate();
+  const [JWT, setJWT] = useState<
+    { nickname: string; exp: number } | undefined
+  >();
 
   useEffect(() => {
-    if (typeof JWT === "undefined") {
-      navigator("/signin");
-    }
-  }, [JWT]);
-  
+    const timer = setInterval(() => {
+      if (typeof parseJwt(Cookies.get("token")) === "undefined") {
+        navigator("/signin");
+      } else {
+        setJWT(parseJwt(Cookies.get("token")));
+      }
+    }, 100);
+    return () => clearInterval(timer);
+  }, []);
+
   const { register, handleSubmit, reset } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -53,7 +58,7 @@ export const Main = () => {
       w={"full"}
       h={"100vh"}
     >
-      <Sidebar nickname={JWT?.nickname}/>
+      <Sidebar nickname={JWT?.nickname} />
       <VStack w="full" h="full" spacing={"0"}>
         <Topbar />
         <HStack w="full" h="full" alignItems={"flex-end"}>
