@@ -5,17 +5,17 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 
 import {
-  Avatar,
   Flex,
   HStack,
   Input,
   VStack,
-  Text,
   Box,
+  Text,
+  Avatar,
 } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
-import { ChatDetails } from "../../components/ChatDetails";
+import { ChatDetails } from "../../components/UsersList";
 import { useNavigate } from "react-router";
 
 type Inputs = {
@@ -30,19 +30,22 @@ type Message = {
 };
 
 export const Dashboard = () => {
-  const navigator = useNavigate()
+  const navigator = useNavigate();
+  const [JWT, setJWT] = useState<
+    { nickname: string; exp: number } | undefined
+  >();
 
-  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
-    Cookies.get("token")
-  );
-  
   useEffect(() => {
-    if (typeof JWT === "undefined") {
-      navigator("/signin");
-    }
+    const timer = setInterval(() => {
+      if (typeof parseJwt(Cookies.get("token")) === "undefined") {
+        navigator("/signin");
+      } else {
+        setJWT(parseJwt(Cookies.get("token")));
+      }
+    }, 100);
+    return () => clearInterval(timer);
   }, []);
 
-  
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
   const { register, handleSubmit, reset } = useForm<Inputs>();
@@ -84,14 +87,13 @@ export const Dashboard = () => {
   useEffect(() => {
     const timer = setInterval(getMessages, 1000);
     return () => clearInterval(timer);
-  }, []);
+  });
 
   useEffect(() => {
     if (msgBoxRef.current !== null) {
       msgBoxRef.current!.scrollIntoView({ behavior: "smooth" });
     }
   }, [msgBoxRef.current]);
-
   return (
     <Flex
       flexDirection={"row"}
@@ -99,7 +101,7 @@ export const Dashboard = () => {
       w={"full"}
       h={"100vh"}
     >
-      <Sidebar />
+      <Sidebar nickname={JWT?.nickname} />
       <VStack w="full" h="full" spacing={"0"}>
         <Topbar />
         <HStack w="full" h="full" alignItems={"flex-end"} spacing={0}>
