@@ -10,10 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { FormEvent, useId, useState } from "react";
 import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../lib/axios";
 
 export const Signin = () => {
+  const navigator = useNavigate()
   const loginId = useId();
   const [exception, setException] = useState("");
 
@@ -30,6 +31,7 @@ export const Signin = () => {
       .then((response) => {
         setException("");
         Cookies.set("token", response.data, { expires: 7 });
+        navigator("/");
       })
       .catch((error) => {
         if (error.response) {
