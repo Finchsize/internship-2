@@ -17,8 +17,13 @@ import {
   AvatarBadge,
   IconButton,
 } from "@chakra-ui/react";
+import Cookies from "js-cookie";
+import parseJwt from "../../lib/parseJwt";
 
 export const Sidebar = () => {
+  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
+    Cookies.get("token")
+  );
   return (
     <Flex
       flexDirection={"column"}
@@ -321,7 +326,7 @@ export const Sidebar = () => {
             <AvatarBadge boxSize="1.25em" bg="green.500" />
           </Avatar>
           <Text fontSize={"lg"} fontWeight={"medium"}>
-            Maciej
+            {JWT?.nickname}
           </Text>
         </HStack>
         <HStack>

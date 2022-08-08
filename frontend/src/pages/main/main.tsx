@@ -7,16 +7,25 @@ import { Flex, HStack, Input, VStack } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/ChatDetails";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 type Inputs = {
   message: string;
 };
 
 export const Main = () => {
+  const navigator = useNavigate()
   const JWT: { nickname: string; exp: number } | undefined = parseJwt(
     Cookies.get("token")
   );
 
+  useEffect(() => {
+    if (typeof JWT === "undefined") {
+      navigator("/signin");
+    }
+  }, []);
+  
   const { register, handleSubmit, reset } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
