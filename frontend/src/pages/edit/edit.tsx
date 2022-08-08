@@ -20,7 +20,6 @@ import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
-import parseJwt from "../../lib/parseJWT";
 
 export const Edit = () => {
   const [login, setLogin] = useState<string>();
@@ -30,10 +29,6 @@ export const Edit = () => {
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
   const [language, setLanguage] = useState<string>("ENGLISH");
-
-  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
-    Cookies.get("token")
-  );
   useEffect(() => {
     axiosInstance({
       method: "get",
@@ -55,12 +50,13 @@ export const Edit = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // console.log(login);
+    
     await axiosInstance({
       method: "put",
       url: "/users/",
+      
       headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
+        'authorization': `Bearer ${Cookies.get("token")}`,
       },
       data: {
         firstName: firstName,
@@ -91,7 +87,7 @@ export const Edit = () => {
     if (typeof city === "undefined") {
       return true;
     }
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
+    const regex = new RegExp('^[A-Z][a-z]*$');
 
     return regex.test(city);
   };
@@ -99,7 +95,7 @@ export const Edit = () => {
     if (typeof country === "undefined") {
       return true;
     }
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
+    const regex = new RegExp('^[A-Z][a-z]*$');
 
     return regex.test(country);
   };

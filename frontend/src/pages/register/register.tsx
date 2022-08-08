@@ -11,7 +11,6 @@ import {
 import { FormEvent, useState } from "react";
 import { BsGlobe } from "react-icons/bs";
 import Cookies from "js-cookie";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
@@ -127,7 +126,7 @@ export const Register = () => {
         >
           <Stack width={"full"}>
             <Heading textAlign={"center"} size={"2xl"} pt={"4"} pb={"1rem"}>
-              <h1>Sign up</h1>
+              Sign up
             </Heading>
 
             <Box width={"100%"}>
@@ -238,7 +237,6 @@ export const Register = () => {
                     onChange={(e) => {
                       setLanguage(e.target.value);
                     }}
-                    defaultValue={"default"}
                   >
                     <option value={"default"} disabled>
                       Choose a language
