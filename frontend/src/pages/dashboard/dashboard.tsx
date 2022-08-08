@@ -63,24 +63,22 @@ export const Dashboard = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
 
   const getMessages = async () => {
-    if (typeof JWT !== "undefined") {
-      await axiosInstance({
-        method: "get",
-        headers: {
-          Authorization: Cookies.get("token")!,
-        },
-        url: "/messages",
-      }).then((response) => {
-        setMessages(response.data);
-      });
-    }
+    await axiosInstance({
+      method: "get",
+      headers: {
+        Authorization: Cookies.get("token")!,
+      },
+      url: "/messages",
+    }).then((response) => {
+      setMessages(response.data);
+    });
   };
 
   /* Fetch messages from the backend */
   useEffect(() => {
-    const timer = setInterval(getMessages, 1000);
+    const timer = setInterval(getMessages, 500);
     return () => clearInterval(timer);
-  });
+  }, []);
 
   useEffect(() => {
     if (msgBoxRef.current !== null) {
@@ -98,14 +96,25 @@ export const Dashboard = () => {
       <VStack w="full" h="full" spacing={"0"}>
         <Topbar />
         <HStack w="full" h="full" alignItems={"flex-end"} spacing={0}>
-          <Box w="full" h="full" position={"relative"}>
+          <Flex w="full" h="full" position={"relative"} alignItems={"flex-end"}>
             <VStack
               position={"absolute"}
-              overflowY={"scroll"}
+              overflowY={"auto"}
               w={"full"}
-              h={"calc(100% - 4rem)"}
+              maxH={"full"}
+              marginBottom={"4.5rem"}
               alignItems={"flex-start"}
-              justifyContent={"flex-end"}
+              css={{
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                
+                /* Hide scrollbar for IE, Edge and Firefox */
+                "&": {
+                  "-ms-overflow-style": "none",  /* IE and Edge */
+                  "scrollbar-width": "none",  /* Firefox */
+                }
+              }}
             >
               {messages.map((message, key) => (
                 <Message ref={msgBoxRef} {...message} key={key} />
@@ -132,7 +141,7 @@ export const Dashboard = () => {
                 padding={"1rem"}
               />
             </form>
-          </Box>
+          </Flex>
           <ChatDetails />
         </HStack>
       </VStack>
