@@ -16,7 +16,6 @@ import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
-
 export const Register = () => {
   const [login, setLogin] = useState<string>();
   const [email, setEmail] = useState<string>();
@@ -26,11 +25,9 @@ export const Register = () => {
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
-  const [language, setLanguage] = useState<string>('ENGLISH');
-
+  const [language, setLanguage] = useState<string>("ENGLISH");
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     await axiosInstance({
       url: "/users",
       method: "POST",
@@ -82,28 +79,29 @@ export const Register = () => {
     }
     return /\S+@\S+\.\S+/.test(email);
   };
-  const checkLogin = ():boolean => {
+  const checkLogin = (): boolean => {
     if (typeof login === "undefined") {
       return true;
     }
     return login.length > 3;
-  }
-  const checkCity = ():boolean => {
+  };
+  const checkCity = (): boolean => {
     if (typeof city === "undefined") {
       return true;
     }
-    const regex = new RegExp('^[A-Z][^A-Z\n]*$');
+    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
 
     return regex.test(city);
-  }
-  const checkCountry = ():boolean => {
+  };
+  const checkCountry = (): boolean => {
     if (typeof country === "undefined") {
       return true;
     }
-    const regex = new RegExp('^[A-Z][^A-Z\n]*$');
+
+    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
 
     return regex.test(country);
-  }
+  };
   return (
     <div>
       <Flex
@@ -142,10 +140,11 @@ export const Register = () => {
                     isRequired={true}
                     type="text"
                     onChange={(e) => setLogin(e.target.value)}
-                    
                   />
-                  <FormHelperText mb={"1rem"}> min. 3 characters</FormHelperText>
-
+                  <FormHelperText mb={"1rem"}>
+                    {" "}
+                    min. 3 characters
+                  </FormHelperText>
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <p>
@@ -186,7 +185,7 @@ export const Register = () => {
                     isInvalid={!checkEmail()}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  
+                  a
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> Phone Number
@@ -225,7 +224,6 @@ export const Register = () => {
                     isRequired={true}
                     onChange={(e) => setCity(e.target.value)}
                   />
-
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <Icon fontSize={25} as={TbLanguage} /> Language
@@ -245,7 +243,6 @@ export const Register = () => {
                     <option value="POLISH">Polish</option>
                     <option value="GERMAN">German</option>
                   </Select>
-
                   <Flex
                     width={"full"}
                     alignItems={"center"}

@@ -44,19 +44,18 @@ export const Edit = () => {
       setCountry(res.data.country);
       setCity(res.data.city);
       setLanguage(res.data.userLanguage);
-      
     });
   }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     await axiosInstance({
       method: "put",
       url: "/users/",
-      
+
       headers: {
-        'authorization': `Bearer ${Cookies.get("token")}`,
+        authorization: `Bearer ${Cookies.get("token")}`,
       },
       data: {
         firstName: firstName,
@@ -87,7 +86,7 @@ export const Edit = () => {
     if (typeof city === "undefined") {
       return true;
     }
-    const regex = new RegExp('^[A-Z][a-z]*$');
+    const regex = new RegExp("^[A-Z][a-z]*$");
 
     return regex.test(city);
   };
@@ -95,7 +94,7 @@ export const Edit = () => {
     if (typeof country === "undefined") {
       return true;
     }
-    const regex = new RegExp('^[A-Z][a-z]*$');
+    const regex = new RegExp("^[A-Z][a-z]*$");
 
     return regex.test(country);
   };
@@ -252,7 +251,6 @@ export const Edit = () => {
                     <option value="POLISH">Polish</option>
                     <option value="GERMAN">German</option>
                   </Select>
-
                   <Flex
                     width={"full"}
                     alignItems={"center"}
