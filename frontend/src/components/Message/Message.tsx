@@ -1,28 +1,159 @@
-import { HStack, Avatar, VStack, Text } from "@chakra-ui/react";
-import { forwardRef, RefObject } from "react";
+import {
+  HStack,
+  Avatar,
+  VStack,
+  Text,
+  IconButton,
+  Input,
+  Icon,
+} from "@chakra-ui/react";
+import { forwardRef, RefObject, useState } from "react";
 
-type Props = {
-  content: string;
-  authorNick: string;
-  createdAt: string;
+import { AnimatePresence, motion } from "framer-motion";
+
+import type MessageType from "../../types/message";
+import { SubmitHandler, useForm } from "react-hook-form";
+import axiosInstance from "../../lib/axios";
+import Cookies from "js-cookie";
+import parseJwt from "../../lib/parseJwt";
+
+import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { MdCheck, MdClose } from "react-icons/md";
+
+type Inputs = {
+  message: string;
 };
 
 export const Message = forwardRef(
-  ({ content, authorNick, createdAt }: Props, ref) => {
+  ({ id, content, authorNick, createdAt }: MessageType, ref) => {
+    const [showOptions, setShowOptions] = useState<boolean>(false);
+    const [editMode, setEditMode] = useState<boolean>(false);
+
+    const { register, handleSubmit, reset } = useForm<Inputs>();
+
+    const JWT: { nickname: string; exp: number } | undefined = parseJwt(
+      Cookies.get("token")
+    );
+
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+      console.log(data)
+      setEditMode(false);
+    };
+
     return (
       <HStack
-        ref={ref ? (ref as RefObject<HTMLDivElement>) : null}
-        spacing={"0.75rem"}
-        paddingX={"1rem"}
+        w={"full"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        onMouseEnter={() => {
+          if (authorNick === JWT?.nickname) {
+            setShowOptions(true);
+          }
+        }}
+        onMouseLeave={() => setShowOptions(false)}
       >
-        <Avatar size={"sm"} />
-        <VStack alignItems={"flex-start"} spacing={0}>
-          <HStack>
-            <Text fontSize={"sm"}>{authorNick}</Text>
-            <Text fontSize={"xs"}>{new Date(createdAt).toLocaleString()}</Text>
+        <HStack
+          ref={ref ? (ref as RefObject<HTMLDivElement>) : null}
+          spacing={"0.75rem"}
+          paddingX={"1rem"}
+          w={"full"}
+        >
+          <Avatar size={"sm"} />
+          <VStack w={"full"} alignItems={"flex-start"} spacing={0}>
+            <HStack>
+              <Text fontSize={"sm"}>{authorNick}</Text>
+              <Text fontSize={"xs"}>
+                {new Date(createdAt).toLocaleString()}
+              </Text>
+            </HStack>
+            {!editMode ? (
+              <Text>{content}</Text>
+            ) : (
+              <form
+                autoComplete={"off"}
+                onSubmit={handleSubmit(onSubmit)}
+                style={{
+                  width: "100%",
+                  paddingTop: "0.25rem",
+                }}
+              >
+                <HStack w={"full"}>
+                  <Input
+                    {...register("message")}
+                    defaultValue={content}
+                    w={"full"}
+                    placeholder="Message..."
+                    bgColor={"white"}
+                    shadow={"sm"}
+                    size={"sm"}
+                    borderRadius={"md"}
+                    padding={"0.5rem"}
+                  />
+                  <HStack>
+                    <IconButton
+                      type={"submit"}
+                      onClick={() => setEditMode(true)}
+                      _hover={{
+                        bgColor: "blackAlpha.50",
+                      }}
+                      _active={{
+                        bgColor: "blackAlpha.200",
+                      }}
+                      variant={"ghost"}
+                      aria-label="Confirm edit"
+                      size={"sm"}
+                      icon={
+                        <Icon as={MdCheck} color={"green.500"} w={7} h={7} />
+                      }
+                    />
+                    <IconButton
+                      onClick={() => setEditMode(false)}
+                      _hover={{
+                        bgColor: "blackAlpha.50",
+                      }}
+                      _active={{
+                        bgColor: "blackAlpha.200",
+                      }}
+                      variant={"ghost"}
+                      aria-label="Cancel edit"
+                      size={"sm"}
+                      icon={<Icon as={MdClose} color={"red.500"} w={7} h={7} />}
+                    />
+                  </HStack>
+                </HStack>
+              </form>
+            )}
+          </VStack>
+        </HStack>
+        {showOptions && !editMode && (
+          <HStack spacing={0.5} paddingRight={"0.75rem"}>
+            <IconButton
+              onClick={() => setEditMode(true)}
+              _hover={{
+                bgColor: "blackAlpha.50",
+              }}
+              _active={{
+                bgColor: "blackAlpha.200",
+              }}
+              variant={"ghost"}
+              aria-label="Edit message"
+              size={"sm"}
+              icon={<EditIcon w={5} h={5} />}
+            />
+            <IconButton
+              _hover={{
+                bgColor: "blackAlpha.50",
+              }}
+              _active={{
+                bgColor: "blackAlpha.200",
+              }}
+              variant={"ghost"}
+              aria-label="Delete message"
+              size={"sm"}
+              icon={<DeleteIcon w={5} h={5} />}
+            />
           </HStack>
-          <Text>{content}</Text>
-        </VStack>
+        )}
       </HStack>
     );
   }
