@@ -3,15 +3,9 @@ import parseJwt from "../../lib/parseJwt";
 import axiosInstance from "../../lib/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
-import {useParams} from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-import {
-  Flex,
-  HStack,
-  Input,
-  VStack,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, HStack, Input, VStack, Box } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
@@ -22,8 +16,6 @@ import { useNavigate } from "react-router";
 type Inputs = {
   message: string;
 };
-
-
 
 export const Dashboard = () => {
   const navigator = useNavigate();
@@ -42,8 +34,7 @@ export const Dashboard = () => {
     return () => clearInterval(timer);
   }, []);
 
-  
-  const params  = useParams();
+  const params = useParams();
   console.log(params.id);
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
@@ -57,7 +48,10 @@ export const Dashboard = () => {
         headers: {
           Authorization: Cookies.get("token")!,
         },
-        url: typeof params.id === 'undefined' ? "/messages" : `/messages/channels/${params.id}`,
+        url:
+          typeof params.id === "undefined"
+            ? "/messages"
+            : `/messages/channels/${params.id}`,
         data: {
           nickname: JWT.nickname,
           content: message,
@@ -70,24 +64,24 @@ export const Dashboard = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
 
   const getMessages = async () => {
-    
-      await axiosInstance({
-        method: "get",
-        headers: {
-          Authorization: Cookies.get("token")!,
-        },
-        url: typeof params.id === 'undefined' ? "/messages" : `/messages/channels/${params.id}`,
-      }).then((response) => {
-        setMessages(response.data);
-        
-      });
-  }
+    await axiosInstance({
+      method: "get",
+      headers: {
+        Authorization: Cookies.get("token")!,
+      },
+      url:
+        typeof params.id === "undefined"
+          ? "/messages"
+          : `/messages/channels/${params.id}`,
+    }).then((response) => {
+      setMessages(response.data);
+    });
+  };
 
   /* Fetch messages from the backend */
   useEffect(() => {
     const timer = setInterval(getMessages, 500);
     return () => clearInterval(timer);
-    
   }, []);
 
   useEffect(() => {
@@ -118,12 +112,12 @@ export const Dashboard = () => {
                 "&::-webkit-scrollbar": {
                   display: "none",
                 },
-                
+
                 /* Hide scrollbar for IE, Edge and Firefox */
                 "&": {
-                  "-ms-overflow-style": "none",  /* IE and Edge */
-                  "scrollbar-width": "none",  /* Firefox */
-                }
+                  "-ms-overflow-style": "none" /* IE and Edge */,
+                  "scrollbar-width": "none" /* Firefox */,
+                },
               }}
             >
               {messages.map((message, key) => (

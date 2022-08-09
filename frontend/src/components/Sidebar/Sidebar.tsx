@@ -99,6 +99,11 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
               variant={"ghost"}
               w={"full"}
               justifyContent={"flex-start"}
+              onClick={
+                () => {
+                  window.location.replace('/');
+                }
+              }
             >
               Main
             </Button>
@@ -120,6 +125,11 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
                 variant={"ghost"}
                 w={"full"}
                 justifyContent={"flex-start"}
+                onClick={
+                  () => {
+                    window.location.replace(`/${chat.id}`);
+                  }
+                }
               >
                 {chat.owners[0]}'s chat #{chat.id}
               </Button>
