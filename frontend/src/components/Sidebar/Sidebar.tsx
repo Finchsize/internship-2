@@ -1,4 +1,4 @@
-import { ChatIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
+import { ChatIcon, BellIcon, SettingsIcon, AddIcon } from "@chakra-ui/icons";
 import {
   Text,
   Flex,
@@ -10,7 +10,12 @@ import {
   Avatar,
   AvatarBadge,
   IconButton,
+  Icon,
+  FormControl,
+  FormLabel,
+  Input,
 } from "@chakra-ui/react";
+import { BiCommentAdd, BiFontSize } from "react-icons/bi";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
@@ -32,12 +37,20 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       },
     }).then((res) => {
       setChats(res.data);
-      
-    })
-  }, [])
-  
-  
-  
+    });
+  }, []);
+
+  const createChat = () => {
+    axiosInstance({
+      method: "post",
+      url: "/channels",
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    }).then((res) => {
+      chats.push(res.data);
+    });
+  }
 
   return (
     <Flex
@@ -47,17 +60,29 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       bgColor={"white"}
       borderRight={"1px"}
       borderColor={"blackAlpha.200"}
-      p={"0.5rem"}
     >
-      <List>
-        <ListItem>
-          <Heading pl={3} py={2} size={"md"}>
-            Chats
-          </Heading>
-        </ListItem>
+      <Flex
+            width={"full"}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+            p={"0.5rem"}
+          >
+            <Heading pl={3} py={2} size={"md"}>
+              Chats
+            </Heading>
+            <form onSubmit={createChat}>
+              <FormControl>
+                <Button shadow={"none"} bgColor={"transparent"} type={"submit"}>
+                  <Icon as={BiCommentAdd}></Icon>
+                </Button>
+              </FormControl>
+            </form>
+          </Flex>
+      <List h={'full'} maxH={'100vh'} pl={'.5rem'} overflow={'auto'} >
+        
 
-        <ListItem>
-          <Button
+        <ListItem pr={'.5rem'}>
+          <Button 
             _hover={{
               bgColor: "blackAlpha.50",
             }}
@@ -74,7 +99,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
           </Button>
         </ListItem>
         {chats.map((chat, key) => (
-          <ListItem key={key}>
+          <ListItem key={key} pr={'.5rem'}>
             <Button
               _hover={{
                 bgColor: "blackAlpha.50",
@@ -88,7 +113,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
               w={"full"}
               justifyContent={"flex-start"}
             >
-              {chat.id}
+              {chat.owners[0]}'s chat #{chat.id}
             </Button>
           </ListItem>
         ))}
