@@ -10,23 +10,16 @@ import {
   Input,
   VStack,
   Box,
-  Text,
-  Avatar,
 } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
+import { Message } from "../../components/Message";
+import type MessageType from "../../types/message";
 import { useNavigate } from "react-router";
 
 type Inputs = {
   message: string;
-};
-
-type Message = {
-  id: number;
-  authorNick: string;
-  content: string;
-  createdAt: string;
 };
 
 export const Dashboard = () => {
@@ -67,7 +60,7 @@ export const Dashboard = () => {
     reset();
   };
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
 
   const getMessages = async () => {
     await axiosInstance({
@@ -124,27 +117,7 @@ export const Dashboard = () => {
               }}
             >
               {messages.map((message, key) => (
-                <HStack
-                  key={key}
-                  ref={
-                    messages.indexOf(message) === messages.length - 1
-                      ? msgBoxRef
-                      : null
-                  }
-                  spacing={"0.75rem"}
-                  paddingX={"1rem"}
-                >
-                  <Avatar size={"sm"} />
-                  <VStack alignItems={"flex-start"} spacing={0}>
-                    <HStack>
-                      <Text fontSize={"sm"}>{message.authorNick}</Text>
-                      <Text fontSize={"xs"}>
-                        {new Date(message.createdAt).toLocaleString()}
-                      </Text>
-                    </HStack>
-                    <p>{message.content}</p>
-                  </VStack>
-                </HStack>
+                <Message ref={msgBoxRef} {...message} key={key} />
               ))}
             </VStack>
             <form
