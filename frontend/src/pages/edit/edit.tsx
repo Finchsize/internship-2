@@ -1,68 +1,81 @@
-import { Box, Flex, Button, Icon, Select } from "@chakra-ui/react";
-import { Heading, Stack } from "@chakra-ui/react";
-import { EmailIcon } from "@chakra-ui/icons";
-import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
-  Input,
+  Box,
+  Button,
+  Flex,
   FormControl,
-  FormLabel,
   FormHelperText,
+  FormLabel,
+  Heading,
+  Icon,
+  Input,
+  Link,
+  Select,
 } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import { Stack, Text } from "@chakra-ui/react";
+import { ChatIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 import { BsGlobe } from "react-icons/bs";
-import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
-import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
+import { HiIdentification, HiOutlineIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
-export const Register = () => {
+import Cookies from "js-cookie";
+
+export const Edit = () => {
   const [login, setLogin] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [exception, setException] = useState("");
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
+  // const [email, setEmail] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
   const [language, setLanguage] = useState<string>("ENGLISH");
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: "/users/details",
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    }).then((res) => {
+      setLogin(res.data.nickname);
+      setFirstName(res.data.firstName);
+      setLastName(res.data.lastName);
+      setphoneNumber(res.data.phoneNumber);
+      setCountry(res.data.country);
+      setCity(res.data.city);
+      setLanguage(res.data.userLanguage);
+    });
+  }, []);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     await axiosInstance({
-      url: "/users",
-      method: "POST",
+      method: "put",
+      url: "/users/",
+
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
       data: {
-        nickname: login,
         firstName: firstName,
         lastName: lastName,
-        email: email,
+        username: login,
         phoneNumber: phoneNumber,
         country: country,
         city: city,
+        email : 'LOLOOLOLOLO@gmail.com',
         language: language,
-      },
-    })
-      .then((response) => {
-        setException("");
-      })
-      .catch((error) => {
-        if (error.response) {
-          setException(error.response.data.exceptionMessage);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-      });
+        timeZone: 'string',
+        showFirstNameAndLastName: true,
+        showEmail: true,
+        showPhoneNumber: true,
+        showAddress: true,
+        deleted: true,
+        userStatus: 'OFFLINE'
 
-    await axiosInstance({
-      url: "/login",
-      method: "POST",
-      data: {
-        nickname: login,
       },
-    }).then((response) => {
-      Cookies.set("token", response.data, { expires: 7 });
     });
   };
 
@@ -72,12 +85,6 @@ export const Register = () => {
     }
 
     return phoneNumber.length === 9;
-  };
-  const checkEmail = (): boolean => {
-    if (typeof email === "undefined") {
-      return true;
-    }
-    return /\S+@\S+\.\S+/.test(email);
   };
   const checkLogin = (): boolean => {
     if (typeof login === "undefined") {
@@ -89,7 +96,7 @@ export const Register = () => {
     if (typeof city === "undefined") {
       return true;
     }
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
+    const regex = new RegExp("^[A-Z][a-z]*$");
 
     return regex.test(city);
   };
@@ -97,11 +104,11 @@ export const Register = () => {
     if (typeof country === "undefined") {
       return true;
     }
-
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
+    const regex = new RegExp("^[A-Z][a-z]*$");
 
     return regex.test(country);
   };
+  console.log(login);
   return (
     <div>
       <Flex
@@ -123,10 +130,26 @@ export const Register = () => {
           padding={8}
         >
           <Stack width={"full"}>
-            <Heading textAlign={"center"} size={"2xl"} pt={"4"} pb={"1rem"}>
-              Sign up
-            </Heading>
-
+            <Box>
+              <Heading textAlign={"center"} size={"3xl"} pt={"4"}>
+                <h1>Edit</h1>
+              </Heading>
+              <Text
+                fontWeight={"semibold"}
+                fontSize={"1.25rem"}
+                textAlign={"center"}
+              >
+                {" "}
+                your profile
+              </Text>
+              <Text
+                fontWeight={"semibold"}
+                fontSize={"1.25rem"}
+                textAlign={"center"}
+              >
+                information
+              </Text>{" "}
+            </Box>
             <Box width={"100%"}>
               <form onSubmit={handleSubmit}>
                 <FormControl my={3}>
@@ -135,8 +158,8 @@ export const Register = () => {
                     <ChatIcon> </ChatIcon> Nickname
                   </FormLabel>
                   <Input
-                    value={login}
                     isInvalid={!checkLogin()}
+                    value={login}
                     isRequired={true}
                     type="text"
                     onChange={(e) => setLogin(e.target.value)}
@@ -145,6 +168,7 @@ export const Register = () => {
                     {" "}
                     min. 3 characters
                   </FormHelperText>
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <p>
@@ -169,29 +193,19 @@ export const Register = () => {
                   <Input
                     value={lastName}
                     isRequired={true}
+                    placeholder={lastName}
                     type="text"
                     onChange={(e) => setLastName(e.target.value)}
                     mb={"1rem"}
                   />
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <EmailIcon> </EmailIcon> Email
-                  </FormLabel>
-                  <Input
-                    type="email"
-                    isRequired={true}
-                    value={email}
-                    mb={"1rem"}
-                    isInvalid={!checkEmail()}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> Phone Number
                   </FormLabel>
                   <Input
                     type="text"
+                    placeholder={phoneNumber}
                     isRequired={true}
                     value={phoneNumber}
                     isInvalid={!checkPhoneNumber()}
@@ -207,6 +221,7 @@ export const Register = () => {
                   <Input
                     type="text"
                     value={country}
+                    placeholder={country}
                     isInvalid={!checkCountry()}
                     isRequired={true}
                     mb={"1rem"}
@@ -219,11 +234,13 @@ export const Register = () => {
                   <Input
                     type="text"
                     value={city}
+                    placeholder={city}
                     isInvalid={!checkCity()}
                     mb={"1rem"}
                     isRequired={true}
                     onChange={(e) => setCity(e.target.value)}
                   />
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <Icon fontSize={25} as={TbLanguage} /> Language
@@ -235,6 +252,7 @@ export const Register = () => {
                     onChange={(e) => {
                       setLanguage(e.target.value);
                     }}
+                    defaultValue={language}
                   >
                     <option value={"default"} disabled>
                       Choose a language
@@ -246,15 +264,10 @@ export const Register = () => {
                   <Flex
                     width={"full"}
                     alignItems={"center"}
-                    justifyContent={"space-between"}
+                    justifyContent={"right"}
                   >
-                    <Link to="/signin">
-                      <Button colorScheme="blue" variant={"link"}>
-                        Already have an account?
-                      </Button>
-                    </Link>
                     <Button colorScheme="teal" type={"submit"}>
-                      Sign up
+                      Confirm
                     </Button>
                   </Flex>
                 </FormControl>
