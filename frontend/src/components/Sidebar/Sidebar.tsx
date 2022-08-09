@@ -11,10 +11,34 @@ import {
   AvatarBadge,
   IconButton,
 } from "@chakra-ui/react";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import axiosInstance from "../../lib/axios";
 
-const channels = ["main", "conversation", "off-topic", "music"];
+type Chat = {
+  id: number;
+  members: string[];
+  owners: string[];
+};
 
 export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
+  const [chats, setChats] = useState<Chat[]>([]);
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: "/channels",
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    }).then((res) => {
+      setChats(res.data);
+      
+    })
+  }, [])
+  
+  
+  
+
   return (
     <Flex
       flexDirection={"column"}
@@ -26,8 +50,30 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       p={"0.5rem"}
     >
       <List>
-        <ListItem><Heading pl={3} py={2} size={"md"}>Chats</Heading></ListItem>
-        {channels.map((channel, key) => (
+        <ListItem>
+          <Heading pl={3} py={2} size={"md"}>
+            Chats
+          </Heading>
+        </ListItem>
+
+        <ListItem>
+          <Button
+            _hover={{
+              bgColor: "blackAlpha.50",
+            }}
+            _active={{
+              bgColor: "blackAlpha.200",
+            }}
+            gap={"0.25rem"}
+            leftIcon={<ChatIcon />}
+            variant={"ghost"}
+            w={"full"}
+            justifyContent={"flex-start"}
+          >
+            Main
+          </Button>
+        </ListItem>
+        {chats.map((chat, key) => (
           <ListItem key={key}>
             <Button
               _hover={{
@@ -42,7 +88,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
               w={"full"}
               justifyContent={"flex-start"}
             >
-              {channel}
+              {chat.id}
             </Button>
           </ListItem>
         ))}
