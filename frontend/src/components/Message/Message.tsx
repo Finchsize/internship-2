@@ -9,15 +9,13 @@ import {
 } from "@chakra-ui/react";
 import { forwardRef, RefObject, useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
-
 import type MessageType from "../../types/message";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
 import parseJwt from "../../lib/parseJwt";
 
-import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { MdCheck, MdClose } from "react-icons/md";
 
 type Inputs = {
