@@ -9,15 +9,13 @@ import {
 } from "@chakra-ui/react";
 import { forwardRef, RefObject, useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
-
 import type MessageType from "../../types/message";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
 import parseJwt from "../../lib/parseJwt";
 
-import { EditIcon, DeleteIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { MdCheck, MdClose } from "react-icons/md";
 
 type Inputs = {
@@ -36,7 +34,21 @@ export const Message = forwardRef(
     );
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
-      console.log(data)
+      const message = data.message.trim();
+      if (typeof JWT !== "undefined" && message !== "") {
+        await axiosInstance({
+          method: "put",
+          headers: {
+            Authorization: Cookies.get("token")!,
+          },
+          url: `/messages/${id}`,
+          data: {
+            nickname: JWT.nickname,
+            content: message,
+          },
+        }).catch((error) => console.log("Error", error.message));
+      }
+      reset();
       setEditMode(false);
     };
 
