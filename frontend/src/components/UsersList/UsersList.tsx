@@ -11,6 +11,7 @@ import {
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
+import { useParams } from "react-router-dom";
 
 type User = {
   nickname: string;
@@ -18,17 +19,27 @@ type User = {
 
 export const ChatDetails = () => {
   const [users, setUsers] = useState<User[]>([]);
-
+  const params = useParams();
   useEffect(() => {
     axiosInstance({
       method: "get",
-      url: "/users",
+      url: typeof params.id === "undefined" ? "/users" : `/channels`,
+      data: typeof params.id === "undefined" ? undefined : {},
       headers: {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      setUsers(res.data);
-      // console.log(users);
+      if (typeof params.id === "undefined") {
+        setUsers(res.data);
+      } else {
+        console.log(res.data);
+        const chat = res.data.filter((c: any) => {
+          return c.id == params.id; 
+        })[0];
+        console.log(chat);
+        setUsers([...chat.members, ...chat.owners]);
+        
+      }
     });
   }, []);
 
@@ -47,6 +58,7 @@ export const ChatDetails = () => {
         Users
       </Heading>
       <List w={"full"}>
+        
         {users.map((user, key) => (
           <ListItem key={key}>
             <Button
@@ -64,7 +76,7 @@ export const ChatDetails = () => {
               <Avatar size={"xs"}>
                 <AvatarBadge boxSize="1.25em" bg="orange.100" />
               </Avatar>
-              <Text fontSize={"md"}>{user.nickname}</Text>
+              <Text fontSize={"md"}>{typeof params.id === 'undefined' ? user.nickname : user.toString()}</Text>
             </Button>
           </ListItem>
         ))}
