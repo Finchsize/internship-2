@@ -57,6 +57,20 @@ export const Message = forwardRef(
       setEditMode(false);
     };
 
+    const deleteMessage = async () => {
+      await axiosInstance({
+        method: "delete",
+        headers: {
+          Authorization: Cookies.get("token")!,
+        },
+        data: {},
+        url:
+          typeof params.id === "undefined"
+            ? `/messages/${id}`
+            : `/messages/channels/${params.id}/${id}`,
+      });
+    };
+
     return (
       <HStack
         w={"full"}
@@ -158,6 +172,7 @@ export const Message = forwardRef(
               icon={<EditIcon w={5} h={5} />}
             />
             <IconButton
+              onClick={deleteMessage}
               _hover={{
                 bgColor: "blackAlpha.50",
               }}
