@@ -8,8 +8,30 @@ import {
   Avatar,
   AvatarBadge,
 } from "@chakra-ui/react";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import axiosInstance from "../../lib/axios";
+
+type User = {
+  nickname: string;
+};
 
 export const ChatDetails = () => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: "/users",
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    }).then((res) => {
+      setUsers(res.data);
+      // console.log(users);
+    });
+  }, []);
+
   return (
     <VStack
       h="full"
@@ -25,63 +47,27 @@ export const ChatDetails = () => {
         Users
       </Heading>
       <List w={"full"}>
-        <ListItem>
-          <Button
-            _hover={{
-              bgColor: "blackAlpha.50",
-            }}
-            _active={{
-              bgColor: "blackAlpha.200",
-            }}
-            variant={"ghost"}
-            w={"full"}
-            gap={"1rem"}
-            justifyContent={"flex-start"}
-          >
-            <Avatar size={"xs"}>
-              <AvatarBadge boxSize="1.25em" bg="green.500" />
-            </Avatar>
-            <Text fontSize={"md"}>Maciej</Text>
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Button
-            _hover={{
-              bgColor: "blackAlpha.50",
-            }}
-            _active={{
-              bgColor: "blackAlpha.200",
-            }}
-            variant={"ghost"}
-            w={"full"}
-            gap={"1rem"}
-            justifyContent={"flex-start"}
-          >
-            <Avatar size={"xs"}>
-              <AvatarBadge boxSize="1.25em" bg="green.500" />
-            </Avatar>
-            <Text fontSize={"md"}>mvrcel</Text>
-          </Button>
-        </ListItem>
-        <ListItem>
-          <Button
-            _hover={{
-              bgColor: "blackAlpha.50",
-            }}
-            _active={{
-              bgColor: "blackAlpha.200",
-            }}
-            variant={"ghost"}
-            w={"full"}
-            gap={"1rem"}
-            justifyContent={"flex-start"}
-          >
-            <Avatar size={"xs"}>
-              <AvatarBadge boxSize="1.25em" bg="green.500" />
-            </Avatar>
-            <Text fontSize={"md"}>Danielxwbt</Text>
-          </Button>
-        </ListItem>
+        {users.map((user, key) => (
+          <ListItem key={key}>
+            <Button
+              _hover={{
+                bgColor: "blackAlpha.50",
+              }}
+              _active={{
+                bgColor: "blackAlpha.200",
+              }}
+              variant={"ghost"}
+              w={"full"}
+              gap={"1rem"}
+              justifyContent={"flex-start"}
+            >
+              <Avatar size={"xs"}>
+                <AvatarBadge boxSize="1.25em" bg="orange.100" />
+              </Avatar>
+              <Text fontSize={"md"}>{user.nickname}</Text>
+            </Button>
+          </ListItem>
+        ))}
       </List>
     </VStack>
   );
