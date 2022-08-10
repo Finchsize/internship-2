@@ -8,15 +8,17 @@ import {
   FormLabel,
   FormHelperText,
 } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { BsGlobe } from "react-icons/bs";
 import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
+import parseJwt from "../../lib/parseJwt";
 export const Register = () => {
+
   const [login, setLogin] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [exception, setException] = useState("");
@@ -26,6 +28,10 @@ export const Register = () => {
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
   const [language, setLanguage] = useState<string>("ENGLISH");
+
+  const navigator = useNavigate();
+
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await axiosInstance({
@@ -62,7 +68,9 @@ export const Register = () => {
         nickname: login,
       },
     }).then((response) => {
+      setException('');
       Cookies.set("token", response.data, { expires: 7 });
+      navigator('/signin');
     });
   };
 

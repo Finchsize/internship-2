@@ -35,7 +35,6 @@ export const Dashboard = () => {
   }, []);
 
   const params = useParams();
-  console.log(params.id);
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
