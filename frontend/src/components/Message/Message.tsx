@@ -6,8 +6,10 @@ import {
   IconButton,
   Input,
   Icon,
+  SlideFade,
+  CircularProgress,
 } from "@chakra-ui/react";
-import { forwardRef, RefObject, useState } from "react";
+import { forwardRef, lazy, RefObject, Suspense, useState } from "react";
 
 import type MessageType from "../../types/message";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -19,6 +21,8 @@ import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { MdCheck, MdClose } from "react-icons/md";
 import { useParams } from "react-router";
 
+const UserDetails = lazy(() => import("../UserDetails/UserDetails"));
+
 type Inputs = {
   message: string;
 };
@@ -27,6 +31,8 @@ export const Message = forwardRef(
   ({ id, content, authorNick, createdAt }: MessageType, ref) => {
     const params = useParams();
     const [showOptions, setShowOptions] = useState<boolean>(false);
+    const [showAuthorsDetails, setShowAuthorsDetails] =
+      useState<boolean>(false);
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const { register, handleSubmit, reset } = useForm<Inputs>();
@@ -89,7 +95,21 @@ export const Message = forwardRef(
           paddingX={"1rem"}
           w={"full"}
         >
-          <Avatar size={"sm"} />
+          <VStack h="full">
+            {showAuthorsDetails && (
+              <Suspense fallback={<CircularProgress isIndeterminate />}>
+                <UserDetails
+                  nickname={authorNick}
+                  onClose={() => setShowAuthorsDetails(false)}
+                />
+              </Suspense>
+            )}
+            <Avatar
+              size={"sm"}
+              cursor={"pointer"}
+              onClick={() => setShowAuthorsDetails(true)}
+            />
+          </VStack>
           <VStack w={"full"} alignItems={"flex-start"} spacing={0}>
             <HStack>
               <Text fontSize={"sm"}>{authorNick}</Text>
