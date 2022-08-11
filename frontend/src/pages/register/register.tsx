@@ -7,40 +7,35 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  Text,
 } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsGlobe } from "react-icons/bs";
-import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
+import { useForm } from "react-hook-form";
+import Cookies from "js-cookie";
 export const Register = () => {
-  const [login, setLogin] = useState<string>();
-  const [email, setEmail] = useState<string>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const stringregex = RegExp("^[A-Z][^A-Z]*$");
+  const phoneregex = RegExp("/d{9}/");
   const [exception, setException] = useState("");
-  const [firstName, setFirstName] = useState<string>();
-  const [lastName, setLastName] = useState<string>();
-  const [phoneNumber, setphoneNumber] = useState<string>();
-  const [country, setCountry] = useState<string>();
-  const [city, setCity] = useState<string>();
-  const [language, setLanguage] = useState<string>("ENGLISH");
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await axiosInstance({
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
+  function onSubmit(data: any) {
+    axiosInstance({
       url: "/users",
       method: "POST",
-      data: {
-        nickname: login,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phoneNumber: phoneNumber,
-        country: country,
-        city: city,
-        language: language,
-      },
+      data: data,
     })
       .then((response) => {
         setException("");
@@ -55,53 +50,16 @@ export const Register = () => {
         }
       });
 
-    await axiosInstance({
+    axiosInstance({
       url: "/login",
       method: "POST",
       data: {
-        nickname: login,
+        data,
       },
     }).then((response) => {
       Cookies.set("token", response.data, { expires: 7 });
     });
-  };
-
-  const checkPhoneNumber = (): boolean => {
-    if (typeof phoneNumber === "undefined") {
-      return true;
-    }
-
-    return phoneNumber.length === 9;
-  };
-  const checkEmail = (): boolean => {
-    if (typeof email === "undefined") {
-      return true;
-    }
-    return /\S+@\S+\.\S+/.test(email);
-  };
-  const checkLogin = (): boolean => {
-    if (typeof login === "undefined") {
-      return true;
-    }
-    return login.length > 3;
-  };
-  const checkCity = (): boolean => {
-    if (typeof city === "undefined") {
-      return true;
-    }
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
-
-    return regex.test(city);
-  };
-  const checkCountry = (): boolean => {
-    if (typeof country === "undefined") {
-      return true;
-    }
-
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
-
-    return regex.test(country);
-  };
+  }
   return (
     <div>
       <Flex
@@ -128,23 +86,30 @@ export const Register = () => {
             </Heading>
 
             <Box width={"100%"}>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl my={3}>
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <ChatIcon> </ChatIcon> Nickname
                   </FormLabel>
                   <Input
-                    value={login}
-                    isInvalid={!checkLogin()}
-                    isRequired={true}
                     type="text"
-                    onChange={(e) => setLogin(e.target.value)}
+                    isInvalid={errors.nickname ? true : false}
+                    placeholder="login"
+                    {...register("nickname", {
+                      required: true,
+                      minLength: {
+                        value: 3,
+                        message: "minimum length should be 3 characters",
+                      },
+                    })}
                   />
+
                   <FormHelperText mb={"1rem"}>
                     {" "}
                     min. 3 characters
                   </FormHelperText>
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <p>
@@ -153,12 +118,19 @@ export const Register = () => {
                     </p>
                   </FormLabel>
                   <Input
-                    value={firstName}
-                    isRequired={true}
                     type="text"
-                    onChange={(e) => setFirstName(e.target.value)}
-                    mb={"1rem"}
+                    placeholder="firstName"
+                    isInvalid={errors.firstName ? true : false}
+                    {...register("firstName", {
+                      required: true,
+                      min: 3,
+                      minLength: {
+                        value: 3,
+                        message: "minimum length should be 3 characters",
+                      },
+                    })}
                   />
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <p>
@@ -167,35 +139,46 @@ export const Register = () => {
                     </p>
                   </FormLabel>
                   <Input
-                    value={lastName}
-                    isRequired={true}
                     type="text"
-                    onChange={(e) => setLastName(e.target.value)}
-                    mb={"1rem"}
+                    placeholder="lastName"
+                    isInvalid={errors.lastName ? true : false}
+                    {...register("lastName", {
+                      required: true,
+                      max: 20,
+                      min: 3,
+                      minLength: {
+                        value: 3,
+                        message: "minimum length should be 3 characters",
+                      },
+                    })}
                   />
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <EmailIcon> </EmailIcon> Email
                   </FormLabel>
                   <Input
                     type="email"
-                    isRequired={true}
-                    value={email}
-                    mb={"1rem"}
-                    isInvalid={!checkEmail()}
-                    onChange={(e) => setEmail(e.target.value)}
+                    isInvalid={errors.email ? true : false}
+                    placeholder="email"
+                    {...register("email", { required: true })}
                   />
-                  
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> Phone Number
                   </FormLabel>
                   <Input
-                    type="text"
-                    isRequired={true}
-                    value={phoneNumber}
-                    isInvalid={!checkPhoneNumber()}
-                    onChange={(e) => setphoneNumber(e.target.value)}
+                    type="tel"
+                    placeholder="phoneNumber"
+                    isInvalid={errors.phoneNumber ? true : false}
+                    {...register("phoneNumber", {
+                      required: true,
+                      pattern: {
+                        value: phoneregex,
+                        message: "",
+                      },
+                    })}
                   />
                   <FormHelperText mb={"1rem"}>
                     Please format your phone number correctly (9 digits).
@@ -206,11 +189,18 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    value={country}
-                    isInvalid={!checkCountry()}
-                    isRequired={true}
-                    mb={"1rem"}
-                    onChange={(e) => setCountry(e.target.value)}
+                    placeholder="Country"
+                    isInvalid={errors.country ? true : false}
+                    {...register("country", {
+                      required: true,
+                      max: 15,
+                      min: 4,
+                      maxLength: 15,
+                      pattern: {
+                        value: stringregex,
+                        message: "First letter should be a capital letter",
+                      },
+                    })}
                   />
                   <FormLabel fontSize={"xl"}>
                     {" "}
@@ -218,27 +208,21 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    value={city}
-                    isInvalid={!checkCity()}
-                    mb={"1rem"}
-                    isRequired={true}
-                    onChange={(e) => setCity(e.target.value)}
+                    isInvalid={errors.city ? true : false}
+                    placeholder="City"
+                    {...register("city", {
+                      required: true,
+                      pattern: {
+                        value: stringregex,
+                        message: "First letter should be a capital letter",
+                      },
+                    })}
                   />
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <Icon fontSize={25} as={TbLanguage} /> Language
                   </FormLabel>
-                  <Select
-                    value={language}
-                    isRequired
-                    mb={"1rem"}
-                    onChange={(e) => {
-                      setLanguage(e.target.value);
-                    }}
-                  >
-                    <option value={"default"} disabled>
-                      Choose a language
-                    </option>
+                  <Select {...register("userLanguage", { required: true })}>
                     <option value="ENGLISH">English</option>
                     <option value="POLISH">Polish</option>
                     <option value="GERMAN">German</option>
