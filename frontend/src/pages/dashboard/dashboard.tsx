@@ -4,13 +4,7 @@ import axiosInstance from "../../lib/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 
-import {
-  Flex,
-  HStack,
-  Input,
-  VStack,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, HStack, Input, VStack, Box } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
@@ -25,20 +19,39 @@ type Inputs = {
 
 export const Dashboard = () => {
   const navigator = useNavigate();
-  const { t } = useTranslation("dashboard")
-  const [JWT, setJWT] = useState<
-    { nickname: string; exp: number } | undefined
-  >();
+  const { t, i18n } = useTranslation("dashboard");
+  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
+    Cookies.get("token")
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
       if (typeof parseJwt(Cookies.get("token")) === "undefined") {
         navigator("/signin");
-      } else {
-        setJWT(parseJwt(Cookies.get("token")));
       }
     }, 100);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: "/users/details",
+      headers: {
+        Authorization: Cookies.get("token")!,
+      },
+      data: {
+        nickname: JWT?.nickname,
+      },
+    }).then((response) =>
+      i18n.changeLanguage(
+        response.data.userLanguage === "POLISH"
+          ? "pl"
+          : response.data.userLanguage === "ENGLISH"
+          ? "en"
+          : "de"
+      )
+    );
   }, []);
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
@@ -110,7 +123,7 @@ export const Dashboard = () => {
                 "&::-webkit-scrollbar": {
                   display: "none",
                 },
-                
+
                 /* Hide scrollbar for IE, Edge and Firefox */
                 "&": {
                   "-ms-overflow-style": "none",  /* IE and Edge */
