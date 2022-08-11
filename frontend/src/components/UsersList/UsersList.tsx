@@ -8,8 +8,10 @@ import {
   Avatar,
   AvatarBadge,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 export const ChatDetails = () => {
+  const { t } = useTranslation("userslist")
   return (
     <VStack
       h="full"
@@ -22,7 +24,7 @@ export const ChatDetails = () => {
       borderColor={"blackAlpha.200"}
     >
       <Heading as={"h1"} fontSize={"xl"} fontWeight={"medium"}>
-        Users
+        {t("userslist:heading", "Members")}
       </Heading>
       <List w={"full"}>
         <ListItem>
