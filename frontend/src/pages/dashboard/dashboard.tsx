@@ -17,6 +17,7 @@ import { ChatDetails } from "../../components/UsersList";
 import { Message } from "../../components/Message";
 import type MessageType from "../../types/message";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 type Inputs = {
   message: string;
@@ -24,6 +25,7 @@ type Inputs = {
 
 export const Dashboard = () => {
   const navigator = useNavigate();
+  const { t } = useTranslation("dashboard")
   const [JWT, setJWT] = useState<
     { nickname: string; exp: number } | undefined
   >();
@@ -135,7 +137,7 @@ export const Dashboard = () => {
               <Input
                 {...register("message")}
                 w={"full"}
-                placeholder="Message..."
+                placeholder={t("dashboard:input-placeholder", "Send message...")}
                 bgColor={"white"}
                 shadow={"sm"}
                 padding={"1rem"}
