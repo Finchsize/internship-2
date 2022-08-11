@@ -85,28 +85,6 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       </Flex>
 
       <List h={"full"} maxH={"100vh"} pl={".5rem"} overflow={"auto"}>
-        {/* <ListItem pr={".5rem"}>
-          <Link to="/">
-            <Button
-              _hover={{
-                bgColor: "blackAlpha.50",
-              }}
-              _active={{
-                bgColor: "blackAlpha.200",
-              }}
-              gap={"0.25rem"}
-              leftIcon={<ChatIcon />}
-              variant={"ghost"}
-              w={"full"}
-              justifyContent={"flex-start"}
-              onClick={() => {
-                window.location.replace("/");
-              }}
-            >
-              Main
-            </Button>
-          </Link>
-        </ListItem> */}
         {chats.map((chat, key) => (
           <ListItem key={key} pr={".5rem"}>
             <Link to={chat.id === null ? "/" : `/${chat.id}`}>
