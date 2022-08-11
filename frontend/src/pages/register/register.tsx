@@ -16,6 +16,7 @@ import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
+import { useTranslation } from "react-i18next";
 export const Register = () => {
   const [login, setLogin] = useState<string>();
   const [email, setEmail] = useState<string>();
@@ -102,6 +103,9 @@ export const Register = () => {
 
     return regex.test(country);
   };
+
+  const { t } = useTranslation("register");
+
   return (
     <div>
       <Flex
@@ -124,15 +128,14 @@ export const Register = () => {
         >
           <Stack width={"full"}>
             <Heading textAlign={"center"} size={"2xl"} pt={"4"} pb={"1rem"}>
-              Sign up
+              {t("sign-up", "Sign up")}
             </Heading>
 
             <Box width={"100%"}>
               <form onSubmit={handleSubmit}>
                 <FormControl my={3}>
                   <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <ChatIcon> </ChatIcon> Nickname
+                    <ChatIcon /> {t("nickname", "Nickname")}
                   </FormLabel>
                   <Input
                     value={login}
@@ -142,14 +145,12 @@ export const Register = () => {
                     onChange={(e) => setLogin(e.target.value)}
                   />
                   <FormHelperText mb={"1rem"}>
-                    {" "}
-                    min. 3 characters
+                    {t("min-3-characters", "min. 3 characters")}
                   </FormHelperText>
                   <FormLabel fontSize={"xl"}>
-                    {" "}
                     <p>
-                      {" "}
-                      <Icon as={HiIdentification} /> First Name{" "}
+                      <Icon as={HiIdentification} />{" "}
+                      {t("first-name", "First Name")}
                     </p>
                   </FormLabel>
                   <Input
@@ -160,10 +161,8 @@ export const Register = () => {
                     mb={"1rem"}
                   />
                   <FormLabel fontSize={"xl"}>
-                    {" "}
                     <p>
-                      {" "}
-                      <Icon as={HiOutlineIdentification} /> Last Name{" "}
+                      <Icon as={HiOutlineIdentification} /> {t("last-name")}
                     </p>
                   </FormLabel>
                   <Input
@@ -175,7 +174,7 @@ export const Register = () => {
                   />
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <EmailIcon> </EmailIcon> Email
+                    <EmailIcon /> Email
                   </FormLabel>
                   <Input
                     type="email"
@@ -185,10 +184,10 @@ export const Register = () => {
                     isInvalid={!checkEmail()}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  
+
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <PhoneIcon> </PhoneIcon> Phone Number
+                    <PhoneIcon> </PhoneIcon> {t("phone-number", "Phone Number")}
                   </FormLabel>
                   <Input
                     type="text"
@@ -198,11 +197,13 @@ export const Register = () => {
                     onChange={(e) => setphoneNumber(e.target.value)}
                   />
                   <FormHelperText mb={"1rem"}>
-                    Please format your phone number correctly (9 digits).
+                    {t(
+                      "phone-validation",
+                      "Please format your phone number correctly (9 digits)."
+                    )}
                   </FormHelperText>
                   <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <Icon as={BsGlobe} /> Country
+                    <Icon as={BsGlobe} /> {t("country", "Country")}
                   </FormLabel>
                   <Input
                     type="text"
@@ -213,8 +214,7 @@ export const Register = () => {
                     onChange={(e) => setCountry(e.target.value)}
                   />
                   <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <Icon as={MdLocationCity} /> City
+                    <Icon as={MdLocationCity} /> {t("city", "City")}
                   </FormLabel>
                   <Input
                     type="text"
@@ -226,7 +226,8 @@ export const Register = () => {
                   />
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <Icon fontSize={25} as={TbLanguage} /> Language
+                    <Icon fontSize={25} as={TbLanguage} />{" "}
+                    {t("language", "Language")}
                   </FormLabel>
                   <Select
                     value={language}
@@ -237,11 +238,11 @@ export const Register = () => {
                     }}
                   >
                     <option value={"default"} disabled>
-                      Choose a language
+                      {t("choose-language", "Choose a language")}
                     </option>
-                    <option value="ENGLISH">English</option>
-                    <option value="POLISH">Polish</option>
-                    <option value="GERMAN">German</option>
+                    <option value="ENGLISH">{t("english", "English")}</option>
+                    <option value="POLISH">{t("polish", "Polish")}</option>
+                    <option value="GERMAN">{t("german", "German")}</option>
                   </Select>
                   <Flex
                     width={"full"}
@@ -250,11 +251,11 @@ export const Register = () => {
                   >
                     <Link to="/signin">
                       <Button colorScheme="blue" variant={"link"}>
-                        Already have an account?
+                        {t("sign-in", "Already have an account?")}
                       </Button>
                     </Link>
                     <Button colorScheme="teal" type={"submit"}>
-                      Sign up
+                      {t("sign-up", "Sign up")}
                     </Button>
                   </Flex>
                 </FormControl>
