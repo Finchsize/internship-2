@@ -11,10 +11,12 @@ import {
   AvatarBadge,
   IconButton,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 const channels = ["main", "conversation", "off-topic", "music"];
 
 export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
+  const { t } = useTranslation("sidebar");
   return (
     <Flex
       flexDirection={"column"}
@@ -26,7 +28,11 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       p={"0.5rem"}
     >
       <List>
-        <ListItem><Heading pl={3} py={2} size={"md"}>Chats</Heading></ListItem>
+        <ListItem>
+          <Heading pl={3} py={2} size={"md"}>
+            {t("sidebar:heading", "Chats")}
+          </Heading>
+        </ListItem>
         {channels.map((channel, key) => (
           <ListItem key={key}>
             <Button
@@ -67,12 +73,15 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         <HStack>
           <IconButton
             variant={"ghost"}
-            aria-label="Read unread notifications"
+            aria-label={t(
+              "sidebar:read-notifications",
+              "Read unread notifications"
+            )}
             icon={<BellIcon />}
           />
           <IconButton
             variant={"ghost"}
-            aria-label="Change settings"
+            aria-label={t("sidebar:change-settings", "Change settings")}
             icon={<SettingsIcon />}
           />
         </HStack>
