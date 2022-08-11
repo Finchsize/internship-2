@@ -30,7 +30,6 @@ type Chat = {
 export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
   const [chats, setChats] = useState<Chat[]>([]);
 
-
   useEffect(() => {
     axiosInstance({
       method: "get",
@@ -43,9 +42,6 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
     });
   }, []);
 
-  
-
-
   const createChat = () => {
     axiosInstance({
       method: "post",
@@ -54,7 +50,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      chats.push(res.data);
+      setChats([...chats, res.data]);
     });
   };
 
@@ -84,6 +80,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
           </FormControl>
         </form>
       </Flex>
+
       <List h={"full"} maxH={"100vh"} pl={".5rem"} overflow={"auto"}>
         <ListItem pr={".5rem"}>
           <Link to="/">
@@ -99,11 +96,9 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
               variant={"ghost"}
               w={"full"}
               justifyContent={"flex-start"}
-              onClick={
-                () => {
-                  window.location.replace('/');
-                }
-              }
+              onClick={() => {
+                window.location.replace("/");
+              }}
             >
               Main
             </Button>
@@ -113,7 +108,6 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
           <ListItem key={key} pr={".5rem"}>
             <Link to={`/${chat.id}`}>
               <Button
-                
                 _hover={{
                   bgColor: "blackAlpha.50",
                 }}
@@ -125,11 +119,9 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
                 variant={"ghost"}
                 w={"full"}
                 justifyContent={"flex-start"}
-                onClick={
-                  () => {
-                    window.location.replace(`/${chat.id}`);
-                  }
-                }
+                onClick={() => {
+                  window.location.replace(`/${chat.id}`);
+                }}
               >
                 {chat.owners[0]}'s chat #{chat.id}
               </Button>
