@@ -19,16 +19,18 @@ import { BiCommentAdd, BiFontSize } from "react-icons/bi";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 type Chat = {
-  id: number;
-  members: string[];
-  owners: string[];
+  id: number | null;
+  members?: string[];
+  owners?: string[];
 };
 
 export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
-  const [chats, setChats] = useState<Chat[]>([]);
+  const [chats, setChats] = useState<Chat[]>([{ id: null }]);
+
+  const params = useParams();
 
   useEffect(() => {
     axiosInstance({
@@ -38,7 +40,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      setChats(res.data);
+      setChats([...chats, ...res.data]);
     });
   }, []);
 
@@ -54,6 +56,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
     });
   };
 
+  console.log(chats[0].id);
   return (
     <Flex
       flexDirection={"column"}
@@ -82,7 +85,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       </Flex>
 
       <List h={"full"} maxH={"100vh"} pl={".5rem"} overflow={"auto"}>
-        <ListItem pr={".5rem"}>
+        {/* <ListItem pr={".5rem"}>
           <Link to="/">
             <Button
               _hover={{
@@ -103,10 +106,10 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
               Main
             </Button>
           </Link>
-        </ListItem>
+        </ListItem> */}
         {chats.map((chat, key) => (
           <ListItem key={key} pr={".5rem"}>
-            <Link to={`/${chat.id}`}>
+            <Link to={chat.id === null ? "/" : `/${chat.id}`}>
               <Button
                 _hover={{
                   bgColor: "blackAlpha.50",
@@ -120,10 +123,15 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
                 w={"full"}
                 justifyContent={"flex-start"}
                 onClick={() => {
-                  window.location.replace(`/${chat.id}`);
+                  window.location.replace(
+                    chat.id === null ? "/" : `/${chat.id}`
+                  );
                 }}
               >
-                {chat.owners[0]}'s chat #{chat.id}
+                {typeof chat.members === "undefined" ||
+                typeof chat.owners === "undefined"
+                  ? "Main"
+                  : `${chat.owners[0]}'s chat #${chat.id}`}
               </Button>
             </Link>
           </ListItem>
