@@ -3,14 +3,9 @@ import parseJwt from "../../lib/parseJwt";
 import axiosInstance from "../../lib/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import {
-  Flex,
-  HStack,
-  Input,
-  VStack,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, HStack, Input, VStack, Box } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
@@ -41,6 +36,8 @@ export const Dashboard = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const params = useParams();
+
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
   const { register, handleSubmit, reset } = useForm<Inputs>();
@@ -52,7 +49,10 @@ export const Dashboard = () => {
         headers: {
           Authorization: Cookies.get("token")!,
         },
-        url: "/messages",
+        url:
+          typeof params.id === "undefined"
+            ? "/messages"
+            : `/messages/channels/${params.id}`,
         data: {
           nickname: JWT.nickname,
           content: message,
@@ -70,7 +70,10 @@ export const Dashboard = () => {
       headers: {
         Authorization: Cookies.get("token")!,
       },
-      url: "/messages",
+      url:
+        typeof params.id === "undefined"
+          ? "/messages"
+          : `/messages/channels/${params.id}`,
     }).then((response) => {
       setMessages(response.data);
     });
@@ -110,12 +113,12 @@ export const Dashboard = () => {
                 "&::-webkit-scrollbar": {
                   display: "none",
                 },
-                
+
                 /* Hide scrollbar for IE, Edge and Firefox */
                 "&": {
-                  "-ms-overflow-style": "none",  /* IE and Edge */
-                  "scrollbar-width": "none",  /* Firefox */
-                }
+                  "-ms-overflow-style": "none" /* IE and Edge */,
+                  "scrollbar-width": "none" /* Firefox */,
+                },
               }}
             >
               {messages.map((message, key) => (
