@@ -20,22 +20,40 @@ type Inputs = {
 
 export const Dashboard = () => {
   const navigator = useNavigate();
-  const { t } = useTranslation("dashboard")
-  const [JWT, setJWT] = useState<
-    { nickname: string; exp: number } | undefined
-  >();
+  const { t, i18n } = useTranslation("dashboard");
+  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
+    Cookies.get("token")
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
       if (typeof parseJwt(Cookies.get("token")) === "undefined") {
         navigator("/signin");
-      } else {
-        setJWT(parseJwt(Cookies.get("token")));
       }
     }, 100);
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: "/users/details",
+      headers: {
+        Authorization: Cookies.get("token")!,
+      },
+      data: {
+        nickname: JWT?.nickname,
+      },
+    }).then((response) =>
+      i18n.changeLanguage(
+        response.data.userLanguage === "POLISH"
+          ? "pl"
+          : response.data.userLanguage === "ENGLISH"
+          ? "en"
+          : "de"
+      )
+    );
+  }, []);
   const params = useParams();
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
