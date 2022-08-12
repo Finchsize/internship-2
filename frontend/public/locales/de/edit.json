@@ -1,0 +1,18 @@
+{
+  "title": "Bearbeiten",
+  "subtitle": "Sie Ihr Chat™ Profil",
+  "nickname": "Spitzname",
+  "min-3-characters": "mindestens 3 Zeichen",
+  "first-name": "Vorname",
+  "last-name": "Nachname",
+  "phone-number": "Telefonnummer",
+  "phone-validation": "Bitte formatieren Sie Ihre Telefonnummer korrekt (9 Ziffern).",
+  "country": "Land",
+  "city": "Stadt",
+  "language": "Sprache",
+  "choose-language": "Wählen Sie eine Sprache",
+  "english": "Englisch",
+  "polish": "Polnisch",
+  "german": "Deutsch",
+  "confirm": "Konfirmieren"
+}

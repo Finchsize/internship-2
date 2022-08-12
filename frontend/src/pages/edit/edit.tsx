@@ -20,6 +20,7 @@ import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
 
 export const Edit = () => {
   const [login, setLogin] = useState<string>();
@@ -65,16 +66,15 @@ export const Edit = () => {
         phoneNumber: phoneNumber,
         country: country,
         city: city,
-        email : 'LOLOOLOLOLO@gmail.com',
+        email: "LOLOOLOLOLO@gmail.com",
         language: language,
-        timeZone: 'string',
+        timeZone: "string",
         showFirstNameAndLastName: true,
         showEmail: true,
         showPhoneNumber: true,
         showAddress: true,
         deleted: true,
-        userStatus: 'OFFLINE'
-
+        userStatus: "OFFLINE",
       },
     });
   };
@@ -108,7 +108,7 @@ export const Edit = () => {
 
     return regex.test(country);
   };
-  console.log(login);
+  const { t } = useTranslation("edit");
   return (
     <div>
       <Flex
@@ -132,22 +132,14 @@ export const Edit = () => {
           <Stack width={"full"}>
             <Box>
               <Heading textAlign={"center"} size={"3xl"} pt={"4"}>
-                <h1>Edit</h1>
+                <h1>{t("title", "Edit")}</h1>
               </Heading>
               <Text
                 fontWeight={"semibold"}
                 fontSize={"1.25rem"}
                 textAlign={"center"}
               >
-                {" "}
-                your profile
-              </Text>
-              <Text
-                fontWeight={"semibold"}
-                fontSize={"1.25rem"}
-                textAlign={"center"}
-              >
-                information
+                {t("subtitle", "your profile information")}
               </Text>{" "}
             </Box>
             <Box width={"100%"}>
@@ -155,7 +147,7 @@ export const Edit = () => {
                 <FormControl my={3}>
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <ChatIcon> </ChatIcon> Nickname
+                    <ChatIcon> </ChatIcon> {t("nickname", "Nickname")}
                   </FormLabel>
                   <Input
                     isInvalid={!checkLogin()}
@@ -165,15 +157,15 @@ export const Edit = () => {
                     onChange={(e) => setLogin(e.target.value)}
                   />
                   <FormHelperText mb={"1rem"}>
-                    {" "}
-                    min. 3 characters
+                    {t("min-3-characters", "min. 3 characters")}
                   </FormHelperText>
 
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <p>
                       {" "}
-                      <Icon as={HiIdentification} /> First Name{" "}
+                      <Icon as={HiIdentification} />{" "}
+                      {t("first-name", "First Name")}
                     </p>
                   </FormLabel>
                   <Input
@@ -187,7 +179,8 @@ export const Edit = () => {
                     {" "}
                     <p>
                       {" "}
-                      <Icon as={HiOutlineIdentification} /> Last Name{" "}
+                      <Icon as={HiOutlineIdentification} />{" "}
+                      {t("last-name", "Last name")}
                     </p>
                   </FormLabel>
                   <Input
@@ -201,7 +194,7 @@ export const Edit = () => {
 
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <PhoneIcon> </PhoneIcon> Phone Number
+                    <PhoneIcon> </PhoneIcon> {t("phone-number", "Phone Number")}
                   </FormLabel>
                   <Input
                     type="text"
@@ -212,11 +205,14 @@ export const Edit = () => {
                     onChange={(e) => setphoneNumber(e.target.value)}
                   />
                   <FormHelperText mb={"1rem"}>
-                    Please format your phone number correctly (9 digits).
+                    {t(
+                      "phone-validation",
+                      "Please format your phone number correctly (9 digits)."
+                    )}
                   </FormHelperText>
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <Icon as={BsGlobe} /> Country
+                    <Icon as={BsGlobe} /> {t("country", "Country")}
                   </FormLabel>
                   <Input
                     type="text"
@@ -229,7 +225,7 @@ export const Edit = () => {
                   />
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <Icon as={MdLocationCity} /> City
+                    <Icon as={MdLocationCity} /> {t("city", "City")}
                   </FormLabel>
                   <Input
                     type="text"
@@ -243,7 +239,8 @@ export const Edit = () => {
 
                   <FormLabel fontSize={"xl"}>
                     {" "}
-                    <Icon fontSize={25} as={TbLanguage} /> Language
+                    <Icon fontSize={25} as={TbLanguage} />{" "}
+                    {t("language", "Language")}
                   </FormLabel>
                   <Select
                     value={language}
@@ -255,11 +252,11 @@ export const Edit = () => {
                     defaultValue={language}
                   >
                     <option value={"default"} disabled>
-                      Choose a language
+                      {t("choose-language", "Choose a language")}
                     </option>
-                    <option value="ENGLISH">English</option>
-                    <option value="POLISH">Polish</option>
-                    <option value="GERMAN">German</option>
+                    <option value="ENGLISH">{t("english", "English")}</option>
+                    <option value="POLISH">{t("polish", "Polish")}</option>
+                    <option value="GERMAN">{t("german", "German")}</option>
                   </Select>
                   <Flex
                     width={"full"}
@@ -267,7 +264,7 @@ export const Edit = () => {
                     justifyContent={"right"}
                   >
                     <Button colorScheme="teal" type={"submit"}>
-                      Confirm
+                      {t("confirm", "Confirm")}
                     </Button>
                   </Flex>
                 </FormControl>
