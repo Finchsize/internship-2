@@ -8,6 +8,7 @@ import {
   Avatar,
   AvatarBadge,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
@@ -18,6 +19,7 @@ type User = {
 };
 
 export const ChatDetails = () => {
+  const { t } = useTranslation("userslist");
   const [users, setUsers] = useState<User[]>([]);
   const params = useParams();
   useEffect(() => {
@@ -34,11 +36,10 @@ export const ChatDetails = () => {
       } else {
         console.log(res.data);
         const chat = res.data.filter((c: any) => {
-          return c.id == params.id; 
+          return c.id == params.id;
         })[0];
         console.log(chat);
         setUsers([...chat.members, ...chat.owners]);
-        
       }
     });
   }, []);
@@ -55,10 +56,9 @@ export const ChatDetails = () => {
       borderColor={"blackAlpha.200"}
     >
       <Heading as={"h1"} fontSize={"xl"} fontWeight={"medium"}>
-        Users
+        {t("userslist:heading", "Members")}
       </Heading>
       <List w={"full"}>
-        
         {users.map((user, key) => (
           <ListItem key={key}>
             <Button
@@ -76,7 +76,11 @@ export const ChatDetails = () => {
               <Avatar size={"xs"}>
                 <AvatarBadge boxSize="1.25em" bg="orange.100" />
               </Avatar>
-              <Text fontSize={"md"}>{typeof params.id === 'undefined' ? user.nickname : user.toString()}</Text>
+              <Text fontSize={"md"}>
+                {typeof params.id === "undefined"
+                  ? user.nickname
+                  : user.toString()}
+              </Text>
             </Button>
           </ListItem>
         ))}

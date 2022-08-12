@@ -51,11 +51,14 @@ public class Channel {
     @JoinColumn(name = "channel_id")
     List<Message> messages;
 
+    Boolean directMessage;
+
     protected Channel() {
         this.id = 0;
         this.owners = new ArrayList<>();
         this.members = new ArrayList<>();
         this.messages = new ArrayList<>();
+        this.directMessage = null;
     }
 
 }

@@ -12,9 +12,11 @@ import { FormEvent, useId, useState } from "react";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../lib/axios";
+import { useTranslation } from "react-i18next";
 
 export const Signin = () => {
-  const navigator = useNavigate()
+  const { t } = useTranslation("signin");
+  const navigator = useNavigate();
   const loginId = useId();
   const [exception, setException] = useState("");
 
@@ -72,7 +74,7 @@ export const Signin = () => {
                 size="2xl"
                 color={"blackAlpha.900"}
               >
-                Sign in
+                {t("signin:title", "Sign in")}
               </Heading>
               <Heading
                 w={"full"}
@@ -81,7 +83,7 @@ export const Signin = () => {
                 size={"md"}
                 color={"blackAlpha.600"}
               >
-                to your Chat™ account
+                {t("signin:subtitle", "to your Chat™ account")}
               </Heading>
             </Flex>
 
@@ -106,11 +108,11 @@ export const Signin = () => {
             >
               <Link to="/register">
                 <Button colorScheme="blue" variant={"link"}>
-                  Don't have an account?
+                  {t("signin:no-account", "Don't have an account?")}
                 </Button>
               </Link>
               <Button colorScheme="blue" type={"submit"}>
-                Sign in
+                {t("signin:title", "Sign in")}
               </Button>
             </Flex>
           </Flex>
