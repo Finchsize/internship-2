@@ -25,8 +25,20 @@ public class ChannelService {
         final var channel = Channel.builder()
                 .owners(List.of(user))
                 .members(List.of())
+                .directMessage(false)
                 .build();
+        return channelRepository.save(channel);
+    }
 
+    public Channel saveChannel(User user, Boolean directMessage) {
+        if(directMessage == null) {
+            return saveChannel(user);
+        }
+        final var channel = Channel.builder()
+            .owners(List.of(user))
+            .members(List.of())
+            .directMessage(directMessage)
+            .build();
         return channelRepository.save(channel);
     }
 

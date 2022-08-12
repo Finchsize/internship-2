@@ -17,6 +17,7 @@ import parseJwt from "../../lib/parseJwt";
 
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { MdCheck, MdClose } from "react-icons/md";
+import { useParams } from "react-router";
 
 type Inputs = {
   message: string;
@@ -24,6 +25,7 @@ type Inputs = {
 
 export const Message = forwardRef(
   ({ id, content, authorNick, createdAt }: MessageType, ref) => {
+    const params = useParams();
     const [showOptions, setShowOptions] = useState<boolean>(false);
     const [editMode, setEditMode] = useState<boolean>(false);
 
@@ -41,7 +43,10 @@ export const Message = forwardRef(
           headers: {
             Authorization: Cookies.get("token")!,
           },
-          url: `/messages/${id}`,
+          url:
+            typeof params.id === "undefined"
+              ? `/messages/${id}`
+              : `/messages/channels/${params.id}/${id}`,
           data: {
             nickname: JWT.nickname,
             content: message,
@@ -50,6 +55,20 @@ export const Message = forwardRef(
       }
       reset();
       setEditMode(false);
+    };
+
+    const deleteMessage = async () => {
+      await axiosInstance({
+        method: "delete",
+        headers: {
+          Authorization: Cookies.get("token")!,
+        },
+        data: {},
+        url:
+          typeof params.id === "undefined"
+            ? `/messages/${id}`
+            : `/messages/channels/${params.id}/${id}`,
+      });
     };
 
     return (
@@ -153,6 +172,7 @@ export const Message = forwardRef(
               icon={<EditIcon w={5} h={5} />}
             />
             <IconButton
+              onClick={deleteMessage}
               _hover={{
                 bgColor: "blackAlpha.50",
               }}

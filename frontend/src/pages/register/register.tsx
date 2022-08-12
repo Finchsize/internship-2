@@ -12,13 +12,13 @@ import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BsGlobe } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import { Link, useNavigate } from "react-router-dom";
 import { HiOutlineIdentification, HiIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
 import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import { useForm } from "react-hook-form";
-import Cookies from "js-cookie";
 
 interface RegisterFormValues {
   nickname: string;
@@ -38,6 +38,8 @@ export const Register = () => {
   } = useForm<RegisterFormValues>();
 
   const stringRegex = RegExp("^[A-Z][^A-Z]*$");
+
+  const navigate = useNavigate();
 
   const [exception, setException] = useState("");
   useEffect(() => {
@@ -69,7 +71,9 @@ export const Register = () => {
         nickname: data.nickname,
       },
     }).then((response) => {
+      setException("");
       Cookies.set("token", response.data, { expires: 7 });
+      navigate("/signin");
     });
   }
   return (
