@@ -3,14 +3,9 @@ import parseJwt from "../../lib/parseJwt";
 import axiosInstance from "../../lib/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import {
-  Flex,
-  HStack,
-  Input,
-  VStack,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, HStack, Input, VStack, Box } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
@@ -25,21 +20,41 @@ type Inputs = {
 
 export const Dashboard = () => {
   const navigator = useNavigate();
-  const { t } = useTranslation("dashboard")
-  const [JWT, setJWT] = useState<
-    { nickname: string; exp: number } | undefined
-  >();
+  const { t, i18n } = useTranslation("dashboard");
+  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
+    Cookies.get("token")
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {
       if (typeof parseJwt(Cookies.get("token")) === "undefined") {
         navigator("/signin");
-      } else {
-        setJWT(parseJwt(Cookies.get("token")));
       }
     }, 100);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    axiosInstance({
+      method: "get",
+      url: "/users/details",
+      headers: {
+        Authorization: Cookies.get("token")!,
+      },
+      data: {
+        nickname: JWT?.nickname,
+      },
+    }).then((response) =>
+      i18n.changeLanguage(
+        response.data.userLanguage === "POLISH"
+          ? "pl"
+          : response.data.userLanguage === "ENGLISH"
+          ? "en"
+          : "de"
+      )
+    );
+  }, []);
+  const params = useParams();
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
@@ -52,7 +67,10 @@ export const Dashboard = () => {
         headers: {
           Authorization: Cookies.get("token")!,
         },
-        url: "/messages",
+        url:
+          typeof params.id === "undefined"
+            ? "/messages"
+            : `/messages/channels/${params.id}`,
         data: {
           nickname: JWT.nickname,
           content: message,
@@ -70,7 +88,10 @@ export const Dashboard = () => {
       headers: {
         Authorization: Cookies.get("token")!,
       },
-      url: "/messages",
+      url:
+        typeof params.id === "undefined"
+          ? "/messages"
+          : `/messages/channels/${params.id}`,
     }).then((response) => {
       setMessages(response.data);
     });
@@ -110,12 +131,12 @@ export const Dashboard = () => {
                 "&::-webkit-scrollbar": {
                   display: "none",
                 },
-                
+
                 /* Hide scrollbar for IE, Edge and Firefox */
                 "&": {
-                  "-ms-overflow-style": "none",  /* IE and Edge */
-                  "scrollbar-width": "none",  /* Firefox */
-                }
+                  "-ms-overflow-style": "none" /* IE and Edge */,
+                  "scrollbar-width": "none" /* Firefox */,
+                },
               }}
             >
               {messages.map((message, key) => (

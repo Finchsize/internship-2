@@ -1,0 +1,18 @@
+{
+  "title": "Edytuj",
+  "subtitle": "swój profil Chat™",
+  "nickname": "Nick",
+  "min-3-characters": "min. 3 znaki",
+  "first-name": "Imię",
+  "last-name": "Nazwisko",
+  "phone-number": "Numer telefonu",
+  "phone-validation": "Proszę podać numer telefonu w poprawnym formacie (9 cyfr).",
+  "country": "Kraj",
+  "city": "Miasto",
+  "language": "Język",
+  "choose-language": "Wybierz język",
+  "english": "Angielski",
+  "polish": "Polski",
+  "german": "Niemiecki",
+  "confirm": "Potwierdź"
+}
