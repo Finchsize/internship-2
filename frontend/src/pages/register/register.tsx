@@ -1,14 +1,15 @@
-import { Box, Flex, Button, Icon, Select } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Button,
+  Icon,
+  Select,
+  FormErrorMessage,
+} from "@chakra-ui/react";
 import { Heading, Stack } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
 import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
-import {
-  Input,
-  FormControl,
-  FormLabel,
-  FormHelperText,
-  Text,
-} from "@chakra-ui/react";
+import { Input, FormControl, FormLabel } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BsGlobe } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -18,21 +19,32 @@ import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
+
+interface RegisterFormValues {
+  nickname: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  country: string;
+  city: string;
+  language: string;
+}
 export const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<RegisterFormValues>();
 
-  const stringregex = RegExp("^[A-Z][^A-Z]*$");
-  const phoneregex = RegExp("/d{9}/");
+  const stringRegex = RegExp("^[A-Z][^A-Z]*$");
+
   const [exception, setException] = useState("");
   useEffect(() => {
     console.log(errors);
   }, [errors]);
-  function onSubmit(data: any) {
-    axiosInstance({
+  async function onSubmit(data: any) {
+    await axiosInstance({
       url: "/users",
       method: "POST",
       data: data,
@@ -50,11 +62,11 @@ export const Register = () => {
         }
       });
 
-    axiosInstance({
+    await axiosInstance({
       url: "/login",
       method: "POST",
       data: {
-        data,
+        nickname: data.nickname,
       },
     }).then((response) => {
       Cookies.set("token", response.data, { expires: 7 });
@@ -75,7 +87,7 @@ export const Register = () => {
           border={"1px"}
           borderColor={"gray.200"}
           width="500px"
-          height="1000px"
+          height="1100px"
           justifyContent="center"
           borderRadius={30}
           padding={8}
@@ -87,14 +99,13 @@ export const Register = () => {
 
             <Box width={"100%"}>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <FormControl my={3}>
+                <FormControl my={3} isInvalid={!!errors.nickname}>
                   <FormLabel fontSize={"xl"}>
                     {" "}
                     <ChatIcon> </ChatIcon> Nickname
                   </FormLabel>
                   <Input
                     type="text"
-                    isInvalid={errors.nickname ? true : false}
                     placeholder="login"
                     {...register("nickname", {
                       required: true,
@@ -104,13 +115,11 @@ export const Register = () => {
                       },
                     })}
                   />
+                  <FormErrorMessage>
+                    {errors?.nickname && errors.nickname.message}
+                  </FormErrorMessage>
 
-                  <FormHelperText mb={"1rem"}>
-                    {" "}
-                    min. 3 characters
-                  </FormHelperText>
-
-                  <FormLabel fontSize={"xl"}>
+                  <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <p>
                       {" "}
@@ -120,7 +129,6 @@ export const Register = () => {
                   <Input
                     type="text"
                     placeholder="firstName"
-                    isInvalid={errors.firstName ? true : false}
                     {...register("firstName", {
                       required: true,
                       min: 3,
@@ -130,8 +138,11 @@ export const Register = () => {
                       },
                     })}
                   />
+                  <FormErrorMessage>
+                    {errors?.firstName && errors.firstName.message}
+                  </FormErrorMessage>
 
-                  <FormLabel fontSize={"xl"}>
+                  <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <p>
                       {" "}
@@ -141,7 +152,6 @@ export const Register = () => {
                   <Input
                     type="text"
                     placeholder="lastName"
-                    isInvalid={errors.lastName ? true : false}
                     {...register("lastName", {
                       required: true,
                       max: 20,
@@ -152,82 +162,93 @@ export const Register = () => {
                       },
                     })}
                   />
-
-                  <FormLabel fontSize={"xl"}>
+                  <FormErrorMessage>
+                    {errors?.lastName && errors.lastName.message}
+                  </FormErrorMessage>
+                  <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <EmailIcon> </EmailIcon> Email
                   </FormLabel>
                   <Input
                     type="email"
-                    isInvalid={errors.email ? true : false}
                     placeholder="email"
                     {...register("email", { required: true })}
                   />
+                  <FormErrorMessage>
+                    {errors?.email && errors.email.message}
+                  </FormErrorMessage>
 
-                  <FormLabel fontSize={"xl"}>
+                  <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> Phone Number
                   </FormLabel>
                   <Input
                     type="tel"
                     placeholder="phoneNumber"
-                    isInvalid={errors.phoneNumber ? true : false}
                     {...register("phoneNumber", {
                       required: true,
                       pattern: {
-                        value: phoneregex,
-                        message: "",
+                        value: new RegExp("[0-9]{9}"),
+                        message: "invalid phone number",
                       },
                     })}
                   />
-                  <FormHelperText mb={"1rem"}>
-                    Please format your phone number correctly (9 digits).
-                  </FormHelperText>
-                  <FormLabel fontSize={"xl"}>
+                  <FormErrorMessage>
+                    {errors?.phoneNumber && errors.phoneNumber.message}
+                  </FormErrorMessage>
+
+                  <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <Icon as={BsGlobe} /> Country
                   </FormLabel>
                   <Input
                     type="text"
                     placeholder="Country"
-                    isInvalid={errors.country ? true : false}
                     {...register("country", {
                       required: true,
                       max: 15,
                       min: 4,
                       maxLength: 15,
                       pattern: {
-                        value: stringregex,
-                        message: "First letter should be a capital letter",
+                        value: stringRegex,
+                        message:
+                          "First letter should be a capital letter, followed by lower case letters.",
                       },
                     })}
                   />
-                  <FormLabel fontSize={"xl"}>
+                  <FormErrorMessage>
+                    {errors?.country && errors.country.message}
+                  </FormErrorMessage>
+                  <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <Icon as={MdLocationCity} /> City
                   </FormLabel>
                   <Input
                     type="text"
-                    isInvalid={errors.city ? true : false}
                     placeholder="City"
                     {...register("city", {
                       required: true,
                       pattern: {
-                        value: stringregex,
-                        message: "First letter should be a capital letter",
+                        value: stringRegex,
+                        message:
+                          "First letter should be a capital letter, followed by lower case letters.",
                       },
                     })}
                   />
-                  <FormLabel fontSize={"xl"}>
+                  <FormErrorMessage>
+                    {errors?.city && errors.city.message}
+                  </FormErrorMessage>
+                  <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <Icon fontSize={25} as={TbLanguage} /> Language
                   </FormLabel>
-                  <Select {...register("userLanguage", { required: true })}>
+                  <Select {...register("language", { required: true })}>
                     <option value="ENGLISH">English</option>
                     <option value="POLISH">Polish</option>
                     <option value="GERMAN">German</option>
                   </Select>
                   <Flex
+                    pt={"1rem"}
                     width={"full"}
                     alignItems={"center"}
                     justifyContent={"space-between"}
