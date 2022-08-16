@@ -126,14 +126,18 @@ export const Register = () => {
                       },
                     })}
                   />
+                  {!errors.nickname && (
+                    <FormHelperText mb={"1rem"}>
+                      {t("min-3-characters", "min. 3 characters")}
+                    </FormHelperText>
+                  )}
 
-                  <FormHelperText mb={"1rem"}>
-                    {t("min-3-characters", "min. 3 characters")}
-                  </FormHelperText>
                   <FormErrorMessage>
                     {errors?.nickname && errors.nickname.message}
                   </FormErrorMessage>
-                  <FormLabel pt={"1rem"} fontSize={"xl"}>
+                </FormControl>
+                <FormControl isInvalid={!!errors.firstName}>
+                  <FormLabel mt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <p>
                       <Icon as={HiIdentification} />{" "}
@@ -152,10 +156,13 @@ export const Register = () => {
                       },
                     })}
                   />
+
                   <FormErrorMessage>
                     {errors?.firstName && errors.firstName.message}
                   </FormErrorMessage>
-                  <FormLabel pt={"1rem"} fontSize={"xl"}>
+                </FormControl>
+                <FormControl isInvalid={!!errors.lastName}>
+                  <FormLabel mt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <p>
                       <Icon as={HiOutlineIdentification} /> {t("last-name")}
@@ -174,10 +181,13 @@ export const Register = () => {
                       },
                     })}
                   />
+
                   <FormErrorMessage>
                     {errors?.lastName && errors.lastName.message}
                   </FormErrorMessage>
-                  <FormLabel pt={"1rem"} fontSize={"xl"}>
+                </FormControl>
+                <FormControl isInvalid={!!errors.email}>
+                  <FormLabel mt={"1rem"} fontSize={"xl"}>
                     {" "}
                     <EmailIcon /> Email
                   </FormLabel>
@@ -186,11 +196,13 @@ export const Register = () => {
                     placeholder="email"
                     {...register("email", { required: true })}
                   />
+
                   <FormErrorMessage>
                     {errors?.email && errors.email.message}
                   </FormErrorMessage>
-
-                  <FormLabel pt={"1rem"} fontSize={"xl"}>
+                </FormControl>
+                <FormControl isInvalid={!!errors.phoneNumber}>
+                  <FormLabel fontSize={"xl"} mt={"1rem"}>
                     {" "}
                     <PhoneIcon> </PhoneIcon> {t("phone-number", "Phone Number")}
                   </FormLabel>
@@ -205,16 +217,13 @@ export const Register = () => {
                       },
                     })}
                   />
-                  <FormHelperText mb={"1rem"}>
-                    {t(
-                      "phone-validation",
-                      "Please format your phone number correctly (9 digits)."
-                    )}
-                  </FormHelperText>
+
                   <FormErrorMessage>
                     {errors?.phoneNumber && errors.phoneNumber.message}
                   </FormErrorMessage>
-                  <FormLabel fontSize={"xl"}>
+                </FormControl>
+                <FormControl isInvalid={!!errors.country}>
+                  <FormLabel fontSize={"xl"} mt={"1rem"}>
                     <Icon as={BsGlobe} /> {t("country", "Country")}
                   </FormLabel>
                   <Input
@@ -232,13 +241,14 @@ export const Register = () => {
                       },
                     })}
                   />
-                  <FormLabel fontSize={"xl"}>
-                    <Icon as={MdLocationCity} /> {t("city", "City")}
-                  </FormLabel>
                   <FormErrorMessage>
                     {errors?.country && errors.country.message}
                   </FormErrorMessage>
-
+                  <FormLabel fontSize={"xl"} mt={"1rem"}>
+                    <Icon as={MdLocationCity} /> {t("city", "City")}
+                  </FormLabel>
+                </FormControl>
+                <FormControl isInvalid={!!errors.city}>
                   <Input
                     type="text"
                     placeholder="City"
@@ -254,38 +264,39 @@ export const Register = () => {
                   <FormErrorMessage>
                     {errors?.city && errors.city.message}
                   </FormErrorMessage>
-                  <FormLabel pt={"1rem"} fontSize={"xl"}>
-                    {" "}
-                    <Icon fontSize={25} as={TbLanguage} />{" "}
-                    {t("language", "Language")}
-                  </FormLabel>
-                  <Select
-                    mb={"1rem"}
-                    {...register("language", { required: true })}
-                  >
-                    <option value={"default"} disabled>
-                      {t("choose-language", "Choose a language")}
-                    </option>
-                    <option value="ENGLISH">{t("english", "English")}</option>
-                    <option value="POLISH">{t("polish", "Polish")}</option>
-                    <option value="GERMAN">{t("german", "German")}</option>
-                  </Select>
-                  <Flex
-                    pt={"1rem"}
-                    width={"full"}
-                    alignItems={"center"}
-                    justifyContent={"space-between"}
-                  >
-                    <Link to="/signin">
-                      <Button colorScheme="blue" variant={"link"}>
-                        {t("sign-in", "Already have an account?")}
-                      </Button>
-                    </Link>
-                    <Button colorScheme="teal" type={"submit"}>
-                      {t("sign-up", "Sign up")}
-                    </Button>
-                  </Flex>
                 </FormControl>
+
+                <FormLabel mt={"1rem"} fontSize={"xl"}>
+                  {" "}
+                  <Icon fontSize={25} as={TbLanguage} />{" "}
+                  {t("language", "Language")}
+                </FormLabel>
+                <Select
+                  mb={"1rem"}
+                  {...register("language", { required: true })}
+                >
+                  <option value={"default"} disabled>
+                    {t("choose-language", "Choose a language")}
+                  </option>
+                  <option value="ENGLISH">{t("english", "English")}</option>
+                  <option value="POLISH">{t("polish", "Polish")}</option>
+                  <option value="GERMAN">{t("german", "German")}</option>
+                </Select>
+                <Flex
+                  pt={"1rem"}
+                  width={"full"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                >
+                  <Link to="/signin">
+                    <Button colorScheme="blue" variant={"link"}>
+                      {t("sign-in", "Already have an account?")}
+                    </Button>
+                  </Link>
+                  <Button colorScheme="teal" type={"submit"}>
+                    {t("sign-up", "Sign up")}
+                  </Button>
+                </Flex>
               </form>
             </Box>
           </Stack>
