@@ -277,7 +277,7 @@ export const Register = () => {
                     mb={"1rem"}
                     {...register("language", { required: true })}
                   >
-                    <option value={"default"} disabled>
+                    <option value={"default"} selected disabled>
                       {t("choose-language", "Choose a language")}
                     </option>
                     <option value="ENGLISH">{t("english", "English")}</option>
