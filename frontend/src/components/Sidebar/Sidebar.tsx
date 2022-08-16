@@ -14,21 +14,31 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Portal,
+  VStack,
+  Grid,
+  CloseButton,
 } from "@chakra-ui/react";
 import { BiCommentAdd, BiFontSize } from "react-icons/bi";
+import { MdChat, MdSend } from "react-icons/md";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ChatCreate } from "../ChatCreate";
 
 type Chat = {
   id: number | null;
   members?: string[];
   owners?: string[];
+  directMessage?: boolean;
 };
 
 export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
+  const [showChannelCreationPopup, setShowChannelCreationPopup] =
+    useState(false);
+
   const [chats, setChats] = useState<Chat[]>([{ id: null }]);
 
   const params = useParams();
@@ -45,7 +55,14 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
     });
   }, []);
 
-  const createChat = () => {
+  const createChat = ({
+    users,
+    directMessage,
+  }: {
+    users?: string[];
+    directMessage: boolean;
+  }) => {
+    setShowChannelCreationPopup(directMessage);
     axiosInstance({
       method: "post",
       url: "/channels",
@@ -78,13 +95,17 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
           {t("sidebar:heading", "Chats")}
         </Heading>
 
-        <form onSubmit={createChat}>
-          <FormControl>
-            <Button shadow={"none"} bgColor={"transparent"} type={"submit"}>
-              <Icon as={BiCommentAdd}></Icon>
-            </Button>
-          </FormControl>
-        </form>
+        <Button
+          shadow={"none"}
+          bgColor={"transparent"}
+          type={"submit"}
+          onClick={() => setShowChannelCreationPopup(true)}
+        >
+          <Icon as={BiCommentAdd} />
+        </Button>
+        {showChannelCreationPopup && (
+          <ChatCreate onClose={() => setShowChannelCreationPopup(false)} />
+        )}
       </Flex>
 
       <List h={"full"} maxH={"100vh"} pl={".5rem"} overflow={"auto"}>
