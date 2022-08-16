@@ -35,13 +35,12 @@ type UserDetailsType = {
   userStatus: Status;
 };
 
-const UserDetails = ({
-  nickname,
-  onClose,
-}: {
+interface UserDetailsProps {
   nickname: string;
   onClose: () => void;
-}) => {
+}
+
+const UserDetails = ({ nickname, onClose }: UserDetailsProps) => {
   const [UserDetails, setUserDetails] = useState<UserDetailsType>();
   useEffect(() => {
     axiosInstance({
