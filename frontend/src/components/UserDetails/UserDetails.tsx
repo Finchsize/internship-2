@@ -14,6 +14,8 @@ import {
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
+import Language from "../../types/language";
+import Status from "../../types/status";
 
 type UserDetailsType = {
   city: string;
@@ -29,8 +31,8 @@ type UserDetailsType = {
   showFirstNameAndLastName: boolean;
   showPhoneNumber: boolean;
   timeZone: string;
-  userLanguage: "POLISH" | "ENGLISH" | "GERMAN";
-  userStatus: "OFFLINE" | "ONLINE";
+  userLanguage: Language;
+  userStatus: Status;
 };
 
 const UserDetails = ({
