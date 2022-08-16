@@ -35,30 +35,25 @@ type UserDetailsType = {
   userStatus: Status;
 };
 
-const UserDetails = ({
-  nickname,
-  onClose,
-}: {
+interface UserDetailsProps {
   nickname: string;
   onClose: () => void;
-}) => {
-  const [UserDetails, setUserDetails] = useState<UserDetailsType>({
-    nickname: "string",
-    firstName: "string",
-    lastName: "string",
-    email: "string@string.string",
-    phoneNumber: "string",
-    country: "string",
-    city: "string",
-    userStatus: "OFFLINE",
-    userLanguage: "POLISH",
-    timeZone: "GMT",
-    showFirstNameAndLastName: true,
-    showEmail: true,
-    showPhoneNumber: true,
-    showAddress: true,
-    deleted: true,
-  });
+}
+
+const UserDetails = ({ nickname, onClose }: UserDetailsProps) => {
+  const [UserDetails, setUserDetails] = useState<UserDetailsType>();
+  useEffect(() => {
+    axiosInstance({
+      method: "GET",
+      url: "/users/details",
+      data: {
+        nickname: nickname,
+      },
+      headers: {
+        authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    }).then((response) => setUserDetails(response.data));
+  }, []);
   return (
     <Portal>
       <Flex
