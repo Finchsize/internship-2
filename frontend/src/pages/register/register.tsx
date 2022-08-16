@@ -117,7 +117,6 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    placeholder="login"
                     {...register("nickname", {
                       required: true,
                       minLength: {
@@ -146,7 +145,6 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    placeholder="firstName"
                     {...register("firstName", {
                       required: true,
                       min: 3,
@@ -170,7 +168,6 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    placeholder="lastName"
                     {...register("lastName", {
                       required: true,
                       max: 20,
@@ -193,7 +190,6 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="email"
-                    placeholder="email"
                     {...register("email", { required: true })}
                   />
 
@@ -208,7 +204,6 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="tel"
-                    placeholder="phoneNumber"
                     {...register("phoneNumber", {
                       required: true,
                       pattern: {
@@ -228,7 +223,6 @@ export const Register = () => {
                   </FormLabel>
                   <Input
                     type="text"
-                    placeholder="Country"
                     {...register("country", {
                       required: true,
                       max: 15,
@@ -251,7 +245,6 @@ export const Register = () => {
                 <FormControl isInvalid={!!errors.city}>
                   <Input
                     type="text"
-                    placeholder="City"
                     {...register("city", {
                       required: true,
                       pattern: {
@@ -282,6 +275,11 @@ export const Register = () => {
                   <option value="POLISH">{t("polish", "Polish")}</option>
                   <option value="GERMAN">{t("german", "German")}</option>
                 </Select>
+
+                <Flex pt={"1rem"} textColor={"red.600"}>
+                  <div>{exception}</div>
+                </Flex>
+
                 <Flex
                   pt={"1rem"}
                   width={"full"}
@@ -293,7 +291,7 @@ export const Register = () => {
                       {t("sign-in", "Already have an account?")}
                     </Button>
                   </Link>
-                  <Button colorScheme="teal" type={"submit"}>
+                  <Button colorScheme="twitter" type={"submit"}>
                     {t("sign-up", "Sign up")}
                   </Button>
                 </Flex>
