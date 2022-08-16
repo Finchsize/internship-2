@@ -128,7 +128,14 @@ export const Message = forwardRef(
                   paddingTop: "0.25rem",
                 }}
               >
-                <HStack w={"full"}>
+                <HStack
+                  w={"full"}
+                  onKeyDown={(e) => {
+                    if (e.code === "Escape") {
+                      setEditMode(false);
+                    }
+                  }}
+                >
                   <Input
                     {...register("message")}
                     defaultValue={content}
