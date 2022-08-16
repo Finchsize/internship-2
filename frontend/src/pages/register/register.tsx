@@ -5,6 +5,7 @@ import {
   Icon,
   Select,
   FormErrorMessage,
+  FormHelperText,
 } from "@chakra-ui/react";
 import { Heading, Stack } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
@@ -20,6 +21,7 @@ import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+import language from "../../types/language";
 
 interface RegisterFormValues {
   nickname: string;
@@ -44,6 +46,7 @@ export const Register = () => {
   const navigate = useNavigate();
 
   const [exception, setException] = useState("");
+
   useEffect(() => {
     console.log(errors);
   }, [errors]);
@@ -77,46 +80,10 @@ export const Register = () => {
       Cookies.set("token", response.data, { expires: 7 });
       navigate("/signin");
     });
-
-  const checkPhoneNumber = (): boolean => {
-    if (typeof phoneNumber === "undefined") {
-      return true;
-    }
-
-    return phoneNumber.length === 9;
-  };
-  const checkEmail = (): boolean => {
-    if (typeof email === "undefined") {
-      return true;
-    }
-    return /\S+@\S+\.\S+/.test(email);
-  };
-  const checkLogin = (): boolean => {
-    if (typeof login === "undefined") {
-      return true;
-    }
-    return login.length > 3;
-  };
-  const checkCity = (): boolean => {
-    if (typeof city === "undefined") {
-      return true;
-    }
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
-
-    return regex.test(city);
-  };
-  const checkCountry = (): boolean => {
-    if (typeof country === "undefined") {
-      return true;
-    }
-
-    const regex = new RegExp("^[A-Z][^A-Z\n]*$");
-
-    return regex.test(country);
-  };
+  }
 
   const { t } = useTranslation("register");
-  
+
   return (
     <div>
       <Flex
@@ -190,7 +157,6 @@ export const Register = () => {
                   </FormErrorMessage>
                   <FormLabel pt={"1rem"} fontSize={"xl"}>
                     {" "}
-
                     <p>
                       <Icon as={HiOutlineIdentification} /> {t("last-name")}
                     </p>
@@ -245,7 +211,7 @@ export const Register = () => {
                       "Please format your phone number correctly (9 digits)."
                     )}
                   </FormHelperText>
-                                    <FormErrorMessage>
+                  <FormErrorMessage>
                     {errors?.phoneNumber && errors.phoneNumber.message}
                   </FormErrorMessage>
                   <FormLabel fontSize={"xl"}>
@@ -272,7 +238,7 @@ export const Register = () => {
                   <FormErrorMessage>
                     {errors?.country && errors.country.message}
                   </FormErrorMessage>
-                  
+
                   <Input
                     type="text"
                     placeholder="City"
@@ -294,12 +260,8 @@ export const Register = () => {
                     {t("language", "Language")}
                   </FormLabel>
                   <Select
-                    value={language}
-                    isRequired
                     mb={"1rem"}
-                    onChange={(e) => {
-                      setLanguage(e.target.value);
-                    }}
+                    {...register("language", { required: true })}
                   >
                     <option value={"default"} disabled>
                       {t("choose-language", "Choose a language")}
