@@ -62,6 +62,15 @@ export const Dashboard = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const message = data.message.trim();
     if (typeof JWT !== "undefined" && message !== "") {
+      setMessages([
+        ...messages,
+        {
+          id: -1,
+          authorNick: JWT.nickname,
+          content: message,
+          createdAt: new Date().toUTCString(),
+        },
+      ]);
       await axiosInstance({
         method: "post",
         headers: {
