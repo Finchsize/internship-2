@@ -58,12 +58,13 @@ export const Dashboard = () => {
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
+  const [sendingMessages, setSendingMessages] = useState<MessageType[]>([]);
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const message = data.message.trim();
     if (typeof JWT !== "undefined" && message !== "") {
-      setMessages([
-        ...messages,
+      setSendingMessages([
+        ...sendingMessages,
         {
           id: -1,
           authorNick: JWT.nickname,
@@ -84,7 +85,12 @@ export const Dashboard = () => {
           nickname: JWT.nickname,
           content: message,
         },
-      }).catch((error) => console.log("Error", error.message));
+      })
+        .then(() => {
+          setSendingMessages(sendingMessages.splice(1, sendingMessages.length));
+          getMessages();
+        })
+        .catch((error) => console.log("Error", error.message));
     }
     reset();
   };
@@ -108,6 +114,7 @@ export const Dashboard = () => {
 
   /* Fetch messages from the backend */
   useEffect(() => {
+    getMessages();
     const timer = setInterval(getMessages, 500);
     return () => clearInterval(timer);
   }, []);
@@ -116,7 +123,7 @@ export const Dashboard = () => {
     if (msgBoxRef.current !== null) {
       msgBoxRef.current!.scrollIntoView({ behavior: "smooth" });
     }
-  }, [msgBoxRef.current]);
+  }, [msgBoxRef.current, messages]);
   return (
     <Flex
       flexDirection={"row"}
@@ -148,7 +155,7 @@ export const Dashboard = () => {
                 },
               }}
             >
-              {messages.map((message, key) => (
+              {[...messages, ...sendingMessages].map((message, key) => (
                 <Message ref={msgBoxRef} {...message} key={key} />
               ))}
             </VStack>
@@ -167,7 +174,10 @@ export const Dashboard = () => {
               <Input
                 {...register("message")}
                 w={"full"}
-                placeholder={t("dashboard:input-placeholder", "Send message...")}
+                placeholder={t(
+                  "dashboard:input-placeholder",
+                  "Send message..."
+                )}
                 bgColor={"white"}
                 shadow={"sm"}
                 padding={"1rem"}
