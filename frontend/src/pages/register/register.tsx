@@ -39,8 +39,10 @@ export const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormValues>();
 
-  const stringRegex = RegExp("^[A-Z][^A-Z]*$");
-  const emailRegex = RegExp("^(.+)@(.+)\.(.+)$"); // prettier-ignore
+  const stringValidationRegex = RegExp("^[A-Z][^A-Z]*$"); // used for validating City and Country
+  const emailRegex = RegExp("[^@ \t\r\n]+@[^@ \t\r\n]+\\.[^@ \t\r\n]+"); // used for validating the e-mail address
+  const phoneNumberRegex = RegExp("^[0-9]{9}$"); // used for validating the phone number
+
   const navigate = useNavigate();
 
   const [exception, setException] = useState("");
@@ -56,6 +58,17 @@ export const Register = () => {
     })
       .then((response) => {
         setException("");
+        axiosInstance({
+          url: "/login",
+          method: "POST",
+          data: {
+            nickname: data.nickname,
+          },
+        }).then((response) => {
+          setException("");
+          Cookies.set("token", response.data, { expires: 7 });
+          navigate("/signin");
+        });
       })
       .catch((error) => {
         if (error.response) {
@@ -66,18 +79,6 @@ export const Register = () => {
           console.log("Error", error.message);
         }
       });
-
-    await axiosInstance({
-      url: "/login",
-      method: "POST",
-      data: {
-        nickname: data.nickname,
-      },
-    }).then((response) => {
-      setException("");
-      Cookies.set("token", response.data, { expires: 7 });
-      navigate("/signin");
-    });
   }
 
   const { t } = useTranslation("register");
@@ -126,7 +127,7 @@ export const Register = () => {
                     <Input
                       type="text"
                       {...register("nickname", {
-                        required: "this field is required",
+                        required: t("field-required", "this field is required"),
                         minLength: {
                           value: 3,
                           message: "minimum length should be 3 characters",
@@ -148,7 +149,7 @@ export const Register = () => {
                     <Input
                       type="text"
                       {...register("firstName", {
-                        required: "this field is required",
+                        required: t("field-required", "this field is required"),
                         min: 3,
                         minLength: {
                           value: 3,
@@ -171,7 +172,7 @@ export const Register = () => {
                     <Input
                       type="text"
                       {...register("lastName", {
-                        required: "this field is required",
+                        required: t("field-required", "this field is required"),
                         max: 20,
                         min: 3,
                         minLength: {
@@ -193,7 +194,7 @@ export const Register = () => {
                     <Input
                       type="string"
                       {...register("email", {
-                        required: "this field is required",
+                        required: t("field-required", "this field is required"),
                         pattern: {
                           value: emailRegex,
                           message: "invalid email",
@@ -214,9 +215,9 @@ export const Register = () => {
                     <Input
                       type="tel"
                       {...register("phoneNumber", {
-                        required: "this field is required",
+                        required: t("field-required", "this field is required"),
                         pattern: {
-                          value: new RegExp("[0-9]{9}"),
+                          value: phoneNumberRegex,
                           message: "invalid phone number",
                         },
                       })}
@@ -233,12 +234,12 @@ export const Register = () => {
                     <Input
                       type="text"
                       {...register("country", {
-                        required: "this field is required",
+                        required: t("field-required", "this field is required"),
                         max: 15,
                         min: 4,
                         maxLength: 15,
                         pattern: {
-                          value: stringRegex,
+                          value: stringValidationRegex,
                           message:
                             "First letter should be a capital letter, followed by lower case letters.",
                         },
@@ -255,9 +256,9 @@ export const Register = () => {
                     <Input
                       type="text"
                       {...register("city", {
-                        required: "this field is required",
+                        required: t("field-required", "this field is required"),
                         pattern: {
-                          value: stringRegex,
+                          value: stringValidationRegex,
                           message:
                             "First letter should be a capital letter, followed by lower case letters.",
                         },
@@ -277,7 +278,7 @@ export const Register = () => {
                     mb={"1rem"}
                     {...register("language", { required: true })}
                   >
-                    <option value={"default"} selected disabled>
+                    <option value={"default"} disabled>
                       {t("choose-language", "Choose a language")}
                     </option>
                     <option value="ENGLISH">{t("english", "English")}</option>
