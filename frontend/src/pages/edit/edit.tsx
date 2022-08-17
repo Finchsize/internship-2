@@ -27,7 +27,6 @@ export const Edit = () => {
   const [login, setLogin] = useState<string>();
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
-  // const [email, setEmail] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
