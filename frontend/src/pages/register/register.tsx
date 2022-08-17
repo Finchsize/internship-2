@@ -39,9 +39,9 @@ export const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormValues>();
 
-  const stringValidationRegex = RegExp("^[A-Z][^A-Z]*$"); // used for validating City and Country
-  const emailRegex = RegExp("[^@ \t\r\n]+@[^@ \t\r\n]+\\.[^@ \t\r\n]+"); // used for validating the e-mail address
-  const phoneNumberRegex = RegExp("^[0-9]{9}$"); // used for validating the phone number
+  const nameValidatorRegex = RegExp("^[A-Z][^A-Z]*$");
+  const emailValidatorRegex = RegExp("^(.+)@(.+)\\.(.+)$");
+  const phoneValidatorRegex = RegExp("^[0-9]{9}$");
 
   const navigate = useNavigate();
 
@@ -65,16 +65,21 @@ export const Register = () => {
             nickname: data.nickname,
           },
         }).then((response) => {
-          setException("");
-          Cookies.set("token", response.data, { expires: 7 });
-          navigate("/signin");
+          if (response.statusText === "OK") {
+            setException("");
+            Cookies.set("token", response.data, { expires: 7 });
+            navigate("/signin");
+          } else {
+            alert("Something went wrong, please try again later");
+          }
         });
       })
       .catch((error) => {
+        if (error.message === "Network Error") {
+          setException("A Network error has occurred, please try again later.");
+        }
         if (error.response) {
           setException(error.response.data.exceptionMessage);
-        } else if (error.request) {
-          console.log(error.request);
         } else {
           console.log("Error", error.message);
         }
@@ -196,7 +201,7 @@ export const Register = () => {
                       {...register("email", {
                         required: t("field-required", "this field is required"),
                         pattern: {
-                          value: emailRegex,
+                          value: emailValidatorRegex,
                           message: "invalid email",
                         },
                       })}
@@ -217,7 +222,7 @@ export const Register = () => {
                       {...register("phoneNumber", {
                         required: t("field-required", "this field is required"),
                         pattern: {
-                          value: phoneNumberRegex,
+                          value: phoneValidatorRegex,
                           message: "invalid phone number",
                         },
                       })}
@@ -239,7 +244,7 @@ export const Register = () => {
                         min: 4,
                         maxLength: 15,
                         pattern: {
-                          value: stringValidationRegex,
+                          value: nameValidatorRegex,
                           message:
                             "First letter should be a capital letter, followed by lower case letters.",
                         },
@@ -258,7 +263,7 @@ export const Register = () => {
                       {...register("city", {
                         required: t("field-required", "this field is required"),
                         pattern: {
-                          value: stringValidationRegex,
+                          value: nameValidatorRegex,
                           message:
                             "First letter should be a capital letter, followed by lower case letters.",
                         },
@@ -269,22 +274,31 @@ export const Register = () => {
                     </FormErrorMessage>
                   </FormControl>
 
-                  <FormLabel mt={"1rem"} fontSize={"xl"}>
-                    {" "}
-                    <Icon fontSize={25} as={TbLanguage} />{" "}
-                    {t("language", "Language")}
-                  </FormLabel>
-                  <Select
-                    mb={"1rem"}
-                    {...register("language", { required: true })}
-                  >
-                    <option value={"default"} disabled>
-                      {t("choose-language", "Choose a language")}
-                    </option>
-                    <option value="ENGLISH">{t("english", "English")}</option>
-                    <option value="POLISH">{t("polish", "Polish")}</option>
-                    <option value="GERMAN">{t("german", "German")}</option>
-                  </Select>
+                  <FormControl isInvalid={!!errors.language}>
+                    <FormLabel mt={"1rem"} fontSize={"xl"}>
+                      {" "}
+                      <Icon fontSize={25} as={TbLanguage} />{" "}
+                      {t("language", "Language")}
+                    </FormLabel>
+                    <Select
+                      defaultValue={""}
+                      mb={"1rem"}
+                      {...register("language", {
+                        required: t("field-required", "this field is required"),
+                      })}
+                    >
+                      <option value="" disabled>
+                        {t("choose-language", "Choose a language")}
+                      </option>
+                      <option value="ENGLISH">{t("english", "English")}</option>
+                      <option value="POLISH">{t("polish", "Polish")}</option>
+                      <option value="GERMAN">{t("german", "German")}</option>
+                    </Select>
+
+                    <FormErrorMessage>
+                      {errors?.language && errors.language.message}
+                    </FormErrorMessage>
+                  </FormControl>
 
                   {exception && (
                     <Flex pt={".5rem"} textColor={"red.600"}>
