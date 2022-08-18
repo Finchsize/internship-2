@@ -186,7 +186,7 @@ public class UserController {
         .city(user.getShowAddress() ? user.getCity() : null)
         .country(user.getShowAddress() ? user.getCountry() : null)
         .phoneNumber(user.getShowPhoneNumber() ? user.getPhoneNumber() : null)
-        .userStatus(user.getUserStatus() == null ? user.getUserStatus().toString() : null)
+        .userStatus(user.getUserStatus() != null ? user.getUserStatus().toString() : null)
         .build();
   }
 
