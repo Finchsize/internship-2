@@ -44,7 +44,7 @@ public class ChannelController {
   @Operation(summary = "Get channel details")
   @GetMapping("/{channelId}")
   @VerifyJWT
-  public ChannelResponseDTO getAvailableChannels(ChannelRequestDTO channelRequestDTO, @PathVariable int channelId) {
+  public ChannelResponseDTO getAvailableChannels(@Parameter(hidden = true) ChannelRequestDTO channelRequestDTO, @PathVariable int channelId) {
     final var user = userService.getUserByNick(channelRequestDTO.getNickname());
     final var channel = channelService.getChannelByIdForUser(user, channelId);
     return createChannelResponseDTO(channel);
