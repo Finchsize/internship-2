@@ -21,7 +21,7 @@ import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import { Helmet } from "react-helmet";
+import { MetaTags } from "../../components/MetaTags";
 
 export const Edit = () => {
   const [login, setLogin] = useState<string>();
@@ -111,30 +111,11 @@ export const Edit = () => {
   const { t } = useTranslation("edit");
   return (
     <div>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>Edit your account details</title>
-        <meta name="description" content="Edit your chat account's details" />
-        <meta name="authors" content="Maciej Malinowski, Marcel Alefierowicz" />
-
-        <meta property="og:title" content="Edit your account details" />
-        <meta
-          property="og:description"
-          content="Edit your chat account's details"
-        />
-
-        <meta itemProp="name" content="Edit your account details" />
-        <meta
-          itemProp="description"
-          content="Edit your chat account's details"
-        />
-
-        <meta name="twitter:title" content="Edit your account details" />
-        <meta
-          name="twitter:description"
-          content="Edit your chat account's details"
-        />
-      </Helmet>
+      <MetaTags
+        title="Edit your account details"
+        description="Edit your chat account details"
+        authors="Maciej Malinowski, Marcel Alefierowicz"
+      />
       <Flex
         bgColor={"blackAlpha.50"}
         width={"full"}

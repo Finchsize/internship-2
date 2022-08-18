@@ -21,8 +21,7 @@ import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import language from "../../types/language";
-import { Helmet } from "react-helmet";
+import { MetaTags } from "../../components/MetaTags";
 
 interface RegisterFormValues {
   nickname: string;
@@ -94,27 +93,11 @@ export const Register = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>Sign up</title>
-          <meta name="description" content="Create a new chat account" />
-          <meta
-            name="authors"
-            content="Maciej Malinowski, Marcel Alefierowicz"
-          />
-
-          <meta property="og:title" content="Sign up" />
-          <meta property="og:description" content="Create a new chat account" />
-
-          <meta itemProp="name" content="Sign up" />
-          <meta itemProp="description" content="Create a new chat account" />
-
-          <meta name="twitter:title" content="Sign up" />
-          <meta
-            name="twitter:description"
-            content="Create a new chat account"
-          />
-        </Helmet>
+        <MetaTags
+          title="Register"
+          description="Create an account to chat with other users"
+          authors="Maciej Malinowski, Marcel Alefierowicz"
+        />
         <Flex
           bgColor={"whiteAlpha.50"}
           shadow={"2xl"}
