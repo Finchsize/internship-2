@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
+import { MetaTags } from "../../components/MetaTags";
 
 export const Signin = () => {
   const { t } = useTranslation("signin");
@@ -56,6 +57,11 @@ export const Signin = () => {
       minHeight={"100vh"}
       alignItems={"center"}
     >
+      <MetaTags
+        title="Sign in"
+        description="Sign in to your chat account"
+        authors="Maciej Malinowski, Marcel Alefierowicz"
+      />
       <Container>
         <form onSubmit={handleSubmit}>
           <Flex

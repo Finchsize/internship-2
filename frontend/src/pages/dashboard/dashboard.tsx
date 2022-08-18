@@ -13,7 +13,7 @@ import { Message } from "../../components/Message";
 import type MessageType from "../../types/message";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-
+import { MetaTags } from "../../components/MetaTags";
 type Inputs = {
   message: string;
 };
@@ -131,6 +131,12 @@ export const Dashboard = () => {
       w={"full"}
       h={"100vh"}
     >
+      <MetaTags
+        title="Chat App"
+        description="Chat app built using react.js"
+        authors="Maciej Malinowski, Marcel Alefierowicz"
+      />
+
       <Sidebar nickname={JWT?.nickname} />
       <VStack w="full" h="full" spacing={"0"}>
         <Topbar />
