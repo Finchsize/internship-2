@@ -21,12 +21,12 @@ import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
+import { MetaTags } from "../../components/MetaTags";
 
 export const Edit = () => {
   const [login, setLogin] = useState<string>();
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
-  // const [email, setEmail] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
@@ -111,6 +111,11 @@ export const Edit = () => {
   const { t } = useTranslation("edit");
   return (
     <div>
+      <MetaTags
+        title="Edit your account details"
+        description="Edit your chat account details"
+        authors="Maciej Malinowski, Marcel Alefierowicz"
+      />
       <Flex
         bgColor={"blackAlpha.50"}
         width={"full"}

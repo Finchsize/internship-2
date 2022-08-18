@@ -1,5 +1,6 @@
 {
   "title": "Zaloguj się",
   "subtitle": "do swojego konta Chat™",
-  "no-account": "Nie masz konta?"
+  "no-account": "Nie masz konta?",
+  "loading-text": "Logowanie..."
 }

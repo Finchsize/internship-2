@@ -13,7 +13,7 @@ import { Message } from "../../components/Message";
 import type MessageType from "../../types/message";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-
+import { MetaTags } from "../../components/MetaTags";
 type Inputs = {
   message: string;
 };
@@ -58,10 +58,20 @@ export const Dashboard = () => {
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
 
+  const [sendingMessages, setSendingMessages] = useState<MessageType[]>([]);
   const { register, handleSubmit, reset } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const message = data.message.trim();
     if (typeof JWT !== "undefined" && message !== "") {
+      setSendingMessages([
+        ...sendingMessages,
+        {
+          id: -1,
+          authorNick: JWT.nickname,
+          content: message,
+          createdAt: new Date().toUTCString(),
+        },
+      ]);
       await axiosInstance({
         method: "post",
         headers: {
@@ -75,7 +85,12 @@ export const Dashboard = () => {
           nickname: JWT.nickname,
           content: message,
         },
-      }).catch((error) => console.log("Error", error.message));
+      })
+        .then(() => {
+          setSendingMessages(sendingMessages.splice(1, sendingMessages.length));
+          getMessages();
+        })
+        .catch((error) => console.log("Error", error.message));
     }
     reset();
   };
@@ -99,6 +114,7 @@ export const Dashboard = () => {
 
   /* Fetch messages from the backend */
   useEffect(() => {
+    getMessages();
     const timer = setInterval(getMessages, 500);
     return () => clearInterval(timer);
   }, []);
@@ -107,7 +123,7 @@ export const Dashboard = () => {
     if (msgBoxRef.current !== null) {
       msgBoxRef.current!.scrollIntoView({ behavior: "smooth" });
     }
-  }, [msgBoxRef.current]);
+  }, [msgBoxRef.current, messages]);
   return (
     <Flex
       flexDirection={"row"}
@@ -115,6 +131,12 @@ export const Dashboard = () => {
       w={"full"}
       h={"100vh"}
     >
+      <MetaTags
+        title="Chat App"
+        description="Chat app built using react.js"
+        authors="Maciej Malinowski, Marcel Alefierowicz"
+      />
+
       <Sidebar nickname={JWT?.nickname} />
       <VStack w="full" h="full" spacing={"0"}>
         <Topbar />
@@ -139,7 +161,7 @@ export const Dashboard = () => {
                 },
               }}
             >
-              {messages.map((message, key) => (
+              {[...messages, ...sendingMessages].map((message, key) => (
                 <Message ref={msgBoxRef} {...message} key={key} />
               ))}
             </VStack>
@@ -158,7 +180,10 @@ export const Dashboard = () => {
               <Input
                 {...register("message")}
                 w={"full"}
-                placeholder={t("dashboard:input-placeholder", "Send message...")}
+                placeholder={t(
+                  "dashboard:input-placeholder",
+                  "Send message..."
+                )}
                 bgColor={"white"}
                 shadow={"sm"}
                 padding={"1rem"}

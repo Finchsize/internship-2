@@ -20,6 +20,8 @@ import { TbLanguage } from "react-icons/tb";
 import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+import { MetaTags } from "../../components/MetaTags";
+
 
 interface RegisterFormValues {
   nickname: string;
@@ -99,6 +101,11 @@ export const Register = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
+        <MetaTags
+          title="Register"
+          description="Create an account to chat with other users"
+          authors="Maciej Malinowski, Marcel Alefierowicz"
+        />
         <Flex
           bgColor={"whiteAlpha.50"}
           shadow={"2xl"}
