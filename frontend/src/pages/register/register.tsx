@@ -45,12 +45,15 @@ export const Register = () => {
 
   const navigate = useNavigate();
 
+  const [buttonState, setButtonState] = useState<Boolean>(false);
   const [exception, setException] = useState("");
 
   useEffect(() => {
     console.log(errors);
   }, [errors]);
   async function onSubmit(data: any) {
+    setButtonState(true);
+
     await axiosInstance({
       url: "/users",
       method: "POST",
@@ -65,22 +68,21 @@ export const Register = () => {
             nickname: data.nickname,
           },
         }).then((response) => {
-          if (response.statusText === "OK") {
-            setException("");
-            Cookies.set("token", response.data, { expires: 7 });
-            navigate("/signin");
-          } else {
-            alert("Something went wrong, please try again later");
-          }
+          setException("");
+          Cookies.set("token", response.data, { expires: 7 });
+          navigate("/signin");
         });
       })
       .catch((error) => {
         if (error.message === "Network Error") {
+          setButtonState(false);
           setException("A Network error has occurred, please try again later.");
         }
         if (error.response) {
+          setButtonState(false);
           setException(error.response.data.exceptionMessage);
         } else {
+          setButtonState(false);
           console.log("Error", error.message);
         }
       });
@@ -317,7 +319,11 @@ export const Register = () => {
                       {t("sign-in", "Already have an account?")}
                     </Button>
                   </Link>
-                  <Button colorScheme="twitter" type={"submit"}>
+                  <Button
+                    colorScheme="twitter"
+                    isDisabled={!!buttonState}
+                    type={"submit"}
+                  >
                     {t("sign-up", "Sign up")}
                   </Button>
                 </Flex>
