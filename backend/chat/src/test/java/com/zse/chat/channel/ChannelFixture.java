@@ -17,6 +17,7 @@ public class ChannelFixture {
                 .id(number)
                 .owners(owners)
                 .members(members)
-                .messages(messages);
+                .messages(messages)
+                .directMessage(false);
     }
 }

@@ -11,88 +11,96 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChannelService {
 
-    private final ChannelRepository channelRepository;
+  private final ChannelRepository channelRepository;
 
-    public List<Channel> getChannels(User user) {
-        return channelRepository.getChannelsByOwnersInOrMembersIn(List.of(user), List.of(user));
+  public List<Channel> getChannels(User user) {
+    return channelRepository.getChannelsByOwnersInOrMembersIn(List.of(user), List.of(user));
+  }
+
+  public Channel getChannelByIdForUser(User user, int id) {
+    return channelRepository.getChannelsByOwnersInOrMembersIn(List.of(user), List.of(user))
+        .stream()
+        .filter(channel -> channel.getId() == id)
+        .findFirst()
+        .orElseThrow(() -> new ChannelNotFoundException(id));
+  }
+
+  public Channel getChannelById(int id) {
+    return channelRepository.findById(id).orElseThrow(() -> new ChannelNotFoundException(id));
+  }
+
+  public Channel saveChannel(User user) {
+    final var channel = Channel.builder()
+        .owners(List.of(user))
+        .members(List.of())
+        .directMessage(false)
+        .build();
+    return channelRepository.save(channel);
+  }
+
+  public Channel saveChannel(User user, Boolean directMessage) {
+    if (directMessage == null) {
+      return saveChannel(user);
     }
+    final var channel = Channel.builder()
+        .owners(List.of(user))
+        .members(List.of())
+        .directMessage(directMessage)
+        .build();
+    return channelRepository.save(channel);
+  }
 
-    public Channel getChannelById(int id){
-        return channelRepository.findById(id).orElseThrow(() -> new ChannelNotFoundException(id));
-    }
+  public boolean userHasPermissionToUpdateChannel(Channel channel, String nickname) {
+    final Optional<User> resultOwner = channel.getOwners()
+        .stream().filter(owner -> owner.getNickname().equals(nickname))
+        .findFirst();
 
-    public Channel saveChannel(User user){
-        final var channel = Channel.builder()
-                .owners(List.of(user))
-                .members(List.of())
-                .directMessage(false)
-                .build();
-        return channelRepository.save(channel);
-    }
+    return resultOwner.isPresent();
+  }
 
-    public Channel saveChannel(User user, Boolean directMessage) {
-        if(directMessage == null) {
-            return saveChannel(user);
+  public Channel updateChannel(Channel channel, ChannelUpdateAction action, User manipulateUser) {
+    final List<User> owners = channel.getOwners();
+    final List<User> members = channel.getMembers();
+
+    switch (action) {
+      case ADD_OWNER -> {
+        owners.add(manipulateUser);
+        members.remove(manipulateUser);
+      }
+      case REMOVE_OWNER -> {
+        owners.remove(manipulateUser);
+        members.add(manipulateUser);
+      }
+      case ADD_MEMBER -> {
+        if (owners.contains(manipulateUser)) {
+          return channel;
         }
-        final var channel = Channel.builder()
-            .owners(List.of(user))
-            .members(List.of())
-            .directMessage(directMessage)
-            .build();
-        return channelRepository.save(channel);
+        members.add(manipulateUser);
+      }
+      case REMOVE_MEMBER -> members.remove(manipulateUser);
     }
 
-    public boolean userHasPermissionToUpdateChannel(Channel channel, String nickname){
-        final Optional<User> resultOwner = channel.getOwners()
-                .stream().filter(owner -> owner.getNickname().equals(nickname))
-                .findFirst();
+    final var updatedChannel = Channel.builder()
+        .id(channel.getId())
+        .owners(owners)
+        .members(members)
+        .build();
 
-        return resultOwner.isPresent();
-    }
+    return channelRepository.save(updatedChannel);
+  }
 
-    public Channel updateChannel(Channel channel, ChannelUpdateAction action, User manipulateUser){
-        final List<User> owners = channel.getOwners();
-        final List<User> members = channel.getMembers();
+  public boolean userHasPermissionToSeeChannel(Channel channel, String nickname) {
+    final Optional<User> resultOwner = channel.getOwners()
+        .stream()
+        .filter(owner -> owner.getNickname().equals(nickname))
+        .findFirst();
 
-        switch (action){
-            case ADD_OWNER -> {
-                owners.add(manipulateUser);
-                members.remove(manipulateUser);
-            }
-            case REMOVE_OWNER -> {
-                owners.remove(manipulateUser);
-                members.add(manipulateUser);
-            }
-            case ADD_MEMBER -> {
-                if(owners.contains(manipulateUser)){
-                    return channel;
-                }
-                members.add(manipulateUser);
-            }
-            case REMOVE_MEMBER -> members.remove(manipulateUser);
-        }
+    final Optional<User> resultMember = channel.getMembers()
+        .stream()
+        .filter(member -> member.getNickname().equals(nickname))
+        .findFirst();
 
-        final var updatedChannel = Channel.builder()
-                .id(channel.getId())
-                .owners(owners)
-                .members(members)
-                .build();
-
-        return channelRepository.save(updatedChannel);
-    }
-
-    public boolean userHasPermissionToSeeChannel(Channel channel, String nickname){
-        final Optional<User> resultOwner = channel.getOwners()
-                .stream()
-                .filter(owner -> owner.getNickname().equals(nickname))
-                .findFirst();
-
-        final Optional<User> resultMember = channel.getMembers()
-                .stream()
-                .filter(member -> member.getNickname().equals(nickname))
-                .findFirst();
-
-        return resultOwner.isPresent() || resultMember.isPresent();
-    }
+    return resultOwner.isPresent() || resultMember.isPresent();
+  }
 
 }
