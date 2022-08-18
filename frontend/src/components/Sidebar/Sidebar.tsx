@@ -20,7 +20,7 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import { BiCommentAdd, BiFontSize } from "react-icons/bi";
-import { MdChat, MdSend } from "react-icons/md";
+import { MdPerson, MdOutlineForum } from "react-icons/md";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
@@ -40,6 +40,8 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
     useState(false);
 
   const [chats, setChats] = useState<Chat[]>([{ id: null }]);
+
+  console.log(chats);
 
   const params = useParams();
 
@@ -120,7 +122,13 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
                   bgColor: "blackAlpha.200",
                 }}
                 gap={"0.25rem"}
-                leftIcon={<ChatIcon />}
+                leftIcon={
+                  <Icon
+                    as={!chat.directMessage ? MdOutlineForum : MdPerson}
+                    h={5}
+                    w={5}
+                  />
+                }
                 variant={"ghost"}
                 w={"full"}
                 justifyContent={"flex-start"}
@@ -133,7 +141,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
                 {typeof chat.members === "undefined" ||
                 typeof chat.owners === "undefined"
                   ? "Main"
-                  : `${chat.owners[0]}'s chat #${chat.id}`}
+                  : !chat.directMessage ? `${chat.owners[0]}'s chat #${chat.id}` : chat.members[0]}
               </Button>
             </Link>
           </ListItem>
