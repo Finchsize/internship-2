@@ -19,9 +19,11 @@ export const Signin = () => {
   const navigator = useNavigate();
   const loginId = useId();
   const [exception, setException] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     await axiosInstance({
       method: "post",
       url: "/login",
@@ -44,6 +46,7 @@ export const Signin = () => {
           console.log("Error", error.message);
         }
       });
+    setLoading(false);
   };
 
   return (
@@ -74,7 +77,7 @@ export const Signin = () => {
                 size="2xl"
                 color={"blackAlpha.900"}
               >
-                {t("signin:title", "Sign in")}
+                {t("title", "Sign in")}
               </Heading>
               <Heading
                 w={"full"}
@@ -83,11 +86,15 @@ export const Signin = () => {
                 size={"md"}
                 color={"blackAlpha.600"}
               >
-                {t("signin:subtitle", "to your Chat™ account")}
+                {t("subtitle", "to your Chat™ account")}
               </Heading>
             </Flex>
 
-            <FormControl isRequired isInvalid={exception !== ""}>
+            <FormControl
+              isRequired
+              isInvalid={exception !== ""}
+              isDisabled={loading}
+            >
               <FormLabel
                 htmlFor={loginId}
                 as={"h3"}
@@ -108,11 +115,16 @@ export const Signin = () => {
             >
               <Link to="/register">
                 <Button colorScheme="blue" variant={"link"}>
-                  {t("signin:no-account", "Don't have an account?")}
+                  {t("no-account", "Don't have an account?")}
                 </Button>
               </Link>
-              <Button colorScheme="blue" type={"submit"}>
-                {t("signin:title", "Sign in")}
+              <Button
+                isLoading={loading}
+                loadingText={t("loading-text", "Signing in...")}
+                colorScheme="blue"
+                type={"submit"}
+              >
+                {t("title", "Sign in")}
               </Button>
             </Flex>
           </Flex>
