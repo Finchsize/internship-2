@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +31,8 @@ public class ChannelService {
 
   public Channel saveChannel(User user) {
     final var channel = Channel.builder()
-        .owners(List.of(user))
-        .members(List.of())
+        .owners(Set.of(user))
+        .members(Set.of())
         .directMessage(false)
         .build();
     return channelRepository.save(channel);
@@ -43,24 +43,21 @@ public class ChannelService {
       return saveChannel(user);
     }
     final var channel = Channel.builder()
-        .owners(List.of(user))
-        .members(List.of())
+        .owners(Set.of(user))
+        .members(Set.of())
         .directMessage(directMessage)
         .build();
     return channelRepository.save(channel);
   }
 
   public boolean userHasPermissionToUpdateChannel(Channel channel, String nickname) {
-    final Optional<User> resultOwner = channel.getOwners()
-        .stream().filter(owner -> owner.getNickname().equals(nickname))
-        .findFirst();
-
-    return resultOwner.isPresent();
+    return channel.getOwners()
+        .stream().anyMatch(owner -> owner.getNickname().equals(nickname));
   }
 
   public Channel updateChannel(Channel channel, ChannelUpdateAction action, User manipulateUser) {
-    final List<User> owners = channel.getOwners();
-    final List<User> members = channel.getMembers();
+    final var owners = channel.getOwners();
+    final var members = channel.getMembers();
 
     switch (action) {
       case ADD_OWNER -> {
@@ -90,12 +87,12 @@ public class ChannelService {
   }
 
   public boolean userHasPermissionToSeeChannel(Channel channel, String nickname) {
-    final Optional<User> resultOwner = channel.getOwners()
+    final var resultOwner = channel.getOwners()
         .stream()
         .filter(owner -> owner.getNickname().equals(nickname))
         .findFirst();
 
-    final Optional<User> resultMember = channel.getMembers()
+    final var resultMember = channel.getMembers()
         .stream()
         .filter(member -> member.getNickname().equals(nickname))
         .findFirst();
