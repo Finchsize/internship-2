@@ -81,6 +81,7 @@ public class ChannelService {
         .id(channel.getId())
         .owners(owners)
         .members(members)
+        .directMessage(channel.getDirectMessage())
         .build();
 
     return channelRepository.save(updatedChannel);

@@ -100,7 +100,7 @@ public class ChannelController {
         .id(channel.getId())
         .owners(channel.getOwners().stream().map(User::getNickname).toList())
         .members(channel.getMembers().stream().map(User::getNickname).toList())
-        .directMessage(channel.getDirectMessage())
+        .directMessage(channel.getDirectMessage() != null ? channel.getDirectMessage() : false)
         .build();
   }
 
