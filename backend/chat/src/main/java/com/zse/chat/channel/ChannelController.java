@@ -39,6 +39,15 @@ public class ChannelController {
         .map(this::createChannelResponseDTO).toList();
   }
 
+  @Operation(summary = "Get channel details")
+  @GetMapping("/{channelId}")
+  @VerifyJWT
+  public ChannelResponseDTO getAvailableChannels(ChannelRequestDTO channelRequestDTO, @PathVariable int channelId) {
+    final var user = userService.getUserByNick(channelRequestDTO.getNickname());
+    final var channel = channelService.getChannelByIdForUser(user, channelId);
+    return createChannelResponseDTO(channel);
+  }
+
   @Operation(summary = "Create new channel")
   @PostMapping
   @VerifyJWT

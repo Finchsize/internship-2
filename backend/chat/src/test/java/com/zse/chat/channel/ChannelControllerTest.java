@@ -152,14 +152,14 @@ class ChannelControllerTest {
         ).build();
 
         when(userService.getUserByNick("testNickname1")).thenReturn(user);
-        when(channelService.saveChannel(user)).thenReturn(channel);
+        when(channelService.saveChannel(eq(user), any())).thenReturn(channel);
 
         mockMvc.perform(post("/channels").headers(authorize()))
                 .andDo(print())
                 .andExpect(status().isOk());
 
         verify(userService, times(1)).getUserByNick("testNickname1");
-        verify(channelService, times(1)).saveChannel(user);
+        verify(channelService, times(1)).saveChannel(eq(user), any());
 
         verifyNoMoreInteractions(channelService);
         verifyNoMoreInteractions(userService);
@@ -176,7 +176,7 @@ class ChannelControllerTest {
         ).build();
 
         when(userService.getUserByNick("testNickname1")).thenReturn(user);
-        when(channelService.saveChannel(user)).thenReturn(channel);
+        when(channelService.saveChannel(eq(user), any())).thenReturn(channel);
 
         mockMvc.perform(post("/channels").headers(authorize()))
                 .andDo(print())
@@ -188,7 +188,7 @@ class ChannelControllerTest {
                 .andExpect(jsonPath("$.members[0]", equalTo("testNickname2")));
 
         verify(userService, times(1)).getUserByNick("testNickname1");
-        verify(channelService, times(1)).saveChannel(user);
+        verify(channelService, times(1)).saveChannel(eq(user), any());
 
         verifyNoMoreInteractions(channelService);
         verifyNoMoreInteractions(userService);
