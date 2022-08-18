@@ -121,7 +121,7 @@ export const Message = forwardRef(
                 onClick={() => setShowAuthorsDetails(true)}
               />
             </VStack>
-            <VStack w={"full"} alignItems={"flex-start"} spacing={0}>
+            <VStack w={"full"} alignItems={"flex-start"} spacing={0} textColor={id !== -1 ? "black" : "GrayText"}>
               <HStack>
                 <Text fontSize={"sm"}>{authorNick}</Text>
                 <Text fontSize={"xs"}>
