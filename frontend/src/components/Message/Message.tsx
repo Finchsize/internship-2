@@ -100,57 +100,18 @@ export const Message = forwardRef(
           }}
           onMouseLeave={() => setShowOptions(false)}
         >
-          <VStack h="full">
-            {showAuthorsDetails && (
-              <Suspense fallback={<CircularProgress isIndeterminate />}>
-                <UserDetails
-                  nickname={authorNick}
-                  onClose={() => setShowAuthorsDetails(false)}
-                />
-              </Suspense>
-            )}
-            <Avatar
-              size={"sm"}
-              cursor={"pointer"}
-              onClick={() => setShowAuthorsDetails(true)}
-            />
-          </VStack>
-          <VStack w={"full"} alignItems={"flex-start"} spacing={0}>
-            <HStack>
-              <Text fontSize={"sm"}>{authorNick}</Text>
-              <Text fontSize={"xs"}>
-                {new Date(createdAt).toLocaleString()}
-              </Text>
-            </HStack>
-            {!editMode ? (
-              <Text>{content}</Text>
-            ) : (
-              <form
-                autoComplete={"off"}
-                onSubmit={handleSubmit(onSubmit)}
-                style={{
-                  width: "100%",
-                  paddingTop: "0.25rem",
-                }}
-              >
-                <HStack
-                  w={"full"}
-                  onKeyDown={(e) => {
-                    if (e.code === "Escape") {
-                      setEditMode(false);
-                    }
-                  }}
-                >
-                  <Input
-                    {...register("message")}
-                    defaultValue={content}
-                    w={"full"}
-                    placeholder="Message..."
-                    bgColor={"white"}
-                    shadow={"sm"}
-                    size={"sm"}
-                    borderRadius={"md"}
-                    padding={"0.5rem"}
+          <HStack
+            ref={ref ? (ref as RefObject<HTMLDivElement>) : null}
+            spacing={"0.75rem"}
+            paddingX={"1rem"}
+            w={"full"}
+          >
+            <VStack h="full">
+              {showAuthorsDetails && (
+                <Suspense fallback={<CircularProgress isIndeterminate />}>
+                  <UserDetails
+                    nickname={authorNick}
+                    onClose={() => setShowAuthorsDetails(false)}
                   />
                 </Suspense>
               )}
