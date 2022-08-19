@@ -27,15 +27,16 @@ export const MemberManage = ({ isOpen, onClose, member }: Props) => {
         <ModalHeader>Manage user</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          What do you want to with the member{" "}
-          <Text textColor={"blue"}>{member.nickname}?</Text>
+          {`What do you want to with ${member.nickname}?`}
         </ModalBody>
         <ModalFooter w={"full"} gap={4}>
           <Button w={"full"} variant="outline">
-            Cancel
+            {`Make ${member.nickname} ${
+              member.owner ? " a member" : " an owner"
+            }`}
           </Button>
           <Button w={"full"} colorScheme="red">
-            Delete
+            {`Remove ${member.nickname}`}
           </Button>
         </ModalFooter>
       </ModalContent>

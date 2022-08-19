@@ -6,26 +6,21 @@ import {
   ListItem,
   Button,
   Avatar,
-  AvatarBadge,
   HStack,
   Badge,
   IconButton,
   Icon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
 import { useParams } from "react-router-dom";
+import { MemberManage } from "../MemberManage";
+import parseJwt from "../../lib/parseJwt";
 
-import { MdManageAccounts } from "react-icons/md";
+import { MdPersonAdd } from "react-icons/md";
+import { MemberAdd } from "../MemberAdd";
 
 type User = {
   nickname: string;
@@ -34,8 +29,18 @@ type User = {
 
 export const ChatDetails = () => {
   const { t } = useTranslation("userslist");
-  const [showModal, setShowModal] = useState(false);
+  const [add, setAdd] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
+  const [user, setUser] = useState<User>();
+  const JWT: { nickname: string; exp: number } | undefined = parseJwt(
+    Cookies.get("token")
+  );
+
+  const isLoggedInUserAnOwner = () => {
+    const member = users.find((user) => user.nickname === JWT?.nickname);
+    return typeof params.id !== "undefined" && member?.owner === true;
+  };
+
   const params = useParams();
   useEffect(() => {
     axiosInstance({
@@ -83,14 +88,29 @@ export const ChatDetails = () => {
         alignItems={"flex-start"}
         borderColor={"blackAlpha.200"}
       >
-        <Heading as={"h1"} fontSize={"xl"} fontWeight={"medium"}>
-          {t("userslist:heading", "Members")}
-        </Heading>
+        <HStack w="full" alignItems={"center"} justifyContent={"space-between"}>
+          <Heading as={"h1"} fontSize={"xl"} fontWeight={"medium"}>
+            {t("userslist:heading", "Members")}
+          </Heading>
+          <IconButton
+            onClick={() => setAdd(true)}
+            _hover={{
+              bgColor: "blackAlpha.50",
+            }}
+            _active={{
+              bgColor: "blackAlpha.200",
+            }}
+            variant={"ghost"}
+            aria-label="Add a member"
+            size={"sm"}
+            icon={<Icon as={MdPersonAdd} w={6} h={6} />}
+          />
+        </HStack>
         <List w={"full"}>
           {users.map((user, key) => (
             <ListItem key={key}>
               <Button
-                onClick={() => setShowModal(true)}
+                onClick={() => setUser(user)}
                 _hover={{
                   bgColor: "blackAlpha.50",
                 }}
@@ -117,26 +137,18 @@ export const ChatDetails = () => {
           ))}
         </List>
       </VStack>
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Manage mejsiej</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>Are you sure you want to delete this message?</ModalBody>
-          <ModalFooter w={"full"} gap={4}>
-            <Button
-              w={"full"}
-              variant="outline"
-              onClick={() => setShowModal(false)}
-            >
-              Cancel
-            </Button>
-            <Button w={"full"} colorScheme="red">
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {user && isLoggedInUserAnOwner() && (
+        <MemberManage
+          isOpen={typeof user !== undefined}
+          onClose={() => {
+            setUser(undefined);
+          }}
+          member={user}
+        />
+      )}
+      {add && isLoggedInUserAnOwner() && (
+        <MemberAdd isOpen={add} onClose={() => setAdd(false)} />
+      )}
     </>
   );
 };
