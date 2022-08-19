@@ -36,7 +36,41 @@ export const Signin = () => {
       .then((response) => {
         setException("");
         Cookies.set("token", response.data, { expires: 7 });
-        navigator("/");
+
+        axiosInstance({
+          method: "get",
+          url: "/users/details",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+          data: {},
+        }).then((res) => {
+          axiosInstance({
+            method: "put",
+            url: "/users",
+            headers: {
+              Authorization: `Bearer ${Cookies.get("token")}`,
+            },
+            data: {
+              nickname: res.data.nickname,
+              firstName: res.data.firstName,
+              lastName: res.data.lastName,
+              phoneNumber: res.data.phoneNumber,
+              country: res.data.country,
+              city: res.data.city,
+              userStatus: "ONLINE",
+              language: res.data.userLanguage,
+              timeZone: res.data.timeZone,
+              showFirstNameAndLastName: res.data.showFirstNameAndLastName,
+              showEmail: res.data.showEmail,
+              showPhoneNumber: res.data.showPhoneNumber,
+              showAddress: res.data.showAddress,
+              deleted: res.data.deleted,
+            },
+          }).then(() => {
+            navigator("/");
+          });
+        });
       })
       .catch((error) => {
         if (error.response) {
@@ -47,6 +81,7 @@ export const Signin = () => {
           console.log("Error", error.message);
         }
       });
+
     setLoading(false);
   };
 

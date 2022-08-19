@@ -13,11 +13,10 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { BiCommentAdd } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChatCreate } from "../ChatCreate";
 import { BiLogOut } from "react-icons/bi";
@@ -35,10 +34,8 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
 
   const [chats, setChats] = useState<Chat[]>([{ id: null }]);
 
-  const navigate = useNavigate();
-
-  const logOut = () => {
-    axiosInstance({
+  const logOut = async () => {
+    await axiosInstance({
       method: "get",
       url: "/users/details",
       headers: {
@@ -68,10 +65,10 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
           showAddress: res.data.showAddress,
           deleted: res.data.deleted,
         },
+      }).then(() => {
+        Cookies.remove("token");
       });
     });
-
-    Cookies.remove("token");
   };
 
   useEffect(() => {

@@ -74,7 +74,11 @@ export const ChatDetails = () => {
               justifyContent={"flex-start"}
             >
               <Avatar size={"xs"}>
-                <AvatarBadge boxSize="1.25em" bg="orange.100" />
+                {user.userStatus === "ONLINE" ? (
+                  <AvatarBadge boxSize="1.25em" bg="green.500" />
+                ) : (
+                  <AvatarBadge boxSize="1.25em" bg="gray.300" />
+                )}
               </Avatar>
               <Text fontSize={"md"}>
                 {typeof params.id === "undefined"
