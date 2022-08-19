@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 
 type User = {
   nickname: string;
+  userStatus: string;
 };
 
 export const ChatDetails = () => {
@@ -31,14 +32,13 @@ export const ChatDetails = () => {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
+      // console.table(res.data);
       if (typeof params.id === "undefined") {
         setUsers(res.data);
       } else {
-        console.log(res.data);
         const chat = res.data.filter((c: any) => {
           return c.id == params.id;
         })[0];
-        console.log(chat);
         setUsers([...chat.members, ...chat.owners]);
       }
     });
