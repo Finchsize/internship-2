@@ -2,5 +2,6 @@
   "title": "Anmelden",
   "subtitle": "zu Ihrem Chat-Konto™",
   "no-account": "Sie haben noch kein Konto?",
-  "loading-text": "Melde an..."
+  "loading-text": "Melde an...",
+  "not-found": "Benutzer nicht gefunden. Kein Nick: "
 }

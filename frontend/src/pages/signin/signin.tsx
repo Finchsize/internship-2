@@ -61,7 +61,7 @@ export const Signin = () => {
       })
       .catch((error) => {
         if (error.response) {
-          setException(error.response.data.exceptionMessage);
+          setException(t("not-found") + error.response.data.exceptionMessage.split(":")[1]);
         } else if (error.request) {
           console.log(error.request);
         } else {
