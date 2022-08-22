@@ -6,6 +6,7 @@
   "last-name": "Nachname",
   "phone-number": "Telefonnummer",
   "phone-validation": "Bitte formatieren Sie Ihre Telefonnummer korrekt (9 Ziffern).",
+  "field-required": "Dieses Feld ist erforderlich",
   "country": "Land",
   "city": "Stadt",
   "language": "Sprache",
