@@ -45,28 +45,30 @@ export const Signin = () => {
           },
           data: {},
         }).then((res) => {
+          res.data.userStatus = "ONLINE";
+          res.data.language = res.data.userLanguage;
           axiosInstance({
             method: "put",
             url: "/users",
             headers: {
               Authorization: `Bearer ${Cookies.get("token")}`,
             },
-            data: {
-              nickname: res.data.nickname,
-              firstName: res.data.firstName,
-              lastName: res.data.lastName,
-              phoneNumber: res.data.phoneNumber,
-              country: res.data.country,
-              city: res.data.city,
-              userStatus: "ONLINE",
-              language: res.data.userLanguage,
-              timeZone: res.data.timeZone,
-              showFirstNameAndLastName: res.data.showFirstNameAndLastName,
-              showEmail: res.data.showEmail,
-              showPhoneNumber: res.data.showPhoneNumber,
-              showAddress: res.data.showAddress,
-              deleted: res.data.deleted,
-            },
+            data: res.data,
+            // data: {
+            //   nickname: res.data.nickname,
+            //   firstName: res.data.firstName,
+            //   lastName: res.data.lastName,
+            //   phoneNumber: res.data.phoneNumber,
+            //   country: res.data.country,
+            //   city: res.data.city,
+            //   userStatus: "ONLINE",
+            //   language: res.data.userLanguage,
+            //   timeZone: res.data.timeZone,
+            //   showFirstNameAndLastName: res.data.showFirstNameAndLastName,
+            //   showEmail: res.data.showEmail,
+            //   showPhoneNumber: res.data.showPhoneNumber,
+            //   showAddress: res.data.showAddress,
+            //   deleted: res.data.deleted,
           }).then(() => {
             navigator("/");
           });
