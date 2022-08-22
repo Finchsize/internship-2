@@ -69,9 +69,9 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      setChats([...chats, ...res.data]);
+      setChats(res.data);
     });
-  }, []);
+  }, [showChannelCreationPopup]);
 
   const { t } = useTranslation("sidebar");
   return (
