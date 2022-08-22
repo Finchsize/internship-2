@@ -1,10 +1,12 @@
 package com.zse.chat.channel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zse.chat.login.VerifyJWT;
 import com.zse.chat.user.User;
 import com.zse.chat.user.UserNickname;
 import com.zse.chat.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Builder;
@@ -32,11 +34,20 @@ public class ChannelController {
   @Operation(summary = "Get available channels")
   @GetMapping
   @VerifyJWT
-  public List<ChannelResponseDTO> getAvailableChannels(ChannelRequestDTO channelRequestDTO) {
+  public List<ChannelResponseDTO> getAvailableChannels(@Parameter(hidden = true) ChannelRequestDTO channelRequestDTO) {
     final var user = userService.getUserByNick(channelRequestDTO.getNickname());
     final var channels = channelService.getChannels(user);
     return channels.stream()
         .map(this::createChannelResponseDTO).toList();
+  }
+
+  @Operation(summary = "Get channel details")
+  @GetMapping("/{channelId}")
+  @VerifyJWT
+  public ChannelResponseDTO getAvailableChannels(@Parameter(hidden = true) ChannelRequestDTO channelRequestDTO, @PathVariable int channelId) {
+    final var user = userService.getUserByNick(channelRequestDTO.getNickname());
+    final var channel = channelService.getChannelByIdForUser(user, channelId);
+    return createChannelResponseDTO(channel);
   }
 
   @Operation(summary = "Create new channel")
@@ -71,6 +82,7 @@ public class ChannelController {
     Integer id;
     @Setter
     @NonFinal
+    @JsonIgnore
     String nickname;
     String userNickname;
     ChannelUpdateAction action;
@@ -88,7 +100,7 @@ public class ChannelController {
         .id(channel.getId())
         .owners(channel.getOwners().stream().map(User::getNickname).toList())
         .members(channel.getMembers().stream().map(User::getNickname).toList())
-        .directMessage(channel.getDirectMessage())
+        .directMessage(channel.getDirectMessage() != null ? channel.getDirectMessage() : false)
         .build();
   }
 
