@@ -13,7 +13,7 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { BiCommentAdd, BiFontSize, BiLogOut } from "react-icons/bi";
-import { MdChat, MdSend } from "react-icons/md";
+import { MdChat, MdSend, MdPerson, MdOutlineForum } from "react-icons/md";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
@@ -34,6 +34,8 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
 
   const [chats, setChats] = useState<Chat[]>([{ id: null }]);
 
+  const params = useParams();
+  
   const logOut = async () => {
     await axiosInstance({
       method: "get",
@@ -115,7 +117,13 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
                   bgColor: "blackAlpha.200",
                 }}
                 gap={"0.25rem"}
-                leftIcon={<ChatIcon />}
+                leftIcon={
+                  <Icon
+                    as={!chat.directMessage ? MdOutlineForum : MdPerson}
+                    h={5}
+                    w={5}
+                  />
+                }
                 variant={"ghost"}
                 w={"full"}
                 justifyContent={"flex-start"}
@@ -128,7 +136,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
                 {typeof chat.members === "undefined" ||
                 typeof chat.owners === "undefined"
                   ? "Main"
-                  : `${chat.owners[0]}'s chat #${chat.id}`}
+                  : !chat.directMessage ? `${chat.owners[0]}'s chat #${chat.id}` : chat.members[0]}
               </Button>
             </Link>
           </ListItem>
