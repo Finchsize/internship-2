@@ -10,7 +10,9 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "channel")
 @Getter
@@ -38,14 +40,16 @@ public class Channel {
             joinColumns = @JoinColumn(name = "channel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @NonFinal List<User> owners;
+    @NonFinal
+    Set<User> owners;
     @ManyToMany
     @JoinTable(
             name = "user_member_channel",
             joinColumns = @JoinColumn(name = "channel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    @NonFinal List<User> members;
+    @NonFinal
+    Set<User> members;
 
     @OneToMany
     @JoinColumn(name = "channel_id")
@@ -55,8 +59,8 @@ public class Channel {
 
     protected Channel() {
         this.id = 0;
-        this.owners = new ArrayList<>();
-        this.members = new ArrayList<>();
+        this.owners = new HashSet<>();
+        this.members = new HashSet<>();
         this.messages = new ArrayList<>();
         this.directMessage = null;
     }
