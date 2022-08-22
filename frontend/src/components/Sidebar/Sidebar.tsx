@@ -20,6 +20,7 @@ import axiosInstance from "../../lib/axios";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChatCreate } from "../ChatCreate";
+import { Chat } from "./Chat";
 
 type Chat = {
   id: number | null;
@@ -107,39 +108,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
 
       <List h={"full"} maxH={"100vh"} pl={".5rem"} overflow={"auto"}>
         {chats.map((chat, key) => (
-          <ListItem key={key} pr={".5rem"}>
-            <Link to={chat.id === null ? "/" : `/${chat.id}`}>
-              <Button
-                _hover={{
-                  bgColor: "blackAlpha.50",
-                }}
-                _active={{
-                  bgColor: "blackAlpha.200",
-                }}
-                gap={"0.25rem"}
-                leftIcon={
-                  <Icon
-                    as={!chat.directMessage ? MdOutlineForum : MdPerson}
-                    h={5}
-                    w={5}
-                  />
-                }
-                variant={"ghost"}
-                w={"full"}
-                justifyContent={"flex-start"}
-                onClick={() => {
-                  window.location.replace(
-                    chat.id === null ? "/" : `/${chat.id}`
-                  );
-                }}
-              >
-                {typeof chat.members === "undefined" ||
-                typeof chat.owners === "undefined"
-                  ? "Main"
-                  : !chat.directMessage ? `${chat.owners[0]}'s chat #${chat.id}` : chat.members[0]}
-              </Button>
-            </Link>
-          </ListItem>
+          <Chat key={key} {...chat} />
         ))}
       </List>
       <Flex
