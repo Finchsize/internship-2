@@ -2,5 +2,6 @@
   "title": "Sign in",
   "subtitle": "to your Chat™ account",
   "no-account": "Don't have an account?",
-  "loading-text": "Signing in..."
+  "loading-text": "Signing in...",
+  "not-found": "User not found. No nick: "
 }

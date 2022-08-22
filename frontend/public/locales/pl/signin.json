@@ -2,5 +2,6 @@
   "title": "Zaloguj się",
   "subtitle": "do swojego konta Chat™",
   "no-account": "Nie masz konta?",
-  "loading-text": "Logowanie..."
+  "loading-text": "Logowanie...",
+  "not-found": "Nie odnaleziono użytkownika z loginem: "
 }
