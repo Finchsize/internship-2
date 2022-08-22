@@ -17,7 +17,7 @@ import { MdChat, MdSend, MdPerson, MdOutlineForum } from "react-icons/md";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChatCreate } from "../ChatCreate";
 
