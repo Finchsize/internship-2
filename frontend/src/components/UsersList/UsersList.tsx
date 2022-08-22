@@ -75,7 +75,7 @@ export const ChatDetails = () => {
         );
       }
     });
-  }, []);
+  }, [user, add]);
 
   return (
     <>
@@ -93,19 +93,21 @@ export const ChatDetails = () => {
           <Heading as={"h1"} fontSize={"xl"} fontWeight={"medium"}>
             {t("userslist:heading", "Members")}
           </Heading>
-          <IconButton
-            onClick={() => setAdd(true)}
-            _hover={{
-              bgColor: "blackAlpha.50",
-            }}
-            _active={{
-              bgColor: "blackAlpha.200",
-            }}
-            variant={"ghost"}
-            aria-label="Add a member"
-            size={"sm"}
-            icon={<Icon as={MdPersonAdd} w={6} h={6} />}
-          />
+          {typeof params.id !== "undefined" && (
+            <IconButton
+              onClick={() => setAdd(true)}
+              _hover={{
+                bgColor: "blackAlpha.50",
+              }}
+              _active={{
+                bgColor: "blackAlpha.200",
+              }}
+              variant={"ghost"}
+              aria-label="Add a member"
+              size={"sm"}
+              icon={<Icon as={MdPersonAdd} w={6} h={6} />}
+            />
+          )}
         </HStack>
         <List w={"full"}>
           {users.map((user, key) => (
@@ -147,17 +149,22 @@ export const ChatDetails = () => {
           ))}
         </List>
       </VStack>
-      {user && isLoggedInUserAnOwner() && (
+      {user && isLoggedInUserAnOwner() && params.id && (
         <MemberManage
           isOpen={typeof user !== undefined}
           onClose={() => {
             setUser(undefined);
           }}
+          channel={parseInt(params.id)}
           member={user}
         />
       )}
-      {add && isLoggedInUserAnOwner() && (
-        <MemberAdd isOpen={add} onClose={() => setAdd(false)} />
+      {add && isLoggedInUserAnOwner() && params.id && (
+        <MemberAdd
+          isOpen={add}
+          onClose={() => setAdd(false)}
+          channel={parseInt(params.id)}
+        />
       )}
     </>
   );
