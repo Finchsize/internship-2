@@ -25,6 +25,7 @@ import { MemberAdd } from "../MemberAdd";
 type User = {
   nickname: string;
   owner: boolean;
+  userStatus: string;
 };
 
 export const ChatDetails = () => {
@@ -52,7 +53,6 @@ export const ChatDetails = () => {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      console.log(res.data);
       if (typeof params.id === "undefined") {
         setUsers(
           res.data
@@ -127,7 +127,13 @@ export const ChatDetails = () => {
                   justifyContent={"space-between"}
                 >
                   <HStack>
-                    <Avatar size={"xs"} />
+                    <Avatar size={"xs"}>
+                      {user.userStatus === "ONLINE" ? (
+                        <AvatarBadge boxSize="1.25em" bg="green.500" />
+                      ) : (
+                        <AvatarBadge boxSize="1.25em" bg="gray.300" />
+                      )}
+                    </Avatar>
                     <Text fontSize={"md"}>{user.nickname}</Text>
                   </HStack>
                   {user.owner && <Badge colorScheme={"blue"}>Owner</Badge>}
