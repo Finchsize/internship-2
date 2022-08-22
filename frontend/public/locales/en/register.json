@@ -1,10 +1,13 @@
 {
   "sign-up": "Sign up",
   "nickname": "Nickname",
-  "min-3-characters": "min. 3 characters",
+  "min-3-characters": "minimum length should be 3 characters",
+  "capital-letter": "First letter should be a capital letter, followed by lower case letters.",
   "first-name": "First Name",
   "last-name": "Last Name",
+  "invalid-email": "Invalid email",
   "phone-number": "Phone Number",
+  "invalid-phone-number": "Invalid phone number",
   "phone-validation": "Please format your phone number correctly (9 digits).",
   "field-required": "This field is required.",
   "country": "Country",
@@ -14,5 +17,6 @@
   "english": "English",
   "polish": "Polish",
   "german": "German",
-  "sign-in": "Already have an account?"
+  "sign-in": "Already have an account?",
+  "network-error": "A network error has occurred, please try again later."
 }

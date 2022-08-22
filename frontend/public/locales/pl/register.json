@@ -2,9 +2,12 @@
   "sign-up": "Zarejestruj się",
   "nickname": "Nick",
   "min-3-characters": "min. 3 znaki",
+  "capital-letter": "Pierwsza litera powinna być wielką literą, a kolejne małymi.",
   "first-name": "Imię",
   "last-name": "Nazwisko",
+  "invalid-email": "Nieprawidłowy adres email.",
   "phone-number": "Numer telefonu",
+  "invalid-phone-number": "Nieprawidłowy numer telefonu.",
   "phone-validation": "Proszę podać numer telefonu w poprawnym formacie (9 cyfr).",
   "field-required": "To pole jest wymagane.",
   "country": "Kraj",
@@ -14,5 +17,6 @@
   "english": "Angielski",
   "polish": "Polski",
   "german": "Niemiecki",
-  "sign-in": "Czy masz już konto?"
+  "sign-in": "Czy masz już konto?",
+  "network-error": "Wystapił błąd sieci, proszę spróbować jeszcze raz później."
 }

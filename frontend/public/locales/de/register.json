@@ -2,9 +2,12 @@
   "sign-up": "Anmelden",
   "nickname": "Spitzname",
   "min-3-characters": "mindestens 3 Zeichen",
+  "capital-letter": "Der erste Buchstabe sollte ein Großbuchstabe sein, gefolgt von Kleinbuchstaben.",
   "first-name": "Vorname",
   "last-name": "Nachname",
+  "invalid-email": "Ungültige E-Mail-Adresse",
   "phone-number": "Telefonnummer",
+  "invalid-phone-number": "Ungültige Telefonnummer",
   "phone-validation": "Bitte formatieren Sie Ihre Telefonnummer korrekt (9 Ziffern).",
   "field-required": "Dieses Feld ist erforderlich",
   "country": "Land",
@@ -14,5 +17,6 @@
   "english": "Englisch",
   "polish": "Polnisch",
   "german": "Deutsch",
-  "sign-in": "Haben Sie bereits ein Konto?"
+  "sign-in": "Haben Sie bereits ein Konto?",
+  "network-error": "Ein Netzwerkfehler ist aufgetreten, bitte versuchen Sie es später erneut."
 }

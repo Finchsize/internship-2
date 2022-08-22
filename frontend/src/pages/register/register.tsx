@@ -22,7 +22,6 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { MetaTags } from "../../components/MetaTags";
 
-
 interface RegisterFormValues {
   nickname: string;
   firstName: string;
@@ -78,7 +77,12 @@ export const Register = () => {
       .catch((error) => {
         if (error.message === "Network Error") {
           setButtonState(false);
-          setException("A Network error has occurred, please try again later.");
+          setException(
+            t(
+              "network-error",
+              "A network error has occurred, please try again later."
+            )
+          );
         }
         if (error.response) {
           setButtonState(false);
@@ -102,7 +106,7 @@ export const Register = () => {
         justifyContent={"center"}
       >
         <MetaTags
-          title="Register"
+          title={t("sign-up", "Sign up")}
           description="Create an account to chat with other users"
           authors="Maciej Malinowski, Marcel Alefierowicz"
         />
@@ -144,7 +148,10 @@ export const Register = () => {
                         required: t("field-required", "this field is required"),
                         minLength: {
                           value: 3,
-                          message: "minimum length should be 3 characters",
+                          message: t(
+                            "min-3-characters",
+                            "minimum length should be 3 characters"
+                          ),
                         },
                       })}
                     />
@@ -167,7 +174,10 @@ export const Register = () => {
                         min: 3,
                         minLength: {
                           value: 3,
-                          message: "minimum length should be 3 characters",
+                          message: t(
+                            "min-3-characters",
+                            "minimum length should be 3 characters"
+                          ),
                         },
                       })}
                     />
@@ -191,7 +201,10 @@ export const Register = () => {
                         min: 3,
                         minLength: {
                           value: 3,
-                          message: "minimum length should be 3 characters",
+                          message: t(
+                            "min-3-characters",
+                            "minimum length should be 3 characters"
+                          ),
                         },
                       })}
                     />
@@ -211,7 +224,7 @@ export const Register = () => {
                         required: t("field-required", "this field is required"),
                         pattern: {
                           value: emailValidatorRegex,
-                          message: "invalid email",
+                          message: t("invalid-email", "Invalid email"),
                         },
                       })}
                     />
@@ -232,7 +245,10 @@ export const Register = () => {
                         required: t("field-required", "this field is required"),
                         pattern: {
                           value: phoneValidatorRegex,
-                          message: "invalid phone number",
+                          message: t(
+                            "invalid-phone-number",
+                            "Invalid phone number"
+                          ),
                         },
                       })}
                     />
@@ -254,8 +270,10 @@ export const Register = () => {
                         maxLength: 15,
                         pattern: {
                           value: nameValidatorRegex,
-                          message:
-                            "First letter should be a capital letter, followed by lower case letters.",
+                          message: t(
+                            "capital-letter",
+                            "First letter should be a capital letter, followed by lower case letters."
+                          ),
                         },
                       })}
                     />
@@ -273,8 +291,10 @@ export const Register = () => {
                         required: t("field-required", "this field is required"),
                         pattern: {
                           value: nameValidatorRegex,
-                          message:
-                            "First letter should be a capital letter, followed by lower case letters.",
+                          message: t(
+                            "capital-letter",
+                            "First letter should be a capital letter, followed by lower case letters."
+                          ),
                         },
                       })}
                     />
@@ -293,7 +313,7 @@ export const Register = () => {
                       defaultValue={""}
                       mb={"1rem"}
                       {...register("language", {
-                        required: t("field-required", "this field is required"),
+                        required: t("field-required", "This field is required"),
                       })}
                     >
                       <option value="" disabled>
