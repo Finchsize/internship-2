@@ -10,6 +10,7 @@ import {
   Badge,
   IconButton,
   Icon,
+  AvatarBadge,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
@@ -128,11 +129,14 @@ export const ChatDetails = () => {
                 >
                   <HStack>
                     <Avatar size={"xs"}>
-                      {user.userStatus === "ONLINE" ? (
-                        <AvatarBadge boxSize="1.25em" bg="green.500" />
-                      ) : (
-                        <AvatarBadge boxSize="1.25em" bg="gray.300" />
-                      )}
+                      <AvatarBadge
+                        boxSize="1.25em"
+                        bg={
+                          user.userStatus === "ONLINE"
+                            ? "green.500"
+                            : "gray.300"
+                        }
+                      />
                     </Avatar>
                     <Text fontSize={"md"}>{user.nickname}</Text>
                   </HStack>
