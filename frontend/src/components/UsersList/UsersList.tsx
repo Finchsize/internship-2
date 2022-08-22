@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 
 type User = {
   nickname: string;
+  userStatus: string;
 };
 
 export const ChatDetails = () => {
@@ -31,14 +32,13 @@ export const ChatDetails = () => {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
+      // console.table(res.data);
       if (typeof params.id === "undefined") {
         setUsers(res.data);
       } else {
-        console.log(res.data);
         const chat = res.data.filter((c: any) => {
           return c.id == params.id;
         })[0];
-        console.log(chat);
         setUsers([...chat.members, ...chat.owners]);
       }
     });
@@ -74,7 +74,11 @@ export const ChatDetails = () => {
               justifyContent={"flex-start"}
             >
               <Avatar size={"xs"}>
-                <AvatarBadge boxSize="1.25em" bg="orange.100" />
+                {user.userStatus === "ONLINE" ? (
+                  <AvatarBadge boxSize="1.25em" bg="green.500" />
+                ) : (
+                  <AvatarBadge boxSize="1.25em" bg="gray.300" />
+                )}
               </Avatar>
               <Text fontSize={"md"}>
                 {typeof params.id === "undefined"

@@ -1,4 +1,4 @@
-import { ChatIcon, BellIcon, SettingsIcon, AddIcon } from "@chakra-ui/icons";
+import { ChatIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Text,
   Flex,
@@ -11,20 +11,13 @@ import {
   AvatarBadge,
   IconButton,
   Icon,
-  FormControl,
-  FormLabel,
-  Input,
-  Portal,
-  VStack,
-  Grid,
-  CloseButton,
 } from "@chakra-ui/react";
 import { BiCommentAdd, BiFontSize, BiLogOut } from "react-icons/bi";
 import { MdChat, MdSend } from "react-icons/md";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChatCreate } from "../ChatCreate";
 
@@ -50,28 +43,15 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       },
       data: {},
     }).then((res) => {
+      res.data.userStatus = "OFFLINE";
+
       axiosInstance({
         method: "put",
         url: "/users",
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        data: {
-          nickname: res.data.nickname,
-          firstName: res.data.firstName,
-          lastName: res.data.lastName,
-          phoneNumber: res.data.phoneNumber,
-          country: res.data.country,
-          city: res.data.city,
-          userStatus: "OFFLINE",
-          language: res.data.userLanguage,
-          timeZone: res.data.timeZone,
-          showFirstNameAndLastName: res.data.showFirstNameAndLastName,
-          showEmail: res.data.showEmail,
-          showPhoneNumber: res.data.showPhoneNumber,
-          showAddress: res.data.showAddress,
-          deleted: res.data.deleted,
-        },
+        data: res.data,
       }).then(() => {
         Cookies.remove("token");
       });
