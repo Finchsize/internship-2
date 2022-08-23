@@ -13,7 +13,7 @@ import { Heading, Stack } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
 import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
 import { Input, FormControl, FormLabel } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsGlobe } from "react-icons/bs";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +25,6 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { MetaTags } from "../../components/MetaTags";
 import { LanguageSelector } from "../../components/LanguageSelector";
-import { BiSleepy } from "react-icons/bi";
 
 interface RegisterFormValues {
   nickname: string;
@@ -235,174 +234,192 @@ export const Register = () => {
                         })}
                       />
 
-                    <FormErrorMessage>
-                      {errors?.lastName && errors.lastName.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.email}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <EmailIcon /> Email
-                    </FormLabel>
-                    <Input
-                      type="string"
-                      {...register("email", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: emailValidatorRegex,
-                          message: t("invalid-email", "Invalid email"),
-                        },
-                      })}
-                    />
-
-                    <FormErrorMessage>
-                      {errors?.email && errors.email.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.phoneNumber}>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      {" "}
-                      <PhoneIcon> </PhoneIcon>{" "}
-                      {t("phone-number", "Phone Number")}
-                    </FormLabel>
-                    <Input
-                      type="tel"
-                      {...register("phoneNumber", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: phoneValidatorRegex,
-                          message: t(
-                            "invalid-phone-number",
-                            "Invalid phone number"
+                      <FormErrorMessage>
+                        {errors?.lastName && errors.lastName.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.email}>
+                      <FormLabel mt={"1rem"} fontSize={"xl"}>
+                        {" "}
+                        <EmailIcon /> Email
+                      </FormLabel>
+                      <Input
+                        type="string"
+                        {...register("email", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
                           ),
-                        },
-                      })}
-                    />
+                          pattern: {
+                            value: emailValidatorRegex,
+                            message: t("invalid-email", "Invalid email"),
+                          },
+                        })}
+                      />
 
-                    <FormErrorMessage>
-                      {errors?.phoneNumber && errors.phoneNumber.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.country}>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      <Icon as={BsGlobe} /> {t("country", "Country")}
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      {...register("country", {
-                        required: t("field-required", "this field is required"),
-                        max: 15,
-                        min: 4,
-                        maxLength: 15,
-                        pattern: {
-                          value: nameValidatorRegex,
-                          message: t(
-                            "capital-letter",
-                            "First letter should be a capital letter, followed by lower case letters."
+                      <FormErrorMessage>
+                        {errors?.email && errors.email.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.phoneNumber}>
+                      <FormLabel fontSize={"xl"} mt={"1rem"}>
+                        {" "}
+                        <PhoneIcon> </PhoneIcon>{" "}
+                        {t("phone-number", "Phone Number")}
+                      </FormLabel>
+                      <Input
+                        type="tel"
+                        {...register("phoneNumber", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
                           ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.country && errors.country.message}
-                    </FormErrorMessage>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      <Icon as={MdLocationCity} /> {t("city", "City")}
-                    </FormLabel>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.city}>
-                    <Input
-                      type="text"
-                      {...register("city", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: nameValidatorRegex,
-                          message: t(
-                            "capital-letter",
-                            "First letter should be a capital letter, followed by lower case letters."
-                          ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.city && errors.city.message}
-                    </FormErrorMessage>
-                  </FormControl>
+                          pattern: {
+                            value: phoneValidatorRegex,
+                            message: t(
+                              "invalid-phone-number",
+                              "Invalid phone number"
+                            ),
+                          },
+                        })}
+                      />
 
-                  <FormControl isInvalid={!!errors.language}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <Icon fontSize={25} as={TbLanguage} />{" "}
-                      {t("language", "Language")}
-                    </FormLabel>
-                    <Select
-                      defaultValue={""}
-                      mb={"1rem"}
-                      {...register("language", {
-                        required: t("field-required", "This field is required"),
-                      })}
-                    >
-                      <option value="" disabled>
-                        {t("choose-language", "Choose a language")}
-                      </option>
-                      <option value="ENGLISH">{t("english", "English")}</option>
-                      <option value="POLISH">{t("polish", "Polish")}</option>
-                      <option value="GERMAN">{t("german", "German")}</option>
-                    </Select>
+                      <FormErrorMessage>
+                        {errors?.phoneNumber && errors.phoneNumber.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.country}>
+                      <FormLabel fontSize={"xl"} mt={"1rem"}>
+                        <Icon as={BsGlobe} /> {t("country", "Country")}
+                      </FormLabel>
+                      <Input
+                        type="text"
+                        {...register("country", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          max: 15,
+                          min: 4,
+                          maxLength: 15,
+                          pattern: {
+                            value: nameValidatorRegex,
+                            message: t(
+                              "capital-letter",
+                              "First letter should be a capital letter, followed by lower case letters."
+                            ),
+                          },
+                        })}
+                      />
+                      <FormErrorMessage>
+                        {errors?.country && errors.country.message}
+                      </FormErrorMessage>
+                      <FormLabel fontSize={"xl"} mt={"1rem"}>
+                        <Icon as={MdLocationCity} /> {t("city", "City")}
+                      </FormLabel>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.city}>
+                      <Input
+                        type="text"
+                        {...register("city", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          pattern: {
+                            value: nameValidatorRegex,
+                            message: t(
+                              "capital-letter",
+                              "First letter should be a capital letter, followed by lower case letters."
+                            ),
+                          },
+                        })}
+                      />
+                      <FormErrorMessage>
+                        {errors?.city && errors.city.message}
+                      </FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={!!errors.language}>
+                      <FormLabel mt={"1rem"} fontSize={"xl"}>
+                        {" "}
+                        <Icon fontSize={25} as={TbLanguage} />{" "}
+                        {t("language", "Language")}
+                      </FormLabel>
+                      <Select
+                        defaultValue={""}
+                        mb={"1rem"}
+                        {...register("language", {
+                          required: t(
+                            "field-required",
+                            "This field is required"
+                          ),
+                        })}
+                      >
+                        <option value="" disabled>
+                          {t("choose-language", "Choose a language")}
+                        </option>
+                        <option value="ENGLISH">
+                          {t("english", "English")}
+                        </option>
+                        <option value="POLISH">{t("polish", "Polish")}</option>
+                        <option value="GERMAN">{t("german", "German")}</option>
+                      </Select>
 
                       <FormErrorMessage>
                         {errors?.language && errors.language.message}
                       </FormErrorMessage>
                     </FormControl>
 
-                  {exception && (
-                    <Alert status="error" borderRadius={"30px"}>
-                      <AlertIcon />
-                      <AlertDescription>{exception}</AlertDescription>
+                    {exception && (
+                      <Alert status="error" borderRadius={"30px"}>
+                        <AlertIcon />
+                        <AlertDescription>{exception}</AlertDescription>
+                      </Alert>
+                    )}
+                  </VStack>
+                  <Flex
+                    pt={".rem"}
+                    width={"full"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                  >
+                    <Link to="/signin">
+                      <Button colorScheme="blue" variant={"link"}>
+                        {t("sign-in", "Already have an account?")}
+                      </Button>
+                    </Link>
+                    <Button
+                      colorScheme="twitter"
+                      isDisabled={!!buttonState}
+                      type={"submit"}
+                    >
+                      {t("sign-up", "Sign up")}
+                    </Button>
+                  </Flex>
+                  {status === true ? (
+                    <Alert
+                      status="success"
+                      borderRadius={"30px"}
+                      variant="subtle"
+                      alignItems="center"
+                      justifyContent="center"
+                      textAlign="center"
+                      height="60px"
+                    >
+                      <AlertIcon boxSize="40px" mr={0} />
+                      <AlertDescription>
+                        {" "}
+                        Success! Redirecting...
+                      </AlertDescription>
                     </Alert>
+                  ) : (
+                    ""
                   )}
                 </VStack>
-                <Flex
-                  pt={".rem"}
-                  width={"full"}
-                  alignItems={"center"}
-                  justifyContent={"space-between"}
-                >
-                  <Link to="/signin">
-                    <Button colorScheme="blue" variant={"link"}>
-                      {t("sign-in", "Already have an account?")}
-                    </Button>
-                  </Link>
-                  <Button
-                    colorScheme="twitter"
-                    isDisabled={!!buttonState}
-                    type={"submit"}
-                  >
-                    {t("sign-up", "Sign up")}
-                  </Button>
-                </Flex>
-                {status === true ? (
-                  <Alert
-                    status="success"
-                    borderRadius={"30px"}
-                    variant="subtle"
-                    alignItems="center"
-                    justifyContent="center"
-                    textAlign="center"
-                    height="60px"
-                  >
-                    <AlertIcon boxSize="40px" mr={0} />
-                    <AlertDescription>
-                      {" "}
-                      Success! Redirecting...
-                    </AlertDescription>
-                  </Alert>
-                ) : (
-                  ""
-                )}
-              </VStack>
-            </form>
-          </Stack>
+              </form>
+            </Stack>
+          </Flex>
         </Flex>
       </Flex>
     </div>

@@ -84,7 +84,7 @@ export const Edit = () => {
 
       reset();
     });
-  }, []);
+  }, [reset]);
   const onSubmit = (data: EditFormValues) => {
     setButtonState(true);
     console.log("data", data);

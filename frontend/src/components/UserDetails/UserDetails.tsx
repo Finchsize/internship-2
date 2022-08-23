@@ -53,7 +53,7 @@ const UserDetails = ({ nickname, onClose }: UserDetailsProps) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((response) => setUserDetails(response.data));
-  }, []);
+  }, [nickname]);
   return (
     <Portal>
       <Flex

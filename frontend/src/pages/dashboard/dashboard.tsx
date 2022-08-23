@@ -2,10 +2,9 @@ import Cookies from "js-cookie";
 import parseJwt from "../../lib/parseJwt";
 import axiosInstance from "../../lib/axios";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-
-import { Flex, HStack, Input, VStack, Box } from "@chakra-ui/react";
+import { Flex, HStack, Input, VStack } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
 import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
@@ -32,7 +31,7 @@ export const Dashboard = () => {
       }
     }, 100);
     return () => clearInterval(timer);
-  }, []);
+  }, [navigator]);
 
   useEffect(() => {
     axiosInstance({
@@ -53,7 +52,7 @@ export const Dashboard = () => {
           : "de"
       )
     );
-  }, []);
+  }, [JWT?.nickname, i18n]);
   const params = useParams();
 
   const msgBoxRef = useRef<null | HTMLDivElement>(null);
@@ -97,7 +96,7 @@ export const Dashboard = () => {
 
   const [messages, setMessages] = useState<MessageType[]>([]);
 
-  const getMessages = async () => {
+  const getMessages = useCallback(async () => {
     await axiosInstance({
       method: "get",
       headers: {
@@ -110,20 +109,20 @@ export const Dashboard = () => {
     }).then((response) => {
       setMessages(response.data);
     });
-  };
+  }, [params.id]);
 
   /* Fetch messages from the backend */
   useEffect(() => {
     getMessages();
     const timer = setInterval(getMessages, 500);
     return () => clearInterval(timer);
-  }, []);
+  }, [getMessages]);
 
   useEffect(() => {
     if (msgBoxRef.current !== null) {
       msgBoxRef.current!.scrollIntoView({ behavior: "smooth" });
     }
-  }, [msgBoxRef.current, messages]);
+  }, [messages]);
   return (
     <Flex
       flexDirection={"row"}

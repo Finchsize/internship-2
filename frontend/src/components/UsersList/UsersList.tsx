@@ -75,7 +75,7 @@ export const ChatDetails = () => {
         );
       }
     });
-  }, [user, add]);
+  }, [user, add, params.id]);
 
   return (
     <>
@@ -151,7 +151,7 @@ export const ChatDetails = () => {
       </VStack>
       {user && isLoggedInUserAnOwner() && params.id && (
         <MemberManage
-          isOpen={typeof user !== undefined}
+          isOpen={typeof user !== "undefined"}
           onClose={() => {
             setUser(undefined);
           }}

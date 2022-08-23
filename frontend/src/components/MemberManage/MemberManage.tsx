@@ -9,7 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axiosInstance from "../../lib/axios";
 
 type Props = {
