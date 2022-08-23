@@ -187,28 +187,6 @@ export const Edit = () => {
                 justifyContent={"space-between"}
               >
                 <VStack spacing={0} width={"full"} alignItems={"flex-start"}>
-                  <FormControl my={3} isInvalid={!!errors.nickname}>
-                    <FormLabel fontSize={"xl"}>
-                      <ChatIcon /> {t("nickname", "Nickname")}
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      defaultValue={nickname}
-                      {...register("nickname", {
-                        required: t("field-required", "this field is required"),
-                        minLength: {
-                          value: 3,
-                          message: t(
-                            "min-3-characters",
-                            "minimum length should be 3 characters"
-                          ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.nickname && errors.nickname.message}
-                    </FormErrorMessage>
-                  </FormControl>
                   <FormControl isInvalid={!!errors.firstName}>
                     <FormLabel mt={"1rem"} fontSize={"xl"}>
                       {" "}
@@ -265,27 +243,7 @@ export const Edit = () => {
                       {errors?.lastName && errors.lastName.message}
                     </FormErrorMessage>
                   </FormControl>
-                  <FormControl isInvalid={!!errors.email}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <EmailIcon /> Email
-                    </FormLabel>
-                    <Input
-                      type="string"
-                      defaultValue={email}
-                      {...register("email", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: emailValidatorRegex,
-                          message: t("invalid-email", "Invalid email"),
-                        },
-                      })}
-                    />
 
-                    <FormErrorMessage>
-                      {errors?.email && errors.email.message}
-                    </FormErrorMessage>
-                  </FormControl>
                   <FormControl isInvalid={!!errors.phoneNumber}>
                     <FormLabel fontSize={"xl"} mt={"1rem"}>
                       {" "}
