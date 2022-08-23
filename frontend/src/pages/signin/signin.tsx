@@ -1,6 +1,5 @@
 import {
   Flex,
-  Container,
   Heading,
   Input,
   Button,
@@ -14,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
 import { MetaTags } from "../../components/MetaTags";
+import { LanguageSelector } from "../../components/LanguageSelector";
 
 export const Signin = () => {
   const { t } = useTranslation("signin");
@@ -61,7 +61,9 @@ export const Signin = () => {
       })
       .catch((error) => {
         if (error.response) {
-          setException(t("not-found") + error.response.data.exceptionMessage.split(":")[1]);
+          setException(
+            t("not-found") + error.response.data.exceptionMessage.split(":")[1]
+          );
         } else if (error.request) {
           console.log(error.request);
         } else {
@@ -76,17 +78,22 @@ export const Signin = () => {
     <Flex
       bgColor={"blackAlpha.50"}
       width={"full"}
-      minHeight={"100vh"}
-      alignItems={"center"}
+      height={"100vh"}
+      alignItems={"flex-end"}
+      flexDirection={"column"}
     >
       <MetaTags
         title="Sign in"
         description="Sign in to your chat account"
         authors="Maciej Malinowski, Marcel Alefierowicz"
       />
-      <Container>
+      <Flex pr={4} pt={4}>
+        <LanguageSelector />
+      </Flex>
+      <Flex h="full" alignItems={"center"} w="full" justifyContent={"center"}>
         <form onSubmit={handleSubmit}>
           <Flex
+            w={"md"}
             bgColor={"white"}
             direction={"column"}
             p={6}
@@ -157,7 +164,7 @@ export const Signin = () => {
             </Flex>
           </Flex>
         </form>
-      </Container>
+      </Flex>
     </Flex>
   );
 };
