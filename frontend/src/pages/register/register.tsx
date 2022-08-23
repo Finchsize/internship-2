@@ -52,6 +52,7 @@ export const Register = () => {
   useEffect(() => {
     console.log(errors);
   }, [errors]);
+
   async function onSubmit(data: any) {
     setButtonState(true);
 
