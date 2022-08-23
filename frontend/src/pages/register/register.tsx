@@ -5,6 +5,9 @@ import {
   Select,
   FormErrorMessage,
   VStack,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
 import { Heading, Stack } from "@chakra-ui/react";
 import { EmailIcon } from "@chakra-ui/icons";
@@ -21,6 +24,7 @@ import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { MetaTags } from "../../components/MetaTags";
+import { BiSleepy } from "react-icons/bi";
 
 interface RegisterFormValues {
   nickname: string;
@@ -48,10 +52,8 @@ export const Register = () => {
 
   const [buttonState, setButtonState] = useState<Boolean>(false);
   const [exception, setException] = useState("");
+  const [status, setStatus] = useState<Boolean>(false);
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
   async function onSubmit(data: any) {
     setButtonState(true);
 
@@ -71,12 +73,16 @@ export const Register = () => {
         }).then((response) => {
           setException("");
           Cookies.set("token", response.data, { expires: 7 });
-          navigate("/signin");
+          setStatus(true);
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
         });
       })
       .catch((error) => {
         if (error.message === "Network Error") {
           setButtonState(false);
+          setStatus(false);
           setException(
             t(
               "network-error",
@@ -86,9 +92,11 @@ export const Register = () => {
         }
         if (error.response) {
           setButtonState(false);
+          setStatus(false);
           setException(error.response.data.exceptionMessage);
         } else {
           setButtonState(false);
+          setStatus(false);
           console.log("Error", error.message);
         }
       });
@@ -330,9 +338,10 @@ export const Register = () => {
                   </FormControl>
 
                   {exception && (
-                    <Flex pt={".5rem"} textColor={"red.600"}>
-                      <div>{exception}</div>
-                    </Flex>
+                    <Alert status="error" borderRadius={"30px"}>
+                      <AlertIcon />
+                      <AlertDescription>{exception}</AlertDescription>
+                    </Alert>
                   )}
                 </VStack>
                 <Flex
@@ -354,6 +363,25 @@ export const Register = () => {
                     {t("sign-up", "Sign up")}
                   </Button>
                 </Flex>
+                {status === true ? (
+                  <Alert
+                    status="success"
+                    borderRadius={"30px"}
+                    variant="subtle"
+                    alignItems="center"
+                    justifyContent="center"
+                    textAlign="center"
+                    height="60px"
+                  >
+                    <AlertIcon boxSize="40px" mr={0} />
+                    <AlertDescription>
+                      {" "}
+                      Success! Redirecting...
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  ""
+                )}
               </VStack>
             </form>
           </Stack>
