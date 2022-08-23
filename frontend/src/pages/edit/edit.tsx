@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Stack, Text } from "@chakra-ui/react";
-import { ChatIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import { PhoneIcon } from "@chakra-ui/icons";
 import { BsGlobe } from "react-icons/bs";
 import { HiIdentification, HiOutlineIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
@@ -25,7 +25,7 @@ import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { MetaTags } from "../../components/MetaTags";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 interface EditFormValues {
   nickname: string;
@@ -58,7 +58,6 @@ export const Edit = () => {
   const [nickname, setNickname] = useState<string>();
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
-  const [email, setEmail] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
@@ -67,7 +66,6 @@ export const Edit = () => {
   const [exception, setException] = useState<string>("");
 
   const nameValidatorRegex = RegExp("^[A-Z][^A-Z]*$");
-  const emailValidatorRegex = RegExp("^(.+)@(.+)\\.(.+)$");
   const phoneValidatorRegex = RegExp("^[0-9]{9}$");
 
   useEffect(() => {
@@ -78,20 +76,12 @@ export const Edit = () => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      const {
-        nickname,
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        country,
-        city,
-      } = res.data;
+      const { nickname, firstName, lastName, phoneNumber, country, city } =
+        res.data;
 
       setNickname(nickname);
       setFirstName(firstName);
       setLastName(lastName);
-      setEmail(email);
       setphoneNumber(phoneNumber);
       setCountry(country);
       setCity(city);
@@ -118,7 +108,7 @@ export const Edit = () => {
     })
       .then(() => {
         setException("");
-        // navigate("/");
+        navigate("/");
       })
       .catch((error) => {
         if (error.message === "Network Error") {
@@ -168,7 +158,7 @@ export const Edit = () => {
           <Stack width={"full"}>
             <Box>
               <Heading textAlign={"center"} size={"3xl"} pt={"4"}>
-                <h1>{t("title", "Edit")}</h1>
+                {t("title", "Edit")}
               </Heading>
               <Text
                 fontWeight={"semibold"}
@@ -410,8 +400,17 @@ export const Edit = () => {
                   pt={".5rem"}
                   width={"full"}
                   alignItems={"center"}
-                  justifyContent={"right"}
+                  justifyContent={"space-between"}
                 >
+                  <Link to="/">
+                    <Button
+                      colorScheme="red"
+                      fontWeight={"bold"}
+                      variant={"link"}
+                    >
+                      Return to dashboard
+                    </Button>
+                  </Link>
                   <Button
                     colorScheme="twitter"
                     isDisabled={!!buttonState}
