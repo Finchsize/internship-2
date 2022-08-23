@@ -1,19 +1,21 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Flex,
   FormControl,
-  FormHelperText,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Icon,
   Input,
-  Link,
   Select,
+  VStack,
+  Switch,
 } from "@chakra-ui/react";
+
 import { Stack, Text } from "@chakra-ui/react";
-import { ChatIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import { PhoneIcon } from "@chakra-ui/icons";
 import { BsGlobe } from "react-icons/bs";
 import { HiIdentification, HiOutlineIdentification } from "react-icons/hi";
 import { MdLocationCity } from "react-icons/md";
@@ -22,15 +24,48 @@ import axiosInstance from "../../lib/axios";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { MetaTags } from "../../components/MetaTags";
+import { useForm } from "react-hook-form";
+import { useNavigate, Link } from "react-router-dom";
+
+interface EditFormValues {
+  nickname: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  country: string;
+  city: string;
+  language: string;
+  timeZone: string;
+  showAddress: boolean;
+  showEmail: boolean;
+  showFirstNameAndLastName: boolean;
+  showPhoneNumber: boolean;
+  deleted: boolean;
+  userStatus: string;
+}
 
 export const Edit = () => {
-  const [login, setLogin] = useState<string>();
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EditFormValues>();
+
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
-  const [language, setLanguage] = useState<string>("ENGLISH");
+
+  const [buttonState, setButtonState] = useState<Boolean>(false);
+  const [exception, setException] = useState<string>("");
+
+  const nameValidatorRegex = RegExp("^[A-Z][^A-Z]*$");
+  const phoneValidatorRegex = RegExp("^[0-9]{9}$");
+
   useEffect(() => {
     axiosInstance({
       method: "get",
@@ -39,75 +74,52 @@ export const Edit = () => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      setLogin(res.data.nickname);
-      setFirstName(res.data.firstName);
-      setLastName(res.data.lastName);
-      setphoneNumber(res.data.phoneNumber);
-      setCountry(res.data.country);
-      setCity(res.data.city);
-      setLanguage(res.data.userLanguage);
+      const { firstName, lastName, phoneNumber, country, city } = res.data;
+
+      setFirstName(firstName);
+      setLastName(lastName);
+      setphoneNumber(phoneNumber);
+      setCountry(country);
+      setCity(city);
+
+      reset();
     });
   }, []);
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    await axiosInstance({
-      method: "put",
-      url: "/users/",
-
+  const onSubmit = (data: EditFormValues) => {
+    setButtonState(true);
+    console.log("data", data);
+    axiosInstance({
+      url: "/users",
       headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
+        Authorization: Cookies.get("token")!,
       },
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-        username: login,
-        phoneNumber: phoneNumber,
-        country: country,
-        city: city,
-        email: "LOLOOLOLOLO@gmail.com",
-        language: language,
-        timeZone: "string",
-        showFirstNameAndLastName: true,
-        showEmail: true,
-        showPhoneNumber: true,
-        showAddress: true,
-        deleted: true,
-        userStatus: "OFFLINE",
-      },
-    });
+      method: "PUT",
+      data: data,
+    })
+      .then(() => {
+        setException("");
+        navigate("/");
+      })
+      .catch((error) => {
+        if (error.message === "Network Error") {
+          setButtonState(false);
+          setException(
+            t(
+              "network-error",
+              "A network error has occurred, please try again later."
+            )
+          );
+        }
+        if (error.response) {
+          setButtonState(false);
+          setException(error.response.data.exceptionMessage);
+        } else {
+          setButtonState(false);
+          console.log("Error", error.message);
+        }
+      });
   };
 
-  const checkPhoneNumber = (): boolean => {
-    if (typeof phoneNumber === "undefined") {
-      return true;
-    }
-
-    return phoneNumber.length === 9;
-  };
-  const checkLogin = (): boolean => {
-    if (typeof login === "undefined") {
-      return true;
-    }
-    return login.length > 3;
-  };
-  const checkCity = (): boolean => {
-    if (typeof city === "undefined") {
-      return true;
-    }
-    const regex = new RegExp("^[A-Z][a-z]*$");
-
-    return regex.test(city);
-  };
-  const checkCountry = (): boolean => {
-    if (typeof country === "undefined") {
-      return true;
-    }
-    const regex = new RegExp("^[A-Z][a-z]*$");
-
-    return regex.test(country);
-  };
   const { t } = useTranslation("edit");
   return (
     <div>
@@ -129,7 +141,6 @@ export const Edit = () => {
           border={"1px"}
           borderColor={"gray.200"}
           width="500px"
-          height="1000px"
           justifyContent="center"
           borderRadius={30}
           padding={8}
@@ -137,7 +148,7 @@ export const Edit = () => {
           <Stack width={"full"}>
             <Box>
               <Heading textAlign={"center"} size={"3xl"} pt={"4"}>
-                <h1>{t("title", "Edit")}</h1>
+                {t("title", "Edit")}
               </Heading>
               <Text
                 fontWeight={"semibold"}
@@ -147,134 +158,259 @@ export const Edit = () => {
                 {t("subtitle", "your profile information")}
               </Text>{" "}
             </Box>
-            <Box width={"100%"}>
-              <form onSubmit={handleSubmit}>
-                <FormControl my={3}>
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <ChatIcon> </ChatIcon> {t("nickname", "Nickname")}
-                  </FormLabel>
-                  <Input
-                    isInvalid={!checkLogin()}
-                    value={login}
-                    isRequired={true}
-                    type="text"
-                    onChange={(e) => setLogin(e.target.value)}
-                  />
-                  <FormHelperText mb={"1rem"}>
-                    {t("min-3-characters", "min. 3 characters")}
-                  </FormHelperText>
 
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <p>
+            <form style={{ height: "100%" }} onSubmit={handleSubmit(onSubmit)}>
+              <VStack
+                spacing={8}
+                width={"full"}
+                height={"full"}
+                justifyContent={"space-between"}
+              >
+                <VStack spacing={0} width={"full"} alignItems={"flex-start"}>
+                  <FormControl isInvalid={!!errors.firstName}>
+                    <FormLabel mt={"1rem"} fontSize={"xl"}>
                       {" "}
-                      <Icon as={HiIdentification} />{" "}
-                      {t("first-name", "First Name")}
-                    </p>
-                  </FormLabel>
-                  <Input
-                    value={firstName}
-                    isRequired={true}
-                    type="text"
-                    onChange={(e) => setFirstName(e.target.value)}
-                    mb={"1rem"}
-                  />
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <p>
+                      <p>
+                        <Icon as={HiIdentification} />{" "}
+                        {t("first-name", "First Name")}
+                      </p>
+                    </FormLabel>
+                    <Input
+                      type="text"
+                      defaultValue={firstName}
+                      {...register("firstName", {
+                        required: t("field-required", "this field is required"),
+                        min: 3,
+                        minLength: {
+                          value: 3,
+                          message: t(
+                            "min-3-characters",
+                            "minimum length should be 3 characters"
+                          ),
+                        },
+                      })}
+                    />
+
+                    <FormErrorMessage>
+                      {errors?.firstName && errors.firstName.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.lastName}>
+                    <FormLabel mt={"1rem"} fontSize={"xl"}>
                       {" "}
-                      <Icon as={HiOutlineIdentification} />{" "}
-                      {t("last-name", "Last name")}
-                    </p>
-                  </FormLabel>
-                  <Input
-                    value={lastName}
-                    isRequired={true}
-                    placeholder={lastName}
-                    type="text"
-                    onChange={(e) => setLastName(e.target.value)}
-                    mb={"1rem"}
-                  />
+                      <p>
+                        <Icon as={HiOutlineIdentification} /> {t("last-name")}
+                      </p>
+                    </FormLabel>
+                    <Input
+                      type="text"
+                      defaultValue={lastName}
+                      {...register("lastName", {
+                        required: t("field-required", "this field is required"),
+                        max: 20,
+                        min: 3,
+                        minLength: {
+                          value: 3,
+                          message: t(
+                            "min-3-characters",
+                            "minimum length should be 3 characters"
+                          ),
+                        },
+                      })}
+                    />
 
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <PhoneIcon> </PhoneIcon> {t("phone-number", "Phone Number")}
-                  </FormLabel>
-                  <Input
-                    type="text"
-                    placeholder={phoneNumber}
-                    isRequired={true}
-                    value={phoneNumber}
-                    isInvalid={!checkPhoneNumber()}
-                    onChange={(e) => setphoneNumber(e.target.value)}
-                  />
-                  <FormHelperText mb={"1rem"}>
-                    {t(
-                      "phone-validation",
-                      "Please format your phone number correctly (9 digits)."
-                    )}
-                  </FormHelperText>
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <Icon as={BsGlobe} /> {t("country", "Country")}
-                  </FormLabel>
-                  <Input
-                    type="text"
-                    value={country}
-                    placeholder={country}
-                    isInvalid={!checkCountry()}
-                    isRequired={true}
-                    mb={"1rem"}
-                    onChange={(e) => setCountry(e.target.value)}
-                  />
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <Icon as={MdLocationCity} /> {t("city", "City")}
-                  </FormLabel>
-                  <Input
-                    type="text"
-                    value={city}
-                    placeholder={city}
-                    isInvalid={!checkCity()}
-                    mb={"1rem"}
-                    isRequired={true}
-                    onChange={(e) => setCity(e.target.value)}
-                  />
+                    <FormErrorMessage>
+                      {errors?.lastName && errors.lastName.message}
+                    </FormErrorMessage>
+                  </FormControl>
 
-                  <FormLabel fontSize={"xl"}>
-                    {" "}
-                    <Icon fontSize={25} as={TbLanguage} />{" "}
-                    {t("language", "Language")}
-                  </FormLabel>
-                  <Select
-                    value={language}
-                    isRequired
-                    mb={"1rem"}
-                    onChange={(e) => {
-                      setLanguage(e.target.value);
-                    }}
-                    defaultValue={language}
+                  <FormControl isInvalid={!!errors.phoneNumber}>
+                    <FormLabel fontSize={"xl"} mt={"1rem"}>
+                      {" "}
+                      <PhoneIcon> </PhoneIcon>{" "}
+                      {t("phone-number", "Phone Number")}
+                    </FormLabel>
+                    <Input
+                      type="tel"
+                      defaultValue={phoneNumber}
+                      {...register("phoneNumber", {
+                        required: t("field-required", "this field is required"),
+                        pattern: {
+                          value: phoneValidatorRegex,
+                          message: t(
+                            "invalid-phone-number",
+                            "Invalid phone number"
+                          ),
+                        },
+                      })}
+                    />
+
+                    <FormErrorMessage>
+                      {errors?.phoneNumber && errors.phoneNumber.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.country}>
+                    <FormLabel fontSize={"xl"} mt={"1rem"}>
+                      <Icon as={BsGlobe} /> {t("country", "Country")}
+                    </FormLabel>
+                    <Input
+                      type="text"
+                      defaultValue={country}
+                      {...register("country", {
+                        required: t("field-required", "this field is required"),
+                        max: 15,
+                        min: 4,
+                        maxLength: 15,
+                        pattern: {
+                          value: nameValidatorRegex,
+                          message: t(
+                            "capital-letter",
+                            "First letter should be a capital letter, followed by lower case letters."
+                          ),
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors?.country && errors.country.message}
+                    </FormErrorMessage>
+                    <FormLabel fontSize={"xl"} mt={"1rem"}>
+                      <Icon as={MdLocationCity} /> {t("city", "City")}
+                    </FormLabel>
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.city}>
+                    <Input
+                      type="text"
+                      defaultValue={city}
+                      {...register("city", {
+                        required: t("field-required", "this field is required"),
+                        pattern: {
+                          value: nameValidatorRegex,
+                          message: t(
+                            "capital-letter",
+                            "First letter should be a capital letter, followed by lower case letters."
+                          ),
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors?.city && errors.city.message}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.language}>
+                    <FormLabel mt={"1rem"} fontSize={"xl"}>
+                      {" "}
+                      <Icon fontSize={25} as={TbLanguage} />{" "}
+                      {t("language", "Language")}
+                    </FormLabel>
+                    <Select
+                      defaultValue={""}
+                      mb={"1rem"}
+                      {...register("language", {
+                        required: t("field-required", "This field is required"),
+                      })}
+                    >
+                      <option value="" disabled>
+                        {t("choose-language", "Choose a language")}
+                      </option>
+                      <option value="ENGLISH">{t("english", "English")}</option>
+                      <option value="POLISH">{t("polish", "Polish")}</option>
+                      <option value="GERMAN">{t("german", "German")}</option>
+                    </Select>
+
+                    <FormErrorMessage>
+                      {errors?.language && errors.language.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <Input
+                    type={"hidden"}
+                    {...register("timeZone", {
+                      value: "",
+                    })}
+                  ></Input>
+                  <Input
+                    type={"hidden"}
+                    {...register("userStatus", {
+                      value: "ONLINE",
+                    })}
+                  ></Input>
+                  <Input
+                    type={"hidden"}
+                    {...register("deleted", {
+                      value: false,
+                    })}
+                  ></Input>
+                  <Switch
+                    py={".5rem"}
+                    size={"md"}
+                    fontSize={"inherit"}
+                    fontWeight={"semibold"}
+                    colorScheme={"twitter"}
+                    {...register("showFirstNameAndLastName")}
                   >
-                    <option value={"default"} disabled>
-                      {t("choose-language", "Choose a language")}
-                    </option>
-                    <option value="ENGLISH">{t("english", "English")}</option>
-                    <option value="POLISH">{t("polish", "Polish")}</option>
-                    <option value="GERMAN">{t("german", "German")}</option>
-                  </Select>
-                  <Flex
-                    width={"full"}
-                    alignItems={"center"}
-                    justifyContent={"right"}
+                    Show first name and last name
+                  </Switch>
+                  <Switch
+                    py={".5rem"}
+                    size={"md"}
+                    fontSize={"inherit"}
+                    fontWeight={"semibold"}
+                    colorScheme={"twitter"}
+                    {...register("showEmail")}
                   >
-                    <Button colorScheme="teal" type={"submit"}>
-                      {t("confirm", "Confirm")}
+                    Show email
+                  </Switch>
+                  <Switch
+                    py={".5rem"}
+                    size={"md"}
+                    fontSize={"inherit"}
+                    fontWeight={"semibold"}
+                    colorScheme={"twitter"}
+                    {...register("showPhoneNumber")}
+                  >
+                    Show phone number
+                  </Switch>
+                  <Switch
+                    py={".5rem"}
+                    size={"md"}
+                    fontSize={"inherit"}
+                    fontWeight={"semibold"}
+                    colorScheme={"twitter"}
+                    {...register("showAddress")}
+                  >
+                    Show Address
+                  </Switch>
+                  {exception && (
+                    <Flex pt={".5rem"} textColor={"red.600"}>
+                      <div>{exception}</div>
+                    </Flex>
+                  )}
+                </VStack>
+                <Flex
+                  pt={".5rem"}
+                  width={"full"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                >
+                  <Link to="/">
+                    <Button
+                      colorScheme="red"
+                      fontWeight={"bold"}
+                      variant={"link"}
+                    >
+                      Return to dashboard
                     </Button>
-                  </Flex>
-                </FormControl>
-              </form>
-            </Box>
+                  </Link>
+                  <Button
+                    colorScheme="twitter"
+                    isDisabled={!!buttonState}
+                    type={"submit"}
+                  >
+                    Confirm
+                  </Button>
+                </Flex>
+              </VStack>
+            </form>
           </Stack>
         </Flex>
       </Flex>
