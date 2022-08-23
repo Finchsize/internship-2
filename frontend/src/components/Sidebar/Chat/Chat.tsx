@@ -1,7 +1,7 @@
 import { ListItem, Button, Icon, HStack, Text, Badge } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 import { MdPerson, MdOutlineForum } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axiosInstance from "../../../lib/axios";
 import Cookies from "js-cookie";
 
@@ -16,7 +16,7 @@ export const Chat = ({ id, owners, members, directMessage }: Props) => {
   const params = useParams();
   const [notify, setNotify] = useState(false);
 
-  const checkIfNewMessages = () => {
+  const checkIfNewMessages = useCallback(() => {
     const localNumber = localStorage.getItem(
       `channel${id === null ? "main" : id}msgCount`
     );
@@ -49,9 +49,9 @@ export const Chat = ({ id, owners, members, directMessage }: Props) => {
         setNotify(false);
       }
     });
-  };
+  }, [id, params.id]);
 
-  useEffect(() => checkIfNewMessages(), [params.id]);
+  useEffect(() => checkIfNewMessages(), [checkIfNewMessages, params.id]);
 
   useEffect(() => {
     checkIfNewMessages();
@@ -60,7 +60,7 @@ export const Chat = ({ id, owners, members, directMessage }: Props) => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [checkIfNewMessages]);
 
   return (
     <ListItem pr={".5rem"}>
