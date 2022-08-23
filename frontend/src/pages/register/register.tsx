@@ -21,6 +21,7 @@ import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { MetaTags } from "../../components/MetaTags";
+import { LanguageSelector } from "../../components/LanguageSelector";
 
 interface RegisterFormValues {
   nickname: string;
@@ -102,261 +103,296 @@ export const Register = () => {
         bgColor={"blackAlpha.50"}
         width={"full"}
         minHeight={"100vh"}
-        alignItems={"center"}
+        alignItems={"flex-end"}
         justifyContent={"center"}
+        flexDirection="column"
       >
         <MetaTags
           title={t("sign-up", "Sign up")}
           description="Create an account to chat with other users"
           authors="Maciej Malinowski, Marcel Alefierowicz"
         />
-        <Flex
-          bgColor={"whiteAlpha.50"}
-          shadow={"2xl"}
-          border={"1px"}
-          borderColor={"gray.200"}
-          width="500px"
-          justifyContent="center"
-          borderRadius={30}
-          padding={8}
-        >
-          <Stack width={"full"} height={"full"}>
-            <Heading
-              textAlign={"center"}
-              size={"2xl"}
-              pt={".25rem"}
-              pb={".5rem"}
-            >
-              {t("sign-up", "Sign up")}
-            </Heading>
-
-            <form style={{ height: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-              <VStack
-                spacing={8}
-                width={"full"}
-                height={"full"}
-                justifyContent={"space-between"}
+        <Flex pr={4} pt={4} pb={8}>
+          <LanguageSelector />
+        </Flex>
+        <Flex h="full" alignItems={"center"} w="full" justifyContent={"center"}>
+          <Flex
+            bgColor={"whiteAlpha.50"}
+            shadow={"2xl"}
+            border={"1px"}
+            borderColor={"gray.200"}
+            width="500px"
+            justifyContent="center"
+            borderRadius={30}
+            padding={8}
+          >
+            <Stack width={"full"} height={"full"}>
+              <Heading
+                textAlign={"center"}
+                size={"2xl"}
+                pt={".25rem"}
+                pb={".5rem"}
               >
-                <VStack spacing={0} width={"full"} alignItems={"flex-start"}>
-                  <FormControl my={3} isInvalid={!!errors.nickname}>
-                    <FormLabel fontSize={"xl"}>
-                      <ChatIcon /> {t("nickname", "Nickname")}
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      {...register("nickname", {
-                        required: t("field-required", "this field is required"),
-                        minLength: {
-                          value: 3,
-                          message: t(
-                            "min-3-characters",
-                            "minimum length should be 3 characters"
-                          ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.nickname && errors.nickname.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.firstName}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <p>
-                        <Icon as={HiIdentification} />{" "}
-                        {t("first-name", "First Name")}
-                      </p>
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      {...register("firstName", {
-                        required: t("field-required", "this field is required"),
-                        min: 3,
-                        minLength: {
-                          value: 3,
-                          message: t(
-                            "min-3-characters",
-                            "minimum length should be 3 characters"
-                          ),
-                        },
-                      })}
-                    />
+                {t("sign-up", "Sign up")}
+              </Heading>
 
-                    <FormErrorMessage>
-                      {errors?.firstName && errors.firstName.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.lastName}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <p>
-                        <Icon as={HiOutlineIdentification} /> {t("last-name")}
-                      </p>
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      {...register("lastName", {
-                        required: t("field-required", "this field is required"),
-                        max: 20,
-                        min: 3,
-                        minLength: {
-                          value: 3,
-                          message: t(
-                            "min-3-characters",
-                            "minimum length should be 3 characters"
-                          ),
-                        },
-                      })}
-                    />
-
-                    <FormErrorMessage>
-                      {errors?.lastName && errors.lastName.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.email}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <EmailIcon /> Email
-                    </FormLabel>
-                    <Input
-                      type="string"
-                      {...register("email", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: emailValidatorRegex,
-                          message: t("invalid-email", "Invalid email"),
-                        },
-                      })}
-                    />
-
-                    <FormErrorMessage>
-                      {errors?.email && errors.email.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.phoneNumber}>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      {" "}
-                      <PhoneIcon> </PhoneIcon>{" "}
-                      {t("phone-number", "Phone Number")}
-                    </FormLabel>
-                    <Input
-                      type="tel"
-                      {...register("phoneNumber", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: phoneValidatorRegex,
-                          message: t(
-                            "invalid-phone-number",
-                            "Invalid phone number"
-                          ),
-                        },
-                      })}
-                    />
-
-                    <FormErrorMessage>
-                      {errors?.phoneNumber && errors.phoneNumber.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.country}>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      <Icon as={BsGlobe} /> {t("country", "Country")}
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      {...register("country", {
-                        required: t("field-required", "this field is required"),
-                        max: 15,
-                        min: 4,
-                        maxLength: 15,
-                        pattern: {
-                          value: nameValidatorRegex,
-                          message: t(
-                            "capital-letter",
-                            "First letter should be a capital letter, followed by lower case letters."
-                          ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.country && errors.country.message}
-                    </FormErrorMessage>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      <Icon as={MdLocationCity} /> {t("city", "City")}
-                    </FormLabel>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.city}>
-                    <Input
-                      type="text"
-                      {...register("city", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: nameValidatorRegex,
-                          message: t(
-                            "capital-letter",
-                            "First letter should be a capital letter, followed by lower case letters."
-                          ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.city && errors.city.message}
-                    </FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl isInvalid={!!errors.language}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <Icon fontSize={25} as={TbLanguage} />{" "}
-                      {t("language", "Language")}
-                    </FormLabel>
-                    <Select
-                      defaultValue={""}
-                      mb={"1rem"}
-                      {...register("language", {
-                        required: t("field-required", "This field is required"),
-                      })}
-                    >
-                      <option value="" disabled>
-                        {t("choose-language", "Choose a language")}
-                      </option>
-                      <option value="ENGLISH">{t("english", "English")}</option>
-                      <option value="POLISH">{t("polish", "Polish")}</option>
-                      <option value="GERMAN">{t("german", "German")}</option>
-                    </Select>
-
-                    <FormErrorMessage>
-                      {errors?.language && errors.language.message}
-                    </FormErrorMessage>
-                  </FormControl>
-
-                  {exception && (
-                    <Flex pt={".5rem"} textColor={"red.600"}>
-                      <div>{exception}</div>
-                    </Flex>
-                  )}
-                </VStack>
-                <Flex
-                  pt={".rem"}
+              <form
+                style={{ height: "100%" }}
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <VStack
+                  spacing={8}
                   width={"full"}
-                  alignItems={"center"}
+                  height={"full"}
                   justifyContent={"space-between"}
                 >
-                  <Link to="/signin">
-                    <Button colorScheme="blue" variant={"link"}>
-                      {t("sign-in", "Already have an account?")}
-                    </Button>
-                  </Link>
-                  <Button
-                    colorScheme="twitter"
-                    isDisabled={!!buttonState}
-                    type={"submit"}
+                  <VStack spacing={0} width={"full"} alignItems={"flex-start"}>
+                    <FormControl my={3} isInvalid={!!errors.nickname}>
+                      <FormLabel fontSize={"xl"}>
+                        <ChatIcon /> {t("nickname", "Nickname")}
+                      </FormLabel>
+                      <Input
+                        type="text"
+                        {...register("nickname", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          minLength: {
+                            value: 3,
+                            message: t(
+                              "min-3-characters",
+                              "minimum length should be 3 characters"
+                            ),
+                          },
+                        })}
+                      />
+                      <FormErrorMessage>
+                        {errors?.nickname && errors.nickname.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.firstName}>
+                      <FormLabel mt={"1rem"} fontSize={"xl"}>
+                        {" "}
+                        <p>
+                          <Icon as={HiIdentification} />{" "}
+                          {t("first-name", "First Name")}
+                        </p>
+                      </FormLabel>
+                      <Input
+                        type="text"
+                        {...register("firstName", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          min: 3,
+                          minLength: {
+                            value: 3,
+                            message: t(
+                              "min-3-characters",
+                              "minimum length should be 3 characters"
+                            ),
+                          },
+                        })}
+                      />
+
+                      <FormErrorMessage>
+                        {errors?.firstName && errors.firstName.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.lastName}>
+                      <FormLabel mt={"1rem"} fontSize={"xl"}>
+                        {" "}
+                        <p>
+                          <Icon as={HiOutlineIdentification} /> {t("last-name")}
+                        </p>
+                      </FormLabel>
+                      <Input
+                        type="text"
+                        {...register("lastName", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          max: 20,
+                          min: 3,
+                          minLength: {
+                            value: 3,
+                            message: t(
+                              "min-3-characters",
+                              "minimum length should be 3 characters"
+                            ),
+                          },
+                        })}
+                      />
+
+                      <FormErrorMessage>
+                        {errors?.lastName && errors.lastName.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.email}>
+                      <FormLabel mt={"1rem"} fontSize={"xl"}>
+                        {" "}
+                        <EmailIcon /> Email
+                      </FormLabel>
+                      <Input
+                        type="string"
+                        {...register("email", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          pattern: {
+                            value: emailValidatorRegex,
+                            message: t("invalid-email", "Invalid email"),
+                          },
+                        })}
+                      />
+
+                      <FormErrorMessage>
+                        {errors?.email && errors.email.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.phoneNumber}>
+                      <FormLabel fontSize={"xl"} mt={"1rem"}>
+                        {" "}
+                        <PhoneIcon> </PhoneIcon>{" "}
+                        {t("phone-number", "Phone Number")}
+                      </FormLabel>
+                      <Input
+                        type="tel"
+                        {...register("phoneNumber", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          pattern: {
+                            value: phoneValidatorRegex,
+                            message: t(
+                              "invalid-phone-number",
+                              "Invalid phone number"
+                            ),
+                          },
+                        })}
+                      />
+
+                      <FormErrorMessage>
+                        {errors?.phoneNumber && errors.phoneNumber.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.country}>
+                      <FormLabel fontSize={"xl"} mt={"1rem"}>
+                        <Icon as={BsGlobe} /> {t("country", "Country")}
+                      </FormLabel>
+                      <Input
+                        type="text"
+                        {...register("country", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          max: 15,
+                          min: 4,
+                          maxLength: 15,
+                          pattern: {
+                            value: nameValidatorRegex,
+                            message: t(
+                              "capital-letter",
+                              "First letter should be a capital letter, followed by lower case letters."
+                            ),
+                          },
+                        })}
+                      />
+                      <FormErrorMessage>
+                        {errors?.country && errors.country.message}
+                      </FormErrorMessage>
+                      <FormLabel fontSize={"xl"} mt={"1rem"}>
+                        <Icon as={MdLocationCity} /> {t("city", "City")}
+                      </FormLabel>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.city}>
+                      <Input
+                        type="text"
+                        {...register("city", {
+                          required: t(
+                            "field-required",
+                            "this field is required"
+                          ),
+                          pattern: {
+                            value: nameValidatorRegex,
+                            message: t(
+                              "capital-letter",
+                              "First letter should be a capital letter, followed by lower case letters."
+                            ),
+                          },
+                        })}
+                      />
+                      <FormErrorMessage>
+                        {errors?.city && errors.city.message}
+                      </FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={!!errors.language}>
+                      <FormLabel mt={"1rem"} fontSize={"xl"}>
+                        {" "}
+                        <Icon fontSize={25} as={TbLanguage} />{" "}
+                        {t("language", "Language")}
+                      </FormLabel>
+                      <Select
+                        defaultValue={""}
+                        mb={"1rem"}
+                        {...register("language", {
+                          required: t(
+                            "field-required",
+                            "This field is required"
+                          ),
+                        })}
+                      >
+                        <option value="" disabled>
+                          {t("choose-language", "Choose a language")}
+                        </option>
+                        <option value="ENGLISH">
+                          {t("english", "English")}
+                        </option>
+                        <option value="POLISH">{t("polish", "Polish")}</option>
+                        <option value="GERMAN">{t("german", "German")}</option>
+                      </Select>
+
+                      <FormErrorMessage>
+                        {errors?.language && errors.language.message}
+                      </FormErrorMessage>
+                    </FormControl>
+
+                    {exception && (
+                      <Flex pt={".5rem"} textColor={"red.600"}>
+                        <div>{exception}</div>
+                      </Flex>
+                    )}
+                  </VStack>
+                  <Flex
+                    pt={".rem"}
+                    width={"full"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
                   >
-                    {t("sign-up", "Sign up")}
-                  </Button>
-                </Flex>
-              </VStack>
-            </form>
-          </Stack>
+                    <Link to="/signin">
+                      <Button colorScheme="blue" variant={"link"}>
+                        {t("sign-in", "Already have an account?")}
+                      </Button>
+                    </Link>
+                    <Button
+                      colorScheme="twitter"
+                      isDisabled={!!buttonState}
+                      type={"submit"}
+                    >
+                      {t("sign-up", "Sign up")}
+                    </Button>
+                  </Flex>
+                </VStack>
+              </form>
+            </Stack>
+          </Flex>
         </Flex>
       </Flex>
     </div>
