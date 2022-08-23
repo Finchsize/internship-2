@@ -54,8 +54,6 @@ export const Edit = () => {
   } = useForm<EditFormValues>();
 
   const navigate = useNavigate();
-
-  const [nickname, setNickname] = useState<string>();
   const [firstName, setFirstName] = useState<string>();
   const [lastName, setLastName] = useState<string>();
   const [phoneNumber, setphoneNumber] = useState<string>();
@@ -76,10 +74,8 @@ export const Edit = () => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      const { nickname, firstName, lastName, phoneNumber, country, city } =
-        res.data;
+      const { firstName, lastName, phoneNumber, country, city } = res.data;
 
-      setNickname(nickname);
       setFirstName(firstName);
       setLastName(lastName);
       setphoneNumber(phoneNumber);
@@ -89,12 +85,6 @@ export const Edit = () => {
       reset();
     });
   }, []);
-
-  useEffect(() => {
-    console.log("nickname:", nickname);
-    console.log("logging: ", errors.nickname);
-  });
-
   const onSubmit = (data: EditFormValues) => {
     setButtonState(true);
     console.log("data", data);
