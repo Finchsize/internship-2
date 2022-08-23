@@ -12,17 +12,16 @@ import {
   IconButton,
   Icon,
 } from "@chakra-ui/react";
-import { BiCommentAdd, BiFontSize, BiLogOut } from "react-icons/bi";
-import { MdChat, MdSend, MdPerson, MdOutlineForum } from "react-icons/md";
+import { BiCommentAdd, BiLogOut } from "react-icons/bi";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChatCreate } from "../ChatCreate";
 import { Chat } from "./Chat";
 
-type Chat = {
+type ChatType = {
   id: number | null;
   members?: string[];
   owners?: string[];
@@ -33,10 +32,8 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
   const [showChannelCreationPopup, setShowChannelCreationPopup] =
     useState(false);
 
-  const [chats, setChats] = useState<Chat[]>([{ id: null }]);
+  const [chats, setChats] = useState<ChatType[]>([{ id: null }]);
 
-  const params = useParams();
-  
   const logOut = async () => {
     await axiosInstance({
       method: "get",
@@ -69,7 +66,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      setChats(res.data);
+      setChats([chats[0], ...res.data]);
     });
   }, [showChannelCreationPopup]);
 
