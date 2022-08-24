@@ -1,10 +1,9 @@
-import { ChatIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
+import { BellIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Text,
   Flex,
   Heading,
   List,
-  ListItem,
   Button,
   HStack,
   Avatar,
@@ -16,7 +15,6 @@ import { BiCommentAdd, BiLogOut } from "react-icons/bi";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../lib/axios";
-import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChatCreate } from "../ChatCreate";
 import { Chat } from "./Chat";
@@ -66,7 +64,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      setChats([chats[0], ...res.data]);
+      setChats([{ id: null }, ...res.data]);
     });
   }, [showChannelCreationPopup]);
 

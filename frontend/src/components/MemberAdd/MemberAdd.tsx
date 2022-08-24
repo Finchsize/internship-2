@@ -1,4 +1,4 @@
-import { SearchIcon, AddIcon } from "@chakra-ui/icons";
+import { SearchIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -8,7 +8,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Text,
   CircularProgress,
   FormControl,
   FormErrorMessage,
@@ -16,7 +15,6 @@ import {
   HStack,
   IconButton,
   Input,
-  VStack,
 } from "@chakra-ui/react";
 import Cookies from "js-cookie";
 import { useState } from "react";
@@ -127,7 +125,12 @@ export const MemberAdd = ({ isOpen, onClose, channel }: Props) => {
             </HStack>
           </form>
         </ModalBody>
-        <ModalFooter w={"full"} gap={4} alignItems="center" justifyItems={"center"}>
+        <ModalFooter
+          w={"full"}
+          gap={4}
+          alignItems="center"
+          justifyItems={"center"}
+        >
           {successful &&
             (!loading ? (
               <>
