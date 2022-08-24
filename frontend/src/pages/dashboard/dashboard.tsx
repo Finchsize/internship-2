@@ -138,7 +138,6 @@ export const Dashboard = () => {
 
       <Sidebar nickname={JWT?.nickname} />
       <VStack w="full" h="full" spacing={"0"}>
-        <Topbar />
         <HStack w="full" h="full" alignItems={"flex-end"} spacing={0}>
           <Flex w="full" h="full" position={"relative"} alignItems={"flex-end"}>
             <VStack
