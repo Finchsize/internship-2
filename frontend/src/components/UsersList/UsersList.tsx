@@ -149,17 +149,18 @@ export const ChatDetails = () => {
           ))}
         </List>
       </VStack>
-      {user && isLoggedInUserAnOwner() && params.id && (
+      {user && (
         <MemberManage
           isOpen={typeof user !== "undefined"}
           onClose={() => {
             setUser(undefined);
           }}
-          channel={parseInt(params.id)}
+          channel={typeof params.id !== "undefined" ? parseInt(params.id) : -1}
           member={user}
+          isOwner={isLoggedInUserAnOwner()}
         />
       )}
-      {add && isLoggedInUserAnOwner() && params.id && (
+      {add && params.id && isLoggedInUserAnOwner() && (
         <MemberAdd
           isOpen={add}
           onClose={() => setAdd(false)}
