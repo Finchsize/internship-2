@@ -56,7 +56,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
     });
   };
 
-  useEffect(() => {
+  const getChats = () => {
     axiosInstance({
       method: "get",
       url: "/channels",
@@ -64,9 +64,19 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
+      console.log("Res data: ", res.data)
       setChats([{ id: null }, ...res.data]);
     });
-  }, [showChannelCreationPopup]);
+  };
+
+  useEffect(() => getChats(), [showChannelCreationPopup]);
+
+  /* Fetch chats from the backend */
+  useEffect(() => {
+    getChats();
+    const timer = setInterval(getChats, 500);
+    return () => clearInterval(timer);
+  }, []);
 
   const { t } = useTranslation("sidebar");
   return (
