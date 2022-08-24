@@ -18,6 +18,7 @@ import axiosInstance from "../../lib/axios";
 import { useTranslation } from "react-i18next";
 import { ChatCreate } from "../ChatCreate";
 import { Chat } from "./Chat";
+import { Link } from "react-router-dom";
 
 type ChatType = {
   id: number | null;
@@ -64,7 +65,6 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      console.log("Res data: ", res.data)
       setChats([{ id: null }, ...res.data]);
     });
   };
@@ -134,19 +134,13 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
           </Text>
         </HStack>
         <HStack>
-          <IconButton
-            variant={"ghost"}
-            aria-label={t(
-              "sidebar:read-notifications",
-              "Read unread notifications"
-            )}
-            icon={<BellIcon />}
-          />
-          <IconButton
-            variant={"ghost"}
-            aria-label={t("sidebar:change-settings", "Change settings")}
-            icon={<SettingsIcon />}
-          />
+          <Link to="/edit">
+            <IconButton
+              variant={"ghost"}
+              aria-label={t("sidebar:change-settings", "Change settings")}
+              icon={<SettingsIcon />}
+            />
+          </Link>
           <IconButton
             variant={"ghost"}
             aria-label={"Log out"} // TODO: translation
