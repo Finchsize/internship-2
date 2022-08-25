@@ -12,6 +12,7 @@ import {
   Select,
   VStack,
   Switch,
+  HStack,
 } from "@chakra-ui/react";
 
 import { Stack, Text } from "@chakra-ui/react";
@@ -128,39 +129,49 @@ export const Edit = () => {
         minHeight={"100vh"}
         alignItems={"center"}
         justifyContent={"center"}
+        p={4}
       >
         <Flex
-          bgColor={"whiteAlpha.50"}
-          shadow={"2xl"}
-          border={"1px"}
-          borderColor={"gray.200"}
-          width="500px"
-          justifyContent="center"
-          borderRadius={30}
-          padding={8}
+          w={"md"}
+          bgColor={"white"}
+          direction={"column"}
+          p={6}
+          alignItems={"center"}
+          borderRadius={10}
+          gap={6}
+          borderColor={"blackAlpha.200"}
+          borderWidth={1}
+          boxShadow={"md"}
         >
-          <Stack width={"full"}>
-            <Box>
-              <Heading textAlign={"center"} size={"3xl"} pt={"4"}>
-                {t("title", "Edit")}
-              </Heading>
-              <Text
-                fontWeight={"semibold"}
-                fontSize={"1.25rem"}
-                textAlign={"center"}
-              >
-                {t("subtitle", "your profile information")}
-              </Text>{" "}
-            </Box>
+          <VStack spacing={2}>
+            <Heading
+              textAlign={"center"}
+              as={"h1"}
+              size="2xl"
+              color={"blackAlpha.900"}
+            >
+              {t("title", "Edit")}
+            </Heading>
+            <Heading
+              w={"full"}
+              textAlign={"center"}
+              as={"h2"}
+              size={"md"}
+              color={"blackAlpha.600"}
+            >
+              {t("subtitle", "your profile information")}
+            </Heading>
+          </VStack>
 
-            <form style={{ height: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-              <VStack
-                spacing={8}
-                width={"full"}
-                height={"full"}
-                justifyContent={"space-between"}
-              >
-                <VStack spacing={0} width={"full"} alignItems={"flex-start"}>
+          <form style={{ height: "100%" }} onSubmit={handleSubmit(onSubmit)}>
+            <VStack
+              spacing={8}
+              width={"full"}
+              height={"full"}
+              justifyContent={"space-between"}
+            >
+              <VStack spacing={0} width={"full"} alignItems={"flex-start"}>
+                <HStack spacing={4}>
                   <FormControl isInvalid={!!errors.firstName}>
                     <FormLabel mt={"1rem"} fontSize={"xl"}>
                       {" "}
@@ -217,195 +228,193 @@ export const Edit = () => {
                       {errors?.lastName && errors.lastName.message}
                     </FormErrorMessage>
                   </FormControl>
-
-                  <FormControl isInvalid={!!errors.phoneNumber}>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      {" "}
-                      <PhoneIcon> </PhoneIcon>{" "}
-                      {t("phone-number", "Phone Number")}
-                    </FormLabel>
-                    <Input
-                      type="tel"
-                      defaultValue={phoneNumber}
-                      {...register("phoneNumber", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: phoneValidatorRegex,
-                          message: t(
-                            "invalid-phone-number",
-                            "Invalid phone number"
-                          ),
-                        },
-                      })}
-                    />
-
-                    <FormErrorMessage>
-                      {errors?.phoneNumber && errors.phoneNumber.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.country}>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      <Icon as={BsGlobe} /> {t("country", "Country")}
-                    </FormLabel>
-                    <Input
-                      type="text"
-                      defaultValue={country}
-                      {...register("country", {
-                        required: t("field-required", "this field is required"),
-                        max: 15,
-                        min: 4,
-                        maxLength: 15,
-                        pattern: {
-                          value: nameValidatorRegex,
-                          message: t(
-                            "capital-letter",
-                            "First letter should be a capital letter, followed by lower case letters."
-                          ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.country && errors.country.message}
-                    </FormErrorMessage>
-                    <FormLabel fontSize={"xl"} mt={"1rem"}>
-                      <Icon as={MdLocationCity} /> {t("city", "City")}
-                    </FormLabel>
-                  </FormControl>
-                  <FormControl isInvalid={!!errors.city}>
-                    <Input
-                      type="text"
-                      defaultValue={city}
-                      {...register("city", {
-                        required: t("field-required", "this field is required"),
-                        pattern: {
-                          value: nameValidatorRegex,
-                          message: t(
-                            "capital-letter",
-                            "First letter should be a capital letter, followed by lower case letters."
-                          ),
-                        },
-                      })}
-                    />
-                    <FormErrorMessage>
-                      {errors?.city && errors.city.message}
-                    </FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl isInvalid={!!errors.language}>
-                    <FormLabel mt={"1rem"} fontSize={"xl"}>
-                      {" "}
-                      <Icon fontSize={25} as={TbLanguage} />{" "}
-                      {t("language", "Language")}
-                    </FormLabel>
-                    <Select
-                      defaultValue={""}
-                      mb={"1rem"}
-                      {...register("language", {
-                        required: t("field-required", "This field is required"),
-                      })}
-                    >
-                      <option value="" disabled>
-                        {t("choose-language", "Choose a language")}
-                      </option>
-                      <option value="ENGLISH">{t("english", "English")}</option>
-                      <option value="POLISH">{t("polish", "Polish")}</option>
-                      <option value="GERMAN">{t("german", "German")}</option>
-                    </Select>
-
-                    <FormErrorMessage>
-                      {errors?.language && errors.language.message}
-                    </FormErrorMessage>
-                  </FormControl>
+                </HStack>
+                <FormControl isInvalid={!!errors.phoneNumber}>
+                  <FormLabel fontSize={"xl"} mt={"1rem"}>
+                    {" "}
+                    <PhoneIcon> </PhoneIcon> {t("phone-number", "Phone Number")}
+                  </FormLabel>
                   <Input
-                    type={"hidden"}
-                    {...register("timeZone", {
-                      value: "",
+                    type="tel"
+                    defaultValue={phoneNumber}
+                    {...register("phoneNumber", {
+                      required: t("field-required", "this field is required"),
+                      pattern: {
+                        value: phoneValidatorRegex,
+                        message: t(
+                          "invalid-phone-number",
+                          "Invalid phone number"
+                        ),
+                      },
                     })}
-                  ></Input>
+                  />
+
+                  <FormErrorMessage>
+                    {errors?.phoneNumber && errors.phoneNumber.message}
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.country}>
+                  <FormLabel fontSize={"xl"} mt={"1rem"}>
+                    <Icon as={BsGlobe} /> {t("country", "Country")}
+                  </FormLabel>
                   <Input
-                    type={"hidden"}
-                    {...register("userStatus", {
-                      value: "ONLINE",
+                    type="text"
+                    defaultValue={country}
+                    {...register("country", {
+                      required: t("field-required", "this field is required"),
+                      max: 15,
+                      min: 4,
+                      maxLength: 15,
+                      pattern: {
+                        value: nameValidatorRegex,
+                        message: t(
+                          "capital-letter",
+                          "First letter should be a capital letter, followed by lower case letters."
+                        ),
+                      },
                     })}
-                  ></Input>
+                  />
+                  <FormErrorMessage>
+                    {errors?.country && errors.country.message}
+                  </FormErrorMessage>
+                  <FormLabel fontSize={"xl"} mt={"1rem"}>
+                    <Icon as={MdLocationCity} /> {t("city", "City")}
+                  </FormLabel>
+                </FormControl>
+                <FormControl isInvalid={!!errors.city}>
                   <Input
-                    type={"hidden"}
-                    {...register("deleted", {
-                      value: false,
+                    type="text"
+                    defaultValue={city}
+                    {...register("city", {
+                      required: t("field-required", "this field is required"),
+                      pattern: {
+                        value: nameValidatorRegex,
+                        message: t(
+                          "capital-letter",
+                          "First letter should be a capital letter, followed by lower case letters."
+                        ),
+                      },
                     })}
-                  ></Input>
-                  <Switch
-                    py={".5rem"}
-                    size={"md"}
-                    fontSize={"inherit"}
-                    fontWeight={"semibold"}
-                    colorScheme={"twitter"}
-                    {...register("showFirstNameAndLastName")}
+                  />
+                  <FormErrorMessage>
+                    {errors?.city && errors.city.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.language}>
+                  <FormLabel mt={"1rem"} fontSize={"xl"}>
+                    {" "}
+                    <Icon fontSize={25} as={TbLanguage} />{" "}
+                    {t("language", "Language")}
+                  </FormLabel>
+                  <Select
+                    defaultValue={""}
+                    mb={"1rem"}
+                    {...register("language", {
+                      required: t("field-required", "This field is required"),
+                    })}
                   >
-                    Show first name and last name
-                  </Switch>
-                  <Switch
-                    py={".5rem"}
-                    size={"md"}
-                    fontSize={"inherit"}
-                    fontWeight={"semibold"}
-                    colorScheme={"twitter"}
-                    {...register("showEmail")}
-                  >
-                    Show email
-                  </Switch>
-                  <Switch
-                    py={".5rem"}
-                    size={"md"}
-                    fontSize={"inherit"}
-                    fontWeight={"semibold"}
-                    colorScheme={"twitter"}
-                    {...register("showPhoneNumber")}
-                  >
-                    Show phone number
-                  </Switch>
-                  <Switch
-                    py={".5rem"}
-                    size={"md"}
-                    fontSize={"inherit"}
-                    fontWeight={"semibold"}
-                    colorScheme={"twitter"}
-                    {...register("showAddress")}
-                  >
-                    Show Address
-                  </Switch>
-                  {exception && (
-                    <Flex pt={".5rem"} textColor={"red.600"}>
-                      <div>{exception}</div>
-                    </Flex>
-                  )}
-                </VStack>
-                <Flex
-                  pt={".5rem"}
-                  width={"full"}
-                  alignItems={"center"}
-                  justifyContent={"space-between"}
+                    <option value="" disabled>
+                      {t("choose-language", "Choose a language")}
+                    </option>
+                    <option value="ENGLISH">{t("english", "English")}</option>
+                    <option value="POLISH">{t("polish", "Polish")}</option>
+                    <option value="GERMAN">{t("german", "German")}</option>
+                  </Select>
+
+                  <FormErrorMessage>
+                    {errors?.language && errors.language.message}
+                  </FormErrorMessage>
+                </FormControl>
+                <Input
+                  type={"hidden"}
+                  {...register("timeZone", {
+                    value: "",
+                  })}
+                ></Input>
+                <Input
+                  type={"hidden"}
+                  {...register("userStatus", {
+                    value: "ONLINE",
+                  })}
+                ></Input>
+                <Input
+                  type={"hidden"}
+                  {...register("deleted", {
+                    value: false,
+                  })}
+                ></Input>
+                <Switch
+                  py={".5rem"}
+                  size={"md"}
+                  fontSize={"inherit"}
+                  fontWeight={"semibold"}
+                  colorScheme={"twitter"}
+                  {...register("showFirstNameAndLastName")}
                 >
-                  <Link to="/">
-                    <Button
-                      colorScheme="red"
-                      fontWeight={"bold"}
-                      variant={"link"}
-                    >
-                      Return to dashboard
-                    </Button>
-                  </Link>
-                  <Button
-                    colorScheme="twitter"
-                    isDisabled={!!buttonState}
-                    type={"submit"}
-                  >
-                    Confirm
-                  </Button>
-                </Flex>
+                  Show first name and last name
+                </Switch>
+                <Switch
+                  py={".5rem"}
+                  size={"md"}
+                  fontSize={"inherit"}
+                  fontWeight={"semibold"}
+                  colorScheme={"twitter"}
+                  {...register("showEmail")}
+                >
+                  Show email
+                </Switch>
+                <Switch
+                  py={".5rem"}
+                  size={"md"}
+                  fontSize={"inherit"}
+                  fontWeight={"semibold"}
+                  colorScheme={"twitter"}
+                  {...register("showPhoneNumber")}
+                >
+                  Show phone number
+                </Switch>
+                <Switch
+                  py={".5rem"}
+                  size={"md"}
+                  fontSize={"inherit"}
+                  fontWeight={"semibold"}
+                  colorScheme={"twitter"}
+                  {...register("showAddress")}
+                >
+                  Show Address
+                </Switch>
+                {exception && (
+                  <Flex pt={".5rem"} textColor={"red.600"}>
+                    <div>{exception}</div>
+                  </Flex>
+                )}
               </VStack>
-            </form>
-          </Stack>
+              <Flex
+                pt={".5rem"}
+                width={"full"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <Link to="/">
+                  <Button
+                    colorScheme="red"
+                    fontWeight={"bold"}
+                    variant={"link"}
+                  >
+                    Return to dashboard
+                  </Button>
+                </Link>
+                <Button
+                  colorScheme="twitter"
+                  isDisabled={!!buttonState}
+                  type={"submit"}
+                >
+                  Confirm
+                </Button>
+              </Flex>
+            </VStack>
+          </form>
         </Flex>
       </Flex>
     </div>
