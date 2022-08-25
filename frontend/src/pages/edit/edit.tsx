@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import { MetaTags } from "../../components/MetaTags";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
+import Language from "../../types/language";
 
 interface EditFormValues {
   nickname: string;
@@ -59,8 +60,12 @@ export const Edit = () => {
   const [phoneNumber, setphoneNumber] = useState<string>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
-
-  const [buttonState, setButtonState] = useState<Boolean>(false);
+  const [showName, setShowName] = useState<boolean>();
+  const [showEmail, setShowEmail] = useState<boolean>();
+  const [showPhone, setShowPhone] = useState<boolean>();
+  const [showAddress, setShowAddress] = useState<boolean>();
+  const [language, setlanguage] = useState<Language>();
+  const [buttonState, setButtonState] = useState<boolean>(false);
   const [exception, setException] = useState<string>("");
 
   const nameValidatorRegex = RegExp("^[A-Z][^A-Z]*$");
@@ -74,17 +79,36 @@ export const Edit = () => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((res) => {
-      const { firstName, lastName, phoneNumber, country, city } = res.data;
+      const {
+        firstName,
+        lastName,
+        phoneNumber,
+        country,
+        city,
+        showFirstNameAndLastName,
+        showEmail,
+        showPhoneNumber,
+        userLanguage,
+        showAddress,
+      } = res.data;
 
       setFirstName(firstName);
       setLastName(lastName);
       setphoneNumber(phoneNumber);
       setCountry(country);
+      setlanguage(userLanguage);
       setCity(city);
+      setShowName(showFirstNameAndLastName);
+      setShowEmail(showEmail);
+      setShowPhone(showPhoneNumber);
+      setShowAddress(showAddress);
 
+      console.log(showFirstNameAndLastName);
       reset();
     });
-  }, [reset]);
+  }, [reset, showAddress]);
+
+  console.log(showName);
   const onSubmit = (data: EditFormValues) => {
     setButtonState(true);
     console.log("data", data);
@@ -304,7 +328,7 @@ export const Edit = () => {
                       {t("language", "Language")}
                     </FormLabel>
                     <Select
-                      defaultValue={""}
+                      defaultValue={language}
                       mb={"1rem"}
                       {...register("language", {
                         required: t("field-required", "This field is required"),
@@ -346,6 +370,7 @@ export const Edit = () => {
                     fontSize={"inherit"}
                     fontWeight={"semibold"}
                     colorScheme={"twitter"}
+                    defaultChecked={showName}
                     {...register("showFirstNameAndLastName")}
                   >
                     Show first name and last name
@@ -355,6 +380,7 @@ export const Edit = () => {
                     size={"md"}
                     fontSize={"inherit"}
                     fontWeight={"semibold"}
+                    checked={showEmail}
                     colorScheme={"twitter"}
                     {...register("showEmail")}
                   >
@@ -366,6 +392,7 @@ export const Edit = () => {
                     fontSize={"inherit"}
                     fontWeight={"semibold"}
                     colorScheme={"twitter"}
+                    checked={showPhone}
                     {...register("showPhoneNumber")}
                   >
                     Show phone number
@@ -376,6 +403,7 @@ export const Edit = () => {
                     fontSize={"inherit"}
                     fontWeight={"semibold"}
                     colorScheme={"twitter"}
+                    checked={showAddress}
                     {...register("showAddress")}
                   >
                     Show Address
