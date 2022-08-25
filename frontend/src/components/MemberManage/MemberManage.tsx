@@ -40,6 +40,7 @@ type Props = {
     owner: boolean;
   };
   isOwner: boolean;
+  isLoggedIn: boolean;
 };
 
 export const MemberManage = ({
@@ -48,6 +49,7 @@ export const MemberManage = ({
   channel,
   member,
   isOwner,
+  isLoggedIn,
 }: Props) => {
   const [removing, setRemoving] = useState(false);
   const [promoting, setPromoting] = useState(false);
@@ -55,15 +57,16 @@ export const MemberManage = ({
   const [UserDetails, setUserDetails] = useState<UserDetailsType>();
 
   useEffect(() => {
-    console.log("Member: ", member.nickname);
     axiosInstance({
       method: "GET",
-      url: `/users/${member.nickname}`,
+      url: isLoggedIn ? "/users/details" : `/users/${member.nickname}`,
       headers: {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((response) => setUserDetails(response.data));
-  }, [member.nickname]);
+  }, [member.nickname, isLoggedIn]);
+
+  console.log("UserDetails: ", UserDetails)
 
   const changeRole = async () => {
     setPromoting(true);

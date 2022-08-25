@@ -18,34 +18,35 @@ import Language from "../../types/language";
 import Status from "../../types/status";
 
 type UserDetailsType = {
-  city: string;
-  country: string;
-  deleted: boolean;
-  email: string;
-  firstName: string;
-  lastName: string;
+  city?: string;
+  country?: string;
+  deleted?: boolean;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
   nickname: string;
-  phoneNumber: string;
-  showAddress: boolean;
-  showEmail: boolean;
-  showFirstNameAndLastName: boolean;
-  showPhoneNumber: boolean;
-  timeZone: string;
-  userLanguage: Language;
+  phoneNumber?: string;
+  showAddress?: boolean;
+  showEmail?: boolean;
+  showFirstNameAndLastName?: boolean;
+  showPhoneNumber?: boolean;
+  timeZone?: string;
+  userLanguage?: Language;
   userStatus: Status;
 };
 
 interface UserDetailsProps {
   nickname: string;
   onClose: () => void;
+  isLoggedIn: boolean;
 }
 
-const UserDetails = ({ nickname, onClose }: UserDetailsProps) => {
+const UserDetails = ({ nickname, onClose, isLoggedIn }: UserDetailsProps) => {
   const [UserDetails, setUserDetails] = useState<UserDetailsType>();
   useEffect(() => {
     axiosInstance({
       method: "GET",
-      url: "/users/details",
+      url: isLoggedIn ? "/users/details" : `/users/${nickname}`,
       data: {
         nickname: nickname,
       },
@@ -53,7 +54,8 @@ const UserDetails = ({ nickname, onClose }: UserDetailsProps) => {
         authorization: `Bearer ${Cookies.get("token")}`,
       },
     }).then((response) => setUserDetails(response.data));
-  }, [nickname]);
+  }, [nickname, isLoggedIn]);
+  console.log("UserDetails: ", UserDetails)
   return (
     <Portal>
       <Flex
@@ -98,24 +100,24 @@ const UserDetails = ({ nickname, onClose }: UserDetailsProps) => {
             <Text fontSize={"sm"}>Loading...</Text>
           ) : (
             <>
-              {UserDetails.showFirstNameAndLastName && (
+              {UserDetails.firstName && UserDetails.lastName && (
                 <Text fontSize={"sm"}>
                   {UserDetails.firstName} {UserDetails.lastName}
                 </Text>
               )}
-              {UserDetails.showEmail && (
+              {UserDetails.email && (
                 <HStack>
                   <EmailIcon />
                   <Text fontSize={"sm"}>{UserDetails.email}</Text>
                 </HStack>
               )}
-              {UserDetails.showPhoneNumber && (
+              {UserDetails.phoneNumber && (
                 <HStack>
                   <PhoneIcon />
                   <Text fontSize={"sm"}>{UserDetails.phoneNumber}</Text>
                 </HStack>
               )}
-              {UserDetails.showAddress && (
+              {UserDetails.country && UserDetails.city && (
                 <HStack>
                   <Icon as={MdHome} />
                   <Text

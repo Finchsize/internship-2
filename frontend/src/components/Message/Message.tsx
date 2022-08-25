@@ -109,6 +109,7 @@ export const Message = forwardRef(
               {showAuthorsDetails && (
                 <Suspense fallback={<CircularProgress isIndeterminate />}>
                   <UserDetails
+                    isLoggedIn={authorNick === JWT?.nickname}
                     nickname={authorNick}
                     onClose={() => setShowAuthorsDetails(false)}
                   />

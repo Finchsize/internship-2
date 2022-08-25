@@ -128,6 +128,7 @@ export const ChatDetails = () => {
           channel={typeof params.id !== "undefined" ? parseInt(params.id) : -1}
           member={user}
           isOwner={isLoggedInUserAnOwner()}
+          isLoggedIn={user.nickname === JWT?.nickname}
         />
       )}
       {add && params.id && isLoggedInUserAnOwner() && (
