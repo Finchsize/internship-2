@@ -1,4 +1,4 @@
-import { BellIcon, SettingsIcon } from "@chakra-ui/icons";
+import { SettingsIcon } from "@chakra-ui/icons";
 import {
   Text,
   Flex,
@@ -43,7 +43,7 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       data: {},
     }).then((res) => {
       res.data.userStatus = "OFFLINE";
-
+      res.data.language = res.data.userLanguage;
       axiosInstance({
         method: "put",
         url: "/users",
