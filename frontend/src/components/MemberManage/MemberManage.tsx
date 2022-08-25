@@ -60,22 +60,16 @@ export const MemberManage = ({
     axiosInstance({
       method: "GET",
       url: isLoggedIn ? "/users/details" : `/users/${member.nickname}`,
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
-      },
     }).then((response) => setUserDetails(response.data));
   }, [member.nickname, isLoggedIn]);
 
-  console.log("UserDetails: ", UserDetails)
+  
 
   const changeRole = async () => {
     setPromoting(true);
     await axiosInstance({
       method: "put",
       url: "channels/users",
-      headers: {
-        Authorization: Cookies.get("token")!,
-      },
       data: {
         id: channel,
         userNickname: member.nickname,
@@ -93,9 +87,6 @@ export const MemberManage = ({
     await axiosInstance({
       method: "put",
       url: "channels/users",
-      headers: {
-        Authorization: Cookies.get("token")!,
-      },
       data: {
         id: channel,
         userNickname: member.nickname,

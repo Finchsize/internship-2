@@ -50,9 +50,6 @@ const UserDetails = ({ nickname, onClose, isLoggedIn }: UserDetailsProps) => {
       data: {
         nickname: nickname,
       },
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
-      },
     }).then((response) => setUserDetails(response.data));
   }, [nickname, isLoggedIn]);
   console.log("UserDetails: ", UserDetails)

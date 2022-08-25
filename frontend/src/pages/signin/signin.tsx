@@ -40,9 +40,6 @@ export const Signin = () => {
         axiosInstance({
           method: "get",
           url: "/users/details",
-          headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
-          },
           data: {},
         }).then((res) => {
           res.data.userStatus = "ONLINE";
@@ -50,9 +47,6 @@ export const Signin = () => {
           axiosInstance({
             method: "put",
             url: "/users",
-            headers: {
-              Authorization: `Bearer ${Cookies.get("token")}`,
-            },
             data: res.data,
           }).then(() => {
             navigator("/");

@@ -37,9 +37,6 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
     await axiosInstance({
       method: "get",
       url: "/users/details",
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
       data: {},
     }).then((res) => {
       res.data.userStatus = "OFFLINE";
@@ -47,9 +44,6 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
       axiosInstance({
         method: "put",
         url: "/users",
-        headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
         data: res.data,
       }).then(() => {
         Cookies.remove("token");
@@ -61,9 +55,6 @@ export const Sidebar = ({ nickname }: { nickname: string | undefined }) => {
     axiosInstance({
       method: "get",
       url: "/channels",
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
-      },
     }).then((res) => {
       setChats([{ id: null }, ...res.data]);
     });

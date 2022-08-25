@@ -26,9 +26,6 @@ export const User = ({ nickname, owner, onClick }: Props) => {
     axiosInstance({
       method: "get",
       url: `/users/${nickname}`,
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
     }).then((res) => setStatus(res.data.userStatus));
   }, [nickname]);
 

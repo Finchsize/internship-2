@@ -23,9 +23,6 @@ export const Chat = ({ id, owners, members, directMessage }: Props) => {
     console.log("localNumber: ", localNumber);
     axiosInstance({
       method: "GET",
-      headers: {
-        Authorization: Cookies.get("token")!,
-      },
       url: `/messages${id !== null ? `/channels/${id}` : ""}`,
     }).then((response) => {
       const latestId =

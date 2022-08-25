@@ -35,9 +35,6 @@ export const ChatCreate = ({ onClose }: { onClose: () => void }) => {
     axiosInstance({
       method: "post",
       url: "/channels",
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
-      },
       data: {
         users: users ? users : undefined,
         directMessage: users ? true : false,
@@ -53,9 +50,6 @@ export const ChatCreate = ({ onClose }: { onClose: () => void }) => {
       await axiosInstance({
         method: successful ? "post" : "get",
         url: successful ? "/channels" : `/users/${nick}`,
-        headers: {
-          Authorization: Cookies.get("token")!,
-        },
         data: {
           directMessage: successful ? true : undefined,
         },
@@ -80,9 +74,6 @@ export const ChatCreate = ({ onClose }: { onClose: () => void }) => {
       await axiosInstance({
         method: "put",
         url: "/channels/users",
-        headers: {
-          Authorization: Cookies.get("token")!,
-        },
         data: {
           id: channelId,
           userNickname: nick,

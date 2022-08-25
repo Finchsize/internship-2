@@ -45,9 +45,6 @@ export const MemberAdd = ({ isOpen, onClose, channel }: Props) => {
       await axiosInstance({
         method: "get",
         url: `/users/${nick}`,
-        headers: {
-          Authorization: Cookies.get("token")!,
-        },
       })
         .then((res) => {
           setUser(res.data.nickname);
@@ -71,9 +68,6 @@ export const MemberAdd = ({ isOpen, onClose, channel }: Props) => {
     await axiosInstance({
       method: "put",
       url: "channels/users",
-      headers: {
-        Authorization: Cookies.get("token")!,
-      },
       data: {
         id: channel,
         userNickname: user,
