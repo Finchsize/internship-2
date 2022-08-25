@@ -22,18 +22,18 @@ import parseJwt from "../../lib/parseJwt";
 
 import { MdPersonAdd } from "react-icons/md";
 import { MemberAdd } from "../MemberAdd";
+import { User } from "./User";
 
-type User = {
+type UserType = {
   nickname: string;
   owner: boolean;
-  userStatus: string;
 };
 
 export const ChatDetails = () => {
   const { t } = useTranslation("userslist");
   const [add, setAdd] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
-  const [user, setUser] = useState<User>();
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [user, setUser] = useState<UserType>();
   const JWT: { nickname: string; exp: number } | undefined = parseJwt(
     Cookies.get("token")
   );
@@ -76,7 +76,6 @@ export const ChatDetails = () => {
       }
     });
   }, [user, add, params.id]);
-
   return (
     <>
       <VStack
@@ -111,41 +110,12 @@ export const ChatDetails = () => {
         </HStack>
         <List w={"full"}>
           {users.map((user, key) => (
-            <ListItem key={key}>
-              <Button
-                onClick={() => setUser(user)}
-                _hover={{
-                  bgColor: "blackAlpha.50",
-                }}
-                _active={{
-                  bgColor: "blackAlpha.200",
-                }}
-                variant={"ghost"}
-                w={"full"}
-                justifyContent={"flex-start"}
-              >
-                <HStack
-                  w="full"
-                  alignItems={"center"}
-                  justifyContent={"space-between"}
-                >
-                  <HStack>
-                    <Avatar size={"xs"}>
-                      <AvatarBadge
-                        boxSize="1.25em"
-                        bg={
-                          user.userStatus === "ONLINE"
-                            ? "green.500"
-                            : "gray.300"
-                        }
-                      />
-                    </Avatar>
-                    <Text fontSize={"md"}>{user.nickname}</Text>
-                  </HStack>
-                  {user.owner && <Badge colorScheme={"blue"}>Owner</Badge>}
-                </HStack>
-              </Button>
-            </ListItem>
+            <User
+              key={key}
+              nickname={user.nickname}
+              owner={user.owner}
+              onClick={() => setUser(user)}
+            />
           ))}
         </List>
       </VStack>
