@@ -70,9 +70,6 @@ export const Edit = () => {
     axiosInstance({
       method: "get",
       url: "/users/details",
-      headers: {
-        authorization: `Bearer ${Cookies.get("token")}`,
-      },
     }).then((res) => {
       const { firstName, lastName, phoneNumber, country, city } = res.data;
 
@@ -90,9 +87,6 @@ export const Edit = () => {
     console.log("data", data);
     axiosInstance({
       url: "/users",
-      headers: {
-        Authorization: Cookies.get("token")!,
-      },
       method: "PUT",
       data: data,
     })

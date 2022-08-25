@@ -54,9 +54,6 @@ export const Message = forwardRef(
       if (typeof JWT !== "undefined" && message !== "") {
         await axiosInstance({
           method: "put",
-          headers: {
-            Authorization: Cookies.get("token")!,
-          },
           url:
             typeof params.id === "undefined"
               ? `/messages/${id}`
@@ -74,9 +71,6 @@ export const Message = forwardRef(
     const deleteMessage = async () => {
       await axiosInstance({
         method: "delete",
-        headers: {
-          Authorization: Cookies.get("token")!,
-        },
         data: {},
         url:
           typeof params.id === "undefined"

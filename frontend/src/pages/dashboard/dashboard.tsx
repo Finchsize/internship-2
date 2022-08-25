@@ -36,9 +36,6 @@ export const Dashboard = () => {
     axiosInstance({
       method: "get",
       url: "/users/details",
-      headers: {
-        Authorization: Cookies.get("token")!,
-      },
       data: {
         nickname: JWT?.nickname,
       },
@@ -72,9 +69,6 @@ export const Dashboard = () => {
       ]);
       await axiosInstance({
         method: "post",
-        headers: {
-          Authorization: Cookies.get("token")!,
-        },
         url:
           typeof params.id === "undefined"
             ? "/messages"
@@ -98,9 +92,6 @@ export const Dashboard = () => {
   const getMessages = useCallback(async () => {
     await axiosInstance({
       method: "get",
-      headers: {
-        Authorization: Cookies.get("token")!,
-      },
       url:
         typeof params.id === "undefined"
           ? "/messages"

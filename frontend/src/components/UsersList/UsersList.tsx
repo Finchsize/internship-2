@@ -50,9 +50,6 @@ export const ChatDetails = () => {
       url:
         typeof params.id === "undefined" ? "/users" : `/channels/${params.id}`,
       data: typeof params.id === "undefined" ? undefined : {},
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
     }).then((res) => {
       if (typeof params.id === "undefined") {
         setUsers(
