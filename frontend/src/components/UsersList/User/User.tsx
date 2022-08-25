@@ -41,7 +41,7 @@ export const User = ({ nickname, owner, onClick }: Props) => {
   return (
     <ListItem>
       <Button
-        onClick={() => onClick}
+        onClick={() => onClick()}
         _hover={{
           bgColor: "blackAlpha.50",
         }}
