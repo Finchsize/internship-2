@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Flex, HStack, Input, VStack } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar";
-import { Topbar } from "../../components/Topbar";
 import { ChatDetails } from "../../components/UsersList";
 import { Message } from "../../components/Message";
 import type MessageType from "../../types/message";
